@@ -1,10 +1,14 @@
 package com.example.saybettereducator.ui.login
 
+import android.app.Activity
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Layout
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,18 +42,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.main.MainActivity
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.Typography
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
 class LoginActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             LoginScreen()
         }
+
+        overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, R.anim.horizon_enter, R.anim.none)
     }
 
     @Preview(widthDp = 360, heightDp = 800)
@@ -108,7 +116,11 @@ class LoginActivity : ComponentActivity() {
                 .fillMaxWidth()
                 .border((1.5).dp, Color.Black, RoundedCornerShape(100.dp))
                 .background(Color.White)
-                .clickable{ Log.d("LoginActivity", "Login!") }
+                .clickable{
+                    finish()
+                    intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                }
         ) {
             Row(
                 modifier = Modifier
