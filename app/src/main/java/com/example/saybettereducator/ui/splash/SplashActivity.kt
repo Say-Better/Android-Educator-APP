@@ -43,7 +43,7 @@ class SplashActivity : ComponentActivity() {
     }
 }
 
-@Preview(widthDp = 393, heightDp = 808)
+@Preview(widthDp = 360, heightDp = 800)
 @Composable
 fun Splash() {
     Surface(color = Color.White,
