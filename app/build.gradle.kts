@@ -69,4 +69,7 @@ dependencies {
 
     // Compose Foundation (필요한 종속성 추가)
     implementation ("androidx.compose.foundation:foundation:1.4.0")
+
+    // 바텀네비 종속성
+    implementation("androidx.navigation:navigation-compose:2.7.4")
 }
