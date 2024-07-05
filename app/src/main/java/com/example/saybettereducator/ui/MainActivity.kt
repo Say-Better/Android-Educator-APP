@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.main
+package com.example.saybettereducator.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +19,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +42,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.calendar.CalendarScreen
+import com.example.saybettereducator.ui.home.HomeScreen
+import com.example.saybettereducator.ui.learner.LearnerScreen
+import com.example.saybettereducator.ui.solution.SolutionScreen
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.theme.montserratFont
@@ -62,6 +74,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MainScreen() {
         val scrollState = rememberScrollState()
+        val navController = rememberNavController()
+
+        // currentRoute 값 추출
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
 
         Scaffold(
             topBar = {
@@ -90,19 +107,67 @@ class MainActivity : ComponentActivity() {
                     )
                     TopBarNavigation(
                         Modifier
-                        .fillMaxWidth()
-                        .padding(top = 14.dp, end = 16.dp)
+                            .fillMaxWidth()
+                            .padding(top = 14.dp, end = 16.dp)
+                    )
+                }
+            },
+
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        selected = currentRoute == "home",
+                        onClick = { navController.navigate("home") },
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.home_nav),
+                                contentDescription = "bottom navigation home"
+                            )
+                        }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == "learner",
+                        onClick = { navController.navigate("learner") },
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.learner_nav),
+                                contentDescription = "bottom navigation home"
+                            )
+                        }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == "solution",
+                        onClick = { navController.navigate("solution") },
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.solution_nav),
+                                contentDescription = "bottom navigation home"
+                            )
+                        }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == "calender",
+                        onClick = { navController.navigate("calender") },
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.calender_nav),
+                                contentDescription = "bottom navigation home"
+                            )
+                        }
                     )
                 }
             }
         ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(scrollState)
+            // 화면 간의 이동 경로를 정의하는 Navigation Graph를 생성
+            NavHost(
+                navController = navController,
+                startDestination = "home",
+                modifier = Modifier.padding(innerPadding)
             ) {
-
+                composable("home") { HomeScreen() }
+                composable("learner") { LearnerScreen() }
+                composable("solution") { SolutionScreen() }
+                composable("calender") { CalendarScreen() }
             }
         }
     }
@@ -122,7 +187,7 @@ class MainActivity : ComponentActivity() {
             Spacer(modifier = Modifier.width(17.dp))
             Image(
                 painter = painterResource(id = R.drawable.profile_my),
-                contentDescription = "새 소식 알림 버튼",
+                contentDescription = "교육자 프로필 버튼",
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
             )
