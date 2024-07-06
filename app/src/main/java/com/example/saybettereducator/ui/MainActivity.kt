@@ -51,6 +51,7 @@ import com.example.saybettereducator.ui.calendar.CalendarScreen
 import com.example.saybettereducator.ui.home.HomeScreen
 import com.example.saybettereducator.ui.learner.LearnerScreen
 import com.example.saybettereducator.ui.solution.SolutionScreen
+import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.theme.montserratFont
@@ -69,6 +70,8 @@ class MainActivity : ComponentActivity() {
     fun MainScreenPreview() {
         MainScreen()
     }
+
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -114,14 +117,26 @@ class MainActivity : ComponentActivity() {
             },
 
             bottomBar = {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = Color.White,
+                    modifier = Modifier.height(72.dp)
+                ) {
                     NavigationBarItem(
                         selected = currentRoute == "home",
                         onClick = { navController.navigate("home") },
                         icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.home_nav),
-                                contentDescription = "bottom navigation home"
+                                contentDescription = "bottom navigation home",
+                                tint = if(currentRoute=="home") MainGreen else GrayW40
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "홈",
+                                fontFamily = FontFamily(pretendardMediumFont),
+                                color = if(currentRoute=="home") MainGreen else GrayW40,
+                                fontSize = 12.sp,
                             )
                         }
                     )
@@ -131,7 +146,16 @@ class MainActivity : ComponentActivity() {
                         icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.learner_nav),
-                                contentDescription = "bottom navigation home"
+                                contentDescription = "bottom navigation learner",
+                                tint = if(currentRoute=="learner") MainGreen else GrayW40
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "학습자",
+                                fontFamily = FontFamily(pretendardMediumFont),
+                                color = if(currentRoute=="learner") MainGreen else GrayW40,
+                                fontSize = 12.sp
                             )
                         }
                     )
@@ -141,17 +165,35 @@ class MainActivity : ComponentActivity() {
                         icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.solution_nav),
-                                contentDescription = "bottom navigation home"
+                                contentDescription = "bottom navigation solution",
+                                tint = if(currentRoute=="solution") MainGreen else GrayW40
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "솔루션",
+                                fontFamily = FontFamily(pretendardMediumFont),
+                                color = if(currentRoute=="solution") MainGreen else GrayW40,
+                                fontSize = 12.sp
                             )
                         }
                     )
                     NavigationBarItem(
-                        selected = currentRoute == "calender",
-                        onClick = { navController.navigate("calender") },
+                        selected = currentRoute == "calendar",
+                        onClick = { navController.navigate("calendar") },
                         icon = {
                             Icon(
-                                painter = painterResource(id = R.drawable.calender_nav),
-                                contentDescription = "bottom navigation home"
+                                painter = painterResource(id = R.drawable.calendar_nav),
+                                contentDescription = "bottom navigation calendar",
+                                tint = if(currentRoute=="calendar") MainGreen else GrayW40
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = "캘린더",
+                                fontFamily = FontFamily(pretendardMediumFont),
+                                color = if(currentRoute=="calendar") MainGreen else GrayW40,
+                                fontSize = 12.sp
                             )
                         }
                     )
@@ -167,7 +209,7 @@ class MainActivity : ComponentActivity() {
                 composable("home") { HomeScreen() }
                 composable("learner") { LearnerScreen() }
                 composable("solution") { SolutionScreen() }
-                composable("calender") { CalendarScreen() }
+                composable("calendar") { CalendarScreen() }
             }
         }
     }

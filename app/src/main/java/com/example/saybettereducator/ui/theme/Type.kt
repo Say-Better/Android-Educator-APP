@@ -11,6 +11,7 @@ import com.example.saybettereducator.R
 // Set of Material typography styles to start with
 
 val pretendardMediumFont = Font(R.font.pretendard_medium)
+val pretendardBoldFont = Font(R.font.pretendard_bold)
 val montserratFont = Font(R.font.montserrat_bold)
 
 val Typography = Typography(

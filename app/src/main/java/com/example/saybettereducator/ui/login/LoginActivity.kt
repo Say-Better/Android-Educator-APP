@@ -59,7 +59,7 @@ class LoginActivity : ComponentActivity() {
 
     @Composable
     fun LoginScreen() {
-        Surface {
+        Surface(color = Color.White) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
