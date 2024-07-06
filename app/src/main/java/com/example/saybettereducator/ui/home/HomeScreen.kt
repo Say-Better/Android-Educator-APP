@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
@@ -126,17 +130,19 @@ fun HomeSolutionView() {
         )
 
         // 학습자 수만큼 루프
-        HomeSolutionViewElement()
-//        Spacer(modifier = ) 흰색!
+        for (i in 1..5)
+            HomeSolutionViewElement()
+
+
     }
 }
 
 @Composable
 fun HomeSolutionViewElement() {
-    Column {
+    Column(modifier = Modifier.padding(top = 18.dp)) {
         Row(
             modifier = Modifier
-                .padding(start = 16.dp, top = 18.dp, end = 16.dp, bottom = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -144,6 +150,12 @@ fun HomeSolutionViewElement() {
             CreateSolutionButton()
         }
         SolutionCardScroll()
+        Box (
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+                .background(Color.White)
+        )
     }
 }
 
@@ -152,17 +164,74 @@ fun SolutionCardScroll() {
     val scrollState = rememberScrollState()
 
     Row(
-        Modifier.horizontalScroll(scrollState)
+        Modifier
+            .horizontalScroll(scrollState)
+            .padding(bottom = 14.dp)
     ) {
         for (i in 1..5) {
             SolutionCard()
+            Spacer(modifier = Modifier.width(8.dp))
         }
-//        Spacer(modifier = )
+
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SolutionCard() {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier
+            .size(width = 152.dp, height = 152.dp),
+        onClick = { Log.d("HomeScreen", "Go VideoCall") }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 12.dp)
+        ) {
+            Box {
+                Image(
+                    painter = painterResource(id = R.drawable.symbol_go),
+                    contentDescription = "symbol sample go",
+                    modifier = Modifier
+                        .size(72.dp, 72.dp)
+                        .offset(x = 52.dp)
+                        .shadow(
+                            elevation = 0.5.dp,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clip(RoundedCornerShape(8.dp))
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.symbol_rice),
+                    contentDescription = "symbol sample rice",
+                    modifier = Modifier
+                        .size(72.dp, 72.dp)
+                        .shadow(
+                            elevation = 1.dp,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clip(RoundedCornerShape(8.dp))
+                )
+            }
+            Text(
+                text = "학교생활 상황",
+                fontSize = 14.sp,
+                fontFamily = FontFamily(pretendardMediumFont),
+                modifier = Modifier.padding(top = 12.dp)
+            )
+            Text(
+                text = "중재 단계 5회기 진행중",
+                fontSize = 12.sp,
+                fontFamily = FontFamily(pretendardMediumFont),
+                color = GrayW40
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
