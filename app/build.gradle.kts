@@ -67,8 +67,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Compose Foundation (필요한 종속성 추가)
-    implementation ("androidx.compose.foundation:foundation:1.4.0")
+    implementation ("androidx.compose.foundation:foundation:1.7.0-alpha02")
 
     // 바텀네비 종속성
     implementation("androidx.navigation:navigation-compose:2.7.4")
