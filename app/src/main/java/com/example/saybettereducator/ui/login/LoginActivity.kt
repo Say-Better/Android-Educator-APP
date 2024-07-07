@@ -76,7 +76,7 @@ class LoginActivity : ComponentActivity() {
                 Spacer(modifier = Modifier.height(30.29.dp))
 
                 Image(
-                    painter = painterResource(id = R.drawable.login_illust),
+                    painter = painterResource(id = R.drawable.login_raw),
                     contentDescription = null,
                     modifier = Modifier
                         .width(360.dp)

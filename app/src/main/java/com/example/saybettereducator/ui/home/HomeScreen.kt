@@ -1,11 +1,15 @@
 package com.example.saybettereducator.ui.home
 
+import android.content.Context
+import android.content.Intent
 import android.inputmethodservice.Keyboard
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +19,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,14 +35,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
@@ -45,9 +56,13 @@ import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.GrayW90
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
+import com.example.saybettereducator.ui.videoCall.VideoCallActivity
+import com.example.saybettereducator.utils.customClick.CustomClickEvent
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onClickSolution: () -> Unit
+) {
     val scrollState = rememberScrollState()
 
     Surface(
@@ -61,7 +76,7 @@ fun HomeScreen() {
         ) {
             HomeScheduleView()
 
-            HomeSolutionView()
+            HomeSolutionView(onClickSolution)
         }
     }
 }
@@ -114,7 +129,9 @@ fun HomeMiniCalendar() {
 }
 
 @Composable
-fun HomeSolutionView() {
+fun HomeSolutionView(
+    onClickSolution: () -> Unit
+) {
     Column {
         Text(
             text = "학습자 솔루션 관리",
@@ -126,43 +143,117 @@ fun HomeSolutionView() {
         )
 
         // 학습자 수만큼 루프
-        HomeSolutionViewElement()
-//        Spacer(modifier = ) 흰색!
+        for (i in 1..5)
+            HomeSolutionViewElement(onClickSolution)
+
+
     }
 }
 
 @Composable
-fun HomeSolutionViewElement() {
-    Column {
+fun HomeSolutionViewElement(
+    onClickSolution: () -> Unit
+) {
+    Column(modifier = Modifier.padding(top = 18.dp)) {
         Row(
             modifier = Modifier
-                .padding(start = 16.dp, top = 18.dp, end = 16.dp, bottom = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             LearnerMiniProfile()
             CreateSolutionButton()
         }
-        SolutionCardScroll()
+        SolutionCardScroll(onClickSolution)
+        Box (
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+                .background(Color.White)
+        )
     }
 }
 
 @Composable
-fun SolutionCardScroll() {
+fun SolutionCardScroll(
+    onClickSolution: () -> Unit
+) {
     val scrollState = rememberScrollState()
 
     Row(
-        Modifier.horizontalScroll(scrollState)
+        Modifier
+            .horizontalScroll(scrollState)
+            .padding(bottom = 14.dp)
     ) {
         for (i in 1..5) {
-            SolutionCard()
+            SolutionCard(onClickSolution)
+            Spacer(modifier = Modifier.width(8.dp))
         }
-//        Spacer(modifier = )
+
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SolutionCard() {
+fun SolutionCard(
+    onClickSolution: () -> Unit
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier
+            .size(width = 152.dp, height = 152.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = CustomClickEvent
+            ) { onClickSolution() }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 12.dp)
+        ) {
+            Box {
+                Image(
+                    painter = painterResource(id = R.drawable.symbol_go),
+                    contentDescription = "symbol sample go",
+                    modifier = Modifier
+                        .size(72.dp, 72.dp)
+                        .offset(x = 52.dp)
+                        .shadow(
+                            elevation = 0.5.dp,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clip(RoundedCornerShape(8.dp))
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.symbol_rice),
+                    contentDescription = "symbol sample rice",
+                    modifier = Modifier
+                        .size(72.dp, 72.dp)
+                        .shadow(
+                            elevation = 1.dp,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clip(RoundedCornerShape(8.dp))
+                )
+            }
+            Text(
+                text = "학교생활 상황",
+                fontSize = 14.sp,
+                fontFamily = FontFamily(pretendardMediumFont),
+                modifier = Modifier.padding(top = 12.dp)
+            )
+            Text(
+                text = "중재 단계 5회기 진행중",
+                fontSize = 12.sp,
+                fontFamily = FontFamily(pretendardMediumFont),
+                color = GrayW40
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -206,9 +297,12 @@ fun LearnerMiniProfile(modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Row {
             Image(
-                painter = painterResource(R.drawable.mini_profile_default_x2_75),
+                painter = painterResource(R.drawable.learner_profile),
                 contentDescription = null,
-                modifier = Modifier.padding(end = 12.dp)
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(width = 48.dp, height = 48.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
             Column(
                 modifier = Modifier
@@ -233,5 +327,5 @@ fun LearnerMiniProfile(modifier: Modifier = Modifier) {
 @Preview(widthDp = 360, heightDp = 680)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+//    HomeScreen()
 }
