@@ -6,8 +6,10 @@ import android.inputmethodservice.Keyboard
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,9 +57,12 @@ import com.example.saybettereducator.ui.theme.GrayW90
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.ui.videoCall.VideoCallActivity
+import com.example.saybettereducator.utils.customClick.CustomClickEvent
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onClickSolution: () -> Unit
+) {
     val scrollState = rememberScrollState()
 
     Surface(
@@ -70,7 +76,7 @@ fun HomeScreen() {
         ) {
             HomeScheduleView()
 
-            HomeSolutionView()
+            HomeSolutionView(onClickSolution)
         }
     }
 }
@@ -123,7 +129,9 @@ fun HomeMiniCalendar() {
 }
 
 @Composable
-fun HomeSolutionView() {
+fun HomeSolutionView(
+    onClickSolution: () -> Unit
+) {
     Column {
         Text(
             text = "학습자 솔루션 관리",
@@ -136,14 +144,16 @@ fun HomeSolutionView() {
 
         // 학습자 수만큼 루프
         for (i in 1..5)
-            HomeSolutionViewElement()
+            HomeSolutionViewElement(onClickSolution)
 
 
     }
 }
 
 @Composable
-fun HomeSolutionViewElement() {
+fun HomeSolutionViewElement(
+    onClickSolution: () -> Unit
+) {
     Column(modifier = Modifier.padding(top = 18.dp)) {
         Row(
             modifier = Modifier
@@ -154,7 +164,7 @@ fun HomeSolutionViewElement() {
             LearnerMiniProfile()
             CreateSolutionButton()
         }
-        SolutionCardScroll()
+        SolutionCardScroll(onClickSolution)
         Box (
             modifier = Modifier
                 .fillMaxWidth()
@@ -165,7 +175,9 @@ fun HomeSolutionViewElement() {
 }
 
 @Composable
-fun SolutionCardScroll() {
+fun SolutionCardScroll(
+    onClickSolution: () -> Unit
+) {
     val scrollState = rememberScrollState()
 
     Row(
@@ -174,7 +186,7 @@ fun SolutionCardScroll() {
             .padding(bottom = 14.dp)
     ) {
         for (i in 1..5) {
-            SolutionCard()
+            SolutionCard(onClickSolution)
             Spacer(modifier = Modifier.width(8.dp))
         }
 
@@ -183,17 +195,20 @@ fun SolutionCardScroll() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SolutionCard() {
+fun SolutionCard(
+    onClickSolution: () -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier
-            .size(width = 152.dp, height = 152.dp),
-        onClick = {
-            Log.d("HomeScreen", "Go VideoCall")
-        }
+            .size(width = 152.dp, height = 152.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = CustomClickEvent
+            ) { onClickSolution() }
     ) {
         Column(
             modifier = Modifier
@@ -312,5 +327,5 @@ fun LearnerMiniProfile(modifier: Modifier = Modifier) {
 @Preview(widthDp = 360, heightDp = 680)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+//    HomeScreen()
 }

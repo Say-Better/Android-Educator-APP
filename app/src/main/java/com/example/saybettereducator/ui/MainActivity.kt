@@ -1,5 +1,6 @@
 package com.example.saybettereducator.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -56,6 +57,7 @@ import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.theme.montserratFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
+import com.example.saybettereducator.ui.videoCall.VideoCallActivity
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -206,7 +208,14 @@ class MainActivity : ComponentActivity() {
                 startDestination = "home",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("home") { HomeScreen() }
+                composable("home") {
+                    HomeScreen(
+                        onClickSolution = {
+                            intent = Intent(this@MainActivity, VideoCallActivity::class.java)
+                            startActivity(intent)
+                        }
+                    )
+                }
                 composable("learner") { LearnerScreen() }
                 composable("solution") { SolutionScreen() }
                 composable("calendar") { CalendarScreen() }
