@@ -1,5 +1,7 @@
 package com.example.saybettereducator.ui.home
 
+import android.content.Context
+import android.content.Intent
 import android.inputmethodservice.Keyboard
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -37,10 +39,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
@@ -49,6 +53,7 @@ import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.GrayW90
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
+import com.example.saybettereducator.ui.videoCall.VideoCallActivity
 
 @Composable
 fun HomeScreen() {
@@ -186,7 +191,9 @@ fun SolutionCard() {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier
             .size(width = 152.dp, height = 152.dp),
-        onClick = { Log.d("HomeScreen", "Go VideoCall") }
+        onClick = {
+            Log.d("HomeScreen", "Go VideoCall")
+        }
     ) {
         Column(
             modifier = Modifier
@@ -275,9 +282,12 @@ fun LearnerMiniProfile(modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Row {
             Image(
-                painter = painterResource(R.drawable.mini_profile_default_x2_75),
+                painter = painterResource(R.drawable.learner_profile),
                 contentDescription = null,
-                modifier = Modifier.padding(end = 12.dp)
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(width = 48.dp, height = 48.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
             Column(
                 modifier = Modifier
