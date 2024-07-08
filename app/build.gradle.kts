@@ -1,6 +1,15 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    id("kotlin-kapt")
+
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
+
+    //Hilt 종속성 추가
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -71,4 +80,20 @@ dependencies {
 
     // 바텀네비 종속성
     implementation("androidx.navigation:navigation-compose:2.7.4")
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
+    //Hilt 종속성 추가
+    implementation("com.google.dagger:hilt-android:2.46")
+    kapt("com.google.dagger:hilt-android-compiler:2.46")
+
+    //webRTC 종속성 추가
+    implementation ("com.mesibo.api:webrtc:1.0.5")
+
+    //Gson 종속성 추가
+    implementation("com.google.code.gson:gson:2.10.1")
 }
