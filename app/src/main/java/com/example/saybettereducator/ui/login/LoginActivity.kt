@@ -50,7 +50,7 @@ class LoginActivity : ComponentActivity() {
 
     @Inject lateinit var mainRepository : MainRepository
 
-    val testid: String = "testUser1"
+    val testid: String = "helloYI"
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +66,7 @@ class LoginActivity : ComponentActivity() {
                             Log.d("login", "로그인 성공")
                             finish()
                             intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            intent.putExtra("userid", testid)
                             startActivity(intent)
                         }
                     }
@@ -81,6 +82,7 @@ class LoginActivity : ComponentActivity() {
             login = {
                 finish()
                 intent = Intent(this@LoginActivity, MainActivity::class.java)
+                intent.putExtra("userid", testid)
                 startActivity(intent)
             }
         )

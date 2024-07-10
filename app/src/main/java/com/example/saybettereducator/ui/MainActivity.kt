@@ -1,10 +1,12 @@
 package com.example.saybettereducator.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +50,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
+import com.example.saybettereducator.model.remote.dto.DataModel
 import com.example.saybettereducator.ui.calendar.CalendarScreen
 import com.example.saybettereducator.ui.home.HomeScreen
 import com.example.saybettereducator.ui.learner.LearnerScreen
@@ -58,15 +61,43 @@ import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.theme.montserratFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.ui.videoCall.VideoCallActivity
+import com.example.saybettereducator.utils.webrtc.repository.MainRepository
+import com.example.saybettereducator.utils.webrtc.service.MainService
+import com.example.saybettereducator.utils.webrtc.service.MainServiceRepository
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), MainService.CallEventListener {
+
+    private var userid : String? = null
+    private var currentReceivedModel: DataModel? = null
+
+    //Hilt 의존성 주입
+    @Inject lateinit var mainRepository : MainRepository
+    @Inject lateinit var mainServiceRepository : MainServiceRepository
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MainScreen()
         }
+        init()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun init(){
+        userid = intent.getStringExtra("userid")
+        if(userid == null) finish()
+
+        MainService.listener = this
+        startMyService()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun startMyService() {
+        mainServiceRepository.startService(userid!!)
     }
 
     @Preview(widthDp = 360, heightDp = 800)
@@ -245,5 +276,10 @@ class MainActivity : ComponentActivity() {
                     .align(Alignment.CenterVertically)
             )
         }
+    }
+
+    override fun onCallReceived(model: DataModel) {
+        Log.d("MainService", "call receive by ${model.sender}")
+        this.currentReceivedModel = model
     }
 }
