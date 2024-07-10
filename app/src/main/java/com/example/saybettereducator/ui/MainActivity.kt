@@ -72,6 +72,7 @@ class MainActivity : ComponentActivity(), MainService.CallEventListener {
 
     private var userid : String? = null
     private var currentReceivedModel: DataModel? = null
+    private val testUser: String = "testUser1"
 
     //Hilt 의존성 주입
     @Inject lateinit var mainRepository : MainRepository

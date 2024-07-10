@@ -63,13 +63,13 @@ class MainService : Service(), MainRepository.Listener {
         mainRepository.setTarget(target!!)
 
         // Local, Remote SurfaceViewRenderer init
-//        mainRepository.initLocalSurfaceView(localSurfaceView!!)
-//        mainRepository.initRemoteSurfaceView(remoteSurfaceView!!)
+        mainRepository.initLocalSurfaceView(localSurfaceView!!)
+        mainRepository.initRemoteSurfaceView(remoteSurfaceView!!)
 
         //Caller 가 아닐 경우 Call 시작
         if(!isCaller) {
             Log.d("MainService", "Start Call to $target")
-//            mainRepository.startCall()
+            mainRepository.startCall()
         }
     }
 
@@ -83,8 +83,8 @@ class MainService : Service(), MainRepository.Listener {
 
             //setup my clients
             mainRepository.listener = this
-//            mainRepository.initFirebase()
-//            mainRepository.initWebrtcClient(userid!!)
+            mainRepository.initFirebase()
+            mainRepository.initWebrtcClient(userid!!)
         }
     }
 
