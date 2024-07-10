@@ -43,7 +43,9 @@ import com.example.saybettereducator.ui.theme.DeepDarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.MainGreen_85
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class VideoCallActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

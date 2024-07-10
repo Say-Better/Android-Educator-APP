@@ -58,7 +58,9 @@ import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.theme.montserratFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.ui.videoCall.VideoCallActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
