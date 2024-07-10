@@ -50,7 +50,7 @@ class LoginActivity : ComponentActivity() {
 
     @Inject lateinit var mainRepository : MainRepository
 
-    val testid: String = "helloYI"
+    val testid: String = "testUser1"
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
