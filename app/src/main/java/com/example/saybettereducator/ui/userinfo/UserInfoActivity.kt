@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,15 +24,11 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -67,233 +64,215 @@ class UserInfoActivity : ComponentActivity() {
         UserInfoScreen()
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun UserInfoScreen() {
-        val showPopup = remember { mutableStateOf(false) }
+        val showPopupState = remember { mutableStateOf(false) }
+        val nameState = remember { mutableStateOf("교육자") }
 
         Scaffold(
-            topBar = {
-                Box {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = "Say Better",
-                                fontSize = 16.sp,
-                                fontFamily = FontFamily(montserratFont),
-                                color = MainGreen,
-                                modifier = Modifier
-                                    .padding(start = 34.04.dp, top = 15.29.dp)
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.main_logo),
-                        contentDescription = "main top bar logo",
-                        modifier = Modifier
-                            .padding(start = 16.dp, top = 14.29.dp)
-                    )
-                }
-            },
+            topBar = { TopBar() },
+            bottomBar = { BottomBar() }
+        ) { innerPadding -> MainContent(innerPadding, showPopupState, nameState) }
 
-            bottomBar = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(88.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(16.dp)
-                            .background(
-                                color = Color(0xFF5FD399),
-                                shape = RoundedCornerShape(size = 32.dp)
-                            )
-                    ) {
-                        Text(
-                            text = "다음",
-                            style = TextStyle(
-                                fontSize = 18.sp,
-                                lineHeight = 25.2.sp,
-                                fontFamily = FontFamily(Font(R.font.pretendard_bold)),
-                                color = Color(0xFFFFFFFF),
-                            ),
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        )
-                    }
-                }
-            }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(start = 16.dp, top = 20.dp, end = 16.dp)
-                    .fillMaxWidth()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .padding(bottom = 50.dp)
-                ) {
-                    TitleText()
-                }
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    ProfileImageCard(showPopup)
-                }
-
-                Column(
-                    modifier = Modifier
-                        .padding(top = 50.dp)
-                ) {
-                    NameInputBox()
-                }
-            }
+        if (showPopupState.value) {
+            ProfilePopup(showPopupState)
         }
+    }
 
-        if (showPopup.value) {
-            PopupBox(
-                popupWidth = 328f,
-                popupHeight = 256f,
-                showPopup = showPopup.value,
-                onClickOutside = { showPopup.value = false }
+    @Composable
+    private fun ProfilePopup(showPopupState: MutableState<Boolean>) {
+        PopupBox(
+            popupWidth = 328f,
+            popupHeight = 256f,
+            showPopup = showPopupState.value,
+            onClickOutside = { showPopupState.value = false }
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Box(modifier = Modifier.size(24.dp)) {}
-
-                        Text(
-                            text = "프로필 설정",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                lineHeight = 22.4.sp,
-                                fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                                fontWeight = FontWeight(500),
-                                color = Color(0xFF5B5B5B)
-                            ),
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                        )
-
-                        Image(
-                            painter = painterResource(R.drawable.cancel_button_2),
-                            contentDescription = "cancel button",
-                            contentScale = ContentScale.None,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .align(Alignment.CenterVertically)
-                                .clickable(onClick = { showPopup.value = false }),
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 17.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box(
-                            modifier = Modifier.height(60.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "카메라로 촬영",
-                                style = TextStyle(
-                                    fontSize = 18.sp,
-                                    lineHeight = 25.2.sp,
-                                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                                    fontWeight = FontWeight(500),
-                                    color = Color(0xFF000000),
-                                ),
-                                modifier = Modifier
-                                    .clickable { showPopup.value = false }
-                            )
-                        }
-
-                        Box(
-                            Modifier
-                                .border(
-                                    width = 1.dp,
-                                    color = Color.Black.copy(alpha = 0.3f)
-                                )
-                                .padding(0.5.dp)
-                                .width(280.dp)
-                        ) {}
-
-                        Box(
-                            modifier = Modifier.height(60.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "갤러리에서 선택",
-                                style = TextStyle(
-                                    fontSize = 18.sp,
-                                    lineHeight = 25.2.sp,
-                                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                                    fontWeight = FontWeight(500),
-                                    color = Color(0xFF000000),
-                                ),
-                                modifier = Modifier
-                                    .clickable { showPopup.value = false }
-                            )
-                        }
-
-                        Box(
-                            Modifier
-                                .border(
-                                    width = 1.dp,
-                                    color = Color.Black.copy(alpha = 0.3f)
-                                )
-                                .padding(0.5.dp)
-                                .width(280.dp)
-                        ) {}
-
-                        Box(
-                            modifier = Modifier.height(60.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "기본 이미지 사용",
-                                style = TextStyle(
-                                    fontSize = 18.sp,
-                                    lineHeight = 25.2.sp,
-                                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                                    fontWeight = FontWeight(500),
-                                    color = Color(0xFF000000),
-                                ),
-                                modifier = Modifier
-                                    .clickable { showPopup.value = false }
-                            )
-                        }
-                    }
-                }
+                PopupHeader(showPopupState)
+                PopupOptions(showPopupState)
             }
         }
     }
 
     @Composable
-    private fun NameInputBox(
-        name: String = "교육자"
-    ) {
-        var nameState by remember { mutableStateOf(name) }
+    private fun PopupOptions(showPopupState: MutableState<Boolean>) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 17.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            PopupOptionItem("카메라로 촬영", showPopupState)
+            Divider()
+            PopupOptionItem("갤러리에서 선택", showPopupState)
+            Divider()
+            PopupOptionItem("기본 이미지 사용", showPopupState)
+        }
+    }
 
+    @Composable
+    private fun Divider() {
+        Box(
+            Modifier
+                .border(
+                    width = 1.dp,
+                    color = Color.Black.copy(alpha = 0.3f)
+                )
+                .padding(0.5.dp)
+                .width(280.dp)
+        ) {}
+    }
+
+    @Composable
+    private fun PopupOptionItem(text: String, showPopupState: MutableState<Boolean>) {
+        Box(
+            modifier = Modifier.height(60.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    lineHeight = 25.2.sp,
+                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF000000),
+                ),
+                modifier = Modifier
+                    .clickable { showPopupState.value = false }
+            )
+        }
+    }
+
+    @Composable
+    private fun PopupHeader(showPopupState: MutableState<Boolean>) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(modifier = Modifier.size(24.dp)) {}
+
+            Text(
+                text = "프로필 설정",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    lineHeight = 22.4.sp,
+                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF5B5B5B)
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            )
+
+            Image(
+                painter = painterResource(R.drawable.cancel_button_2),
+                contentDescription = "cancel button",
+                contentScale = ContentScale.None,
+                modifier = Modifier
+                    .size(24.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable(onClick = { showPopupState.value = false }),
+            )
+        }
+    }
+
+    @Composable
+    private fun MainContent(
+        innerPadding: PaddingValues,
+        showPopupState: MutableState<Boolean>,
+        nameState: MutableState<String>
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(start = 16.dp, top = 20.dp, end = 16.dp)
+                .fillMaxWidth()
+        ) {
+            Box(modifier = Modifier.padding(bottom = 50.dp)) {
+                TitleText()
+            }
+
+            Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                ProfileImageCard(showPopupState)
+            }
+
+            Column(modifier = Modifier.padding(top = 50.dp)) {
+                NameInputBox(nameState)
+            }
+        }
+    }
+
+    @Composable
+    private fun BottomBar() {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(88.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(16.dp)
+                    .background(
+                        color = Color(0xFF5FD399),
+                        shape = RoundedCornerShape(size = 32.dp)
+                    )
+            ) {
+                Text(
+                    text = "다음",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        lineHeight = 25.2.sp,
+                        fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+                        color = Color(0xFFFFFFFF),
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+            }
+        }
+    }
+
+    @Composable
+    @OptIn(ExperimentalMaterial3Api::class)
+    private fun TopBar() {
+        Box {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Say Better",
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(montserratFont),
+                        color = MainGreen,
+                        modifier = Modifier
+                            .padding(start = 34.04.dp, top = 15.29.dp)
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.main_logo),
+                contentDescription = "main top bar logo",
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 14.29.dp)
+            )
+        }
+    }
+
+    @Composable
+    private fun NameInputBox(
+        nameState: MutableState<String>
+    ) {
         Text(
             text = "이름",
             style = TextStyle(
@@ -320,8 +299,8 @@ class UserInfoActivity : ComponentActivity() {
                 .height(48.dp)
         ) {
             BasicTextField(
-                value = nameState,
-                onValueChange = { nameState = it },
+                value = nameState.value,
+                onValueChange = { nameState.value = it },
                 textStyle = TextStyle(
                     fontSize = 16.sp,
                     lineHeight = 22.4.sp,
@@ -342,7 +321,7 @@ class UserInfoActivity : ComponentActivity() {
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .align(Alignment.CenterVertically)
-                    .clickable { nameState = "" }
+                    .clickable { nameState.value = "" }
             )
         }
     }
