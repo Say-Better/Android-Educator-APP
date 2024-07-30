@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,7 +21,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -29,6 +29,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -63,6 +65,8 @@ class UserInfoActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun UserInfoScreen() {
+        val showPopup = remember { mutableStateOf(false) }
+
         Scaffold(
             topBar = {
                 Box {
@@ -138,7 +142,7 @@ class UserInfoActivity : ComponentActivity() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                 ) {
-                    ProfileImageCard()
+                    ProfileImageCard(showPopup)
                 }
 
                 Column(
@@ -198,6 +202,134 @@ class UserInfoActivity : ComponentActivity() {
                 }
             }
         }
+
+        if (showPopup.value) {
+            PopupBox(
+                popupWidth = 328f,
+                popupHeight = 256f,
+                showPopup = showPopup.value,
+                onClickOutside = { showPopup.value = false }
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(modifier = Modifier.size(24.dp)) {}
+
+                        Text(
+                            text = "프로필 설정",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                lineHeight = 22.4.sp,
+                                fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                                fontWeight = FontWeight(500),
+                                color = Color(0xFF5B5B5B)
+                            ),
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                        )
+
+                        Image(
+                            painter = painterResource(R.drawable.cancel_button_2),
+                            contentDescription = "cancel button",
+                            contentScale = ContentScale.None,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .align(Alignment.CenterVertically)
+                                .clickable(onClick = { showPopup.value = false }),
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 17.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier.height(60.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "카메라로 촬영",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 25.2.sp,
+                                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                                    fontWeight = FontWeight(500),
+                                    color = Color(0xFF000000),
+                                ),
+                                modifier = Modifier
+                                    .clickable { showPopup.value = false }
+                            )
+                        }
+
+                        Box(
+                            Modifier
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.Black.copy(alpha = 0.3f)
+                                )
+                                .padding(0.5.dp)
+                                .width(280.dp)
+                        ) {}
+
+                        Box(
+                            modifier = Modifier.height(60.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "갤러리에서 선택",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 25.2.sp,
+                                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                                    fontWeight = FontWeight(500),
+                                    color = Color(0xFF000000),
+                                ),
+                                modifier = Modifier
+                                    .clickable { showPopup.value = false }
+                            )
+                        }
+
+                        Box(
+                            Modifier
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.Black.copy(alpha = 0.3f)
+                                )
+                                .padding(0.5.dp)
+                                .width(280.dp)
+                        ) {}
+
+                        Box(
+                            modifier = Modifier.height(60.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "기본 이미지 사용",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    lineHeight = 25.2.sp,
+                                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                                    fontWeight = FontWeight(500),
+                                    color = Color(0xFF000000),
+                                ),
+                                modifier = Modifier
+                                    .clickable { showPopup.value = false }
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Composable
@@ -235,11 +367,7 @@ class UserInfoActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ProfileImageCard() {
-        val showInputPopup = remember {
-            mutableStateOf(false)
-        }
-
+    fun ProfileImageCard(showInputPopup: MutableState<Boolean>) {
         Box(
             modifier = Modifier
                 .padding(0.dp)
@@ -270,31 +398,44 @@ class UserInfoActivity : ComponentActivity() {
                     .clip(RoundedCornerShape(50))
                     .clickable { showInputPopup.value = true }
             )
-
-            if (showInputPopup.value) {
-                ProfileInputPopup(showInputPopup)
-            }
         }
 
     }
 
     @Composable
-    private fun ProfileInputPopup(showInputPopup: MutableState<Boolean>) {
-        Popup(
-            alignment = Alignment.Center,
-            onDismissRequest = { showInputPopup.value = false }
-        ) {
-            Surface(
+    private fun PopupBox(
+        popupWidth: Float,
+        popupHeight: Float,
+        popupRadius: Float = 16f,
+        backgroundColor: Color = Color.White,
+        showPopup: Boolean,
+        onClickOutside: () -> Unit,
+        content: @Composable () -> Unit
+    ) {
+        if (showPopup) {
+            Box(
                 modifier = Modifier
-                    .size(200.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                color = Color.White
+                    .fillMaxSize()
+                    .background(color = Color.Black.copy(alpha = 0.2f))
+                    .blur(
+                        radius = 10.dp,
+                        edgeTreatment = BlurredEdgeTreatment(RoundedCornerShape(8.dp))
+                    )
             ) {
-                // Popup content goes here
-                Box(
-                    modifier = Modifier.padding(16.dp)
+                Popup(
+                    alignment = Alignment.Center,
+                    onDismissRequest = { onClickOutside() },
                 ) {
-                    Text(text = "Popup Content")
+                    Box(
+                        modifier = Modifier
+                            .width(popupWidth.dp)
+                            .height(popupHeight.dp)
+                            .background(backgroundColor, shape = RoundedCornerShape(popupRadius.dp))
+                            .clip(RoundedCornerShape(popupRadius.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        content()
+                    }
                 }
             }
         }
