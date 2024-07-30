@@ -19,14 +19,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -149,56 +154,7 @@ class UserInfoActivity : ComponentActivity() {
                     modifier = Modifier
                         .padding(top = 50.dp)
                 ) {
-                    Text(
-                        text = "이름",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 18.2.sp,
-                            fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF5B5B5B),
-                        ),
-                        modifier = Modifier
-                            .padding(bottom = 12.dp)
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .border(
-                                width = 1.dp,
-                                color = Color(0xFF5B5B5B),
-                                shape = RoundedCornerShape(size = 12.dp)
-                            )
-                            .background(
-                                color = Color(0xFFFFFFFF),
-                                shape = RoundedCornerShape(size = 12.dp)
-                            )
-                            .fillMaxWidth()
-                            .height(48.dp)
-                    ) {
-                        Text(
-                            text = "교육자",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                lineHeight = 22.4.sp,
-                                fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                                color = colorResource(R.color.black),
-                            ),
-                            modifier = Modifier
-                                .padding(start = 16.dp)
-                        )
-
-                        Image(
-                            painter = painterResource(id = R.drawable.cancel_button),
-                            contentDescription = "cancell button",
-                            contentScale = ContentScale.None,
-                            modifier = Modifier
-                                .padding(end = 16.dp)
-                                .align(Alignment.CenterVertically)
-                        )
-                    }
+                    NameInputBox()
                 }
             }
         }
@@ -329,6 +285,65 @@ class UserInfoActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun NameInputBox(
+        name: String = "교육자"
+    ) {
+        var nameState by remember { mutableStateOf(name) }
+
+        Text(
+            text = "이름",
+            style = TextStyle(
+                fontSize = 14.sp,
+                lineHeight = 18.2.sp,
+                fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                fontWeight = FontWeight(500),
+                color = Color(0xFF5B5B5B),
+            ),
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = Color.Black.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(size = 12.dp)
+                )
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
+            BasicTextField(
+                value = nameState,
+                onValueChange = { nameState = it },
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    lineHeight = 22.4.sp,
+                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
+                    color = colorResource(R.color.black),
+                ),
+                singleLine = true,
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f),
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.cancel_button),
+                contentDescription = "cancell button",
+                contentScale = ContentScale.None,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable { nameState = "" }
+            )
         }
     }
 
