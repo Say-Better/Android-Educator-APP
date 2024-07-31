@@ -72,4 +72,6 @@ dependencies {
 
     // 바텀네비 종속성
     implementation("androidx.navigation:navigation-compose:2.7.4")
+
+    implementation("io.coil-kt:coil-compose:2.1.0")
 }
