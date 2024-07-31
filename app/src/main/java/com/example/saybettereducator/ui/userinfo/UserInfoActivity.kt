@@ -1,8 +1,14 @@
 package com.example.saybettereducator.ui.userinfo
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,6 +48,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import coil.compose.rememberAsyncImagePainter
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Black
 import com.example.saybettereducator.ui.theme.Gray
@@ -50,30 +59,85 @@ import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.PretendardTypography
 import com.example.saybettereducator.ui.theme.White
 import com.example.saybettereducator.ui.theme.montserratFont
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class UserInfoActivity : ComponentActivity() {
+    private lateinit var currentPhotoPath: String
+    private lateinit var photoUri: Uri
+
+    private val takePictureLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                profileImageUri.value = photoUri
+            }
+        }
+
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                profileImageUri.value = it
+            }
+        }
+
+    private val profileImageUri = mutableStateOf<Uri?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            UserInfoScreen()
+            UserInfoScreen(profileImageUri)
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(packageManager) != null) {
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (ex: IOException) {
+                null
+            }
+            photoFile?.also {
+                photoUri = FileProvider.getUriForFile(
+                    this,
+                    "com.example.saybettereducator.fileprovider",
+                    it
+                )
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                takePictureLauncher.launch(photoUri)
+            }
+        }
+    }
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = getExternalFilesDir(null)!!
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
         }
     }
 
     @Preview(showBackground = true, widthDp = 360, heightDp = 800)
     @Composable
     fun UserInfoScreenPreview() {
-        UserInfoScreen()
+        UserInfoScreen(profileImageUri)
     }
 
     @Composable
-    fun UserInfoScreen() {
+    fun UserInfoScreen(profileImageUri: MutableState<Uri?>) {
         val showPopupState = remember { mutableStateOf(false) }
         val nameState = remember { mutableStateOf("교육자") }
 
         Scaffold(
             topBar = { TopBar() },
             bottomBar = { BottomBar() }
-        ) { innerPadding -> MainContent(innerPadding, showPopupState, nameState) }
+        ) { innerPadding -> MainContent(innerPadding, showPopupState, nameState, profileImageUri) }
 
         if (showPopupState.value) {
             ProfilePopup(showPopupState)
@@ -108,11 +172,27 @@ class UserInfoActivity : ComponentActivity() {
                 .padding(top = 17.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PopupOptionItem("카메라로 촬영", showPopupState)
+            PopupOptionItem("카메라로 촬영", showPopupState) {
+                if (ContextCompat.checkSelfPermission(
+                        this@UserInfoActivity,
+                        Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    dispatchTakePictureIntent()
+                } else {
+                    requestPermissions(arrayOf(Manifest.permission.CAMERA), 1)
+                }
+            }
             Divider()
-            PopupOptionItem("갤러리에서 선택", showPopupState)
+            PopupOptionItem("갤러리에서 선택", showPopupState) {
+                pickImageLauncher.launch("image/*")
+            }
             Divider()
-            PopupOptionItem("기본 이미지 사용", showPopupState)
+            PopupOptionItem("기본 이미지 사용", showPopupState) {
+                profileImageUri.value =
+                    Uri.parse("android.resource://com.example.saybettereducator/drawable/educator_profile")
+                showPopupState.value = false
+            }
         }
     }
 
@@ -130,7 +210,11 @@ class UserInfoActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun PopupOptionItem(text: String, showPopupState: MutableState<Boolean>) {
+    private fun PopupOptionItem(
+        text: String,
+        showPopupState: MutableState<Boolean>,
+        onClick: () -> Unit
+    ) {
         Box(
             modifier = Modifier.height(60.dp),
             contentAlignment = Alignment.Center
@@ -139,7 +223,10 @@ class UserInfoActivity : ComponentActivity() {
                 text = text,
                 style = PretendardTypography.bodyLarge.copy(Black),
                 modifier = Modifier
-                    .clickable { showPopupState.value = false }
+                    .clickable {
+                        onClick()
+                        showPopupState.value = false
+                    }
             )
         }
     }
@@ -176,7 +263,8 @@ class UserInfoActivity : ComponentActivity() {
     private fun MainContent(
         innerPadding: PaddingValues,
         showPopupState: MutableState<Boolean>,
-        nameState: MutableState<String>
+        nameState: MutableState<String>,
+        profileImageUri: MutableState<Uri?>
     ) {
         Column(
             modifier = Modifier
@@ -189,7 +277,7 @@ class UserInfoActivity : ComponentActivity() {
             }
 
             Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                ProfileImageCard(showPopupState)
+                ProfileImageCard(showPopupState, profileImageUri)
             }
 
             Column(modifier = Modifier.padding(top = 50.dp)) {
@@ -327,13 +415,30 @@ class UserInfoActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ProfileImageCard(showInputPopup: MutableState<Boolean>) {
+    fun ProfileImageCard(
+        showInputPopup: MutableState<Boolean>,
+        profileImageUri: MutableState<Uri?>
+    ) {
         Box(
             modifier = Modifier
                 .padding(0.dp)
                 .size(176.dp)
         ) {
-            Image(
+            profileImageUri.value?.let { uri ->
+                Image(
+                    painter = rememberAsyncImagePainter(uri),
+                    contentDescription = "Profile Image",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = GrayW40,
+                            shape = RoundedCornerShape(size = 24.dp)
+                        )
+                        .size(160.dp)
+                        .clip(RoundedCornerShape(size = 24.dp))
+                )
+            } ?: Image(
                 painter = painterResource(id = R.drawable.educator_profile),
                 contentDescription = "Educator Profile Image",
                 contentScale = ContentScale.FillBounds,
