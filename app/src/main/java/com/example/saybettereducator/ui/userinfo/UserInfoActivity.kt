@@ -44,10 +44,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Black
-import com.example.saybettereducator.ui.theme.BoxBackground
 import com.example.saybettereducator.ui.theme.Gray
 import com.example.saybettereducator.ui.theme.GrayW40
-import com.example.saybettereducator.ui.theme.GrayW70
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.PretendardTypography
 import com.example.saybettereducator.ui.theme.White
@@ -124,7 +122,7 @@ class UserInfoActivity : ComponentActivity() {
             Modifier
                 .border(
                     width = 1.dp,
-                    color = GrayW70
+                    color = Color.Black.copy(alpha = 0.3f)
                 )
                 .padding(0.5.dp)
                 .width(280.dp)
@@ -369,7 +367,7 @@ class UserInfoActivity : ComponentActivity() {
         popupWidth: Float,
         popupHeight: Float,
         popupRadius: Float = 16f,
-        backgroundColor: Color = BoxBackground,
+        backgroundColor: Color = White,
         showPopup: Boolean,
         onClickOutside: () -> Unit,
         content: @Composable () -> Unit
