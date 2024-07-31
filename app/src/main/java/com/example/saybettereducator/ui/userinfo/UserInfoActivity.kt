@@ -36,12 +36,8 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,10 +46,11 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Black
 import com.example.saybettereducator.ui.theme.BoxBackground
 import com.example.saybettereducator.ui.theme.Gray
-import com.example.saybettereducator.ui.theme.Gray100
+import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.GrayW70
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.PretendardTypography
+import com.example.saybettereducator.ui.theme.White
 import com.example.saybettereducator.ui.theme.montserratFont
 
 class UserInfoActivity : ComponentActivity() {
@@ -142,13 +139,7 @@ class UserInfoActivity : ComponentActivity() {
         ) {
             Text(
                 text = text,
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    lineHeight = 25.2.sp,
-                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                    fontWeight = FontWeight(500),
-                    color = Black,
-                ),
+                style = PretendardTypography.bodyLarge.copy(Black),
                 modifier = Modifier
                     .clickable { showPopupState.value = false }
             )
@@ -166,13 +157,7 @@ class UserInfoActivity : ComponentActivity() {
 
             Text(
                 text = "프로필 설정",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 22.4.sp,
-                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                    fontWeight = FontWeight(500),
-                    color = Color(0xFF5B5B5B)
-                ),
+                style = PretendardTypography.headlineMedium.copy(Gray),
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
             )
@@ -234,12 +219,7 @@ class UserInfoActivity : ComponentActivity() {
             ) {
                 Text(
                     text = "다음",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        lineHeight = 25.2.sp,
-                        fontFamily = FontFamily(Font(R.font.pretendard_bold)),
-                        color = BoxBackground,
-                    ),
+                    style = PretendardTypography.buttonLarge.copy(White),
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
@@ -281,13 +261,7 @@ class UserInfoActivity : ComponentActivity() {
     ) {
         Text(
             text = "이름",
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 18.2.sp,
-                fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                fontWeight = FontWeight(500),
-                color = Gray,
-            ),
+            style = PretendardTypography.bodySmall.copy(Gray),
             modifier = Modifier
                 .padding(bottom = 12.dp)
         )
@@ -307,12 +281,7 @@ class UserInfoActivity : ComponentActivity() {
             BasicTextField(
                 value = nameState.value,
                 onValueChange = { nameState.value = it },
-                textStyle = TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 22.4.sp,
-                    fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                    color = Black,
-                ),
+                textStyle = PretendardTypography.bodyMedium.copy(Black),
                 singleLine = true,
                 maxLines = 1,
                 modifier = Modifier
@@ -343,9 +312,7 @@ class UserInfoActivity : ComponentActivity() {
         ) {
             Text(
                 text = "로그인에 성공했어요!",
-                fontSize = 18.sp,
-                lineHeight = 25.2.sp,
-                fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+                style = PretendardTypography.headlineMedium.copy(Black),
                 modifier = Modifier
                     .width(150.dp)
                     .height(24.dp)
@@ -353,7 +320,7 @@ class UserInfoActivity : ComponentActivity() {
 
             Text(
                 text = "시작하기 전 기본 설정이 필요해요.",
-                style = PretendardTypography.bodyLarge,
+                style = PretendardTypography.bodySmall.copy(GrayW40),
                 modifier = Modifier
                     .width(187.dp)
                     .height(18.dp)
@@ -375,7 +342,7 @@ class UserInfoActivity : ComponentActivity() {
                 modifier = Modifier
                     .border(
                         width = 1.dp,
-                        color = Gray100,
+                        color = GrayW40,
                         shape = RoundedCornerShape(size = 24.dp)
                     )
                     .size(160.dp)
