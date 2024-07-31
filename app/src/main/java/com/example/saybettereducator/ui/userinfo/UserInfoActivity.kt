@@ -47,6 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.theme.Black
+import com.example.saybettereducator.ui.theme.BoxBackground
+import com.example.saybettereducator.ui.theme.Gray
+import com.example.saybettereducator.ui.theme.GrayW70
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.montserratFont
 
@@ -121,7 +125,7 @@ class UserInfoActivity : ComponentActivity() {
             Modifier
                 .border(
                     width = 1.dp,
-                    color = Color.Black.copy(alpha = 0.3f)
+                    color = GrayW70
                 )
                 .padding(0.5.dp)
                 .width(280.dp)
@@ -141,7 +145,7 @@ class UserInfoActivity : ComponentActivity() {
                     lineHeight = 25.2.sp,
                     fontFamily = FontFamily(Font(R.font.pretendard_medium)),
                     fontWeight = FontWeight(500),
-                    color = Color(0xFF000000),
+                    color = Black,
                 ),
                 modifier = Modifier
                     .clickable { showPopupState.value = false }
@@ -222,7 +226,7 @@ class UserInfoActivity : ComponentActivity() {
                     .fillMaxHeight()
                     .padding(16.dp)
                     .background(
-                        color = Color(0xFF5FD399),
+                        color = MainGreen,
                         shape = RoundedCornerShape(size = 32.dp)
                     )
             ) {
@@ -232,7 +236,7 @@ class UserInfoActivity : ComponentActivity() {
                         fontSize = 18.sp,
                         lineHeight = 25.2.sp,
                         fontFamily = FontFamily(Font(R.font.pretendard_bold)),
-                        color = Color(0xFFFFFFFF),
+                        color = BoxBackground,
                     ),
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -280,7 +284,7 @@ class UserInfoActivity : ComponentActivity() {
                 lineHeight = 18.2.sp,
                 fontFamily = FontFamily(Font(R.font.pretendard_medium)),
                 fontWeight = FontWeight(500),
-                color = Color(0xFF5B5B5B),
+                color = Gray,
             ),
             modifier = Modifier
                 .padding(bottom = 12.dp)
@@ -292,7 +296,7 @@ class UserInfoActivity : ComponentActivity() {
             modifier = Modifier
                 .border(
                     width = 1.dp,
-                    color = Color.Black.copy(alpha = 0.3f),
+                    color = Black,
                     shape = RoundedCornerShape(size = 12.dp)
                 )
                 .fillMaxWidth()
@@ -351,7 +355,7 @@ class UserInfoActivity : ComponentActivity() {
                     fontSize = 14.sp,
                     lineHeight = 18.2.sp,
                     fontFamily = FontFamily(Font(R.font.pretendard_medium)),
-                    color = Color(0xFF5B5B5B),
+                    color = Gray,
                 ),
                 modifier = Modifier
                     .width(187.dp)
@@ -401,7 +405,7 @@ class UserInfoActivity : ComponentActivity() {
         popupWidth: Float,
         popupHeight: Float,
         popupRadius: Float = 16f,
-        backgroundColor: Color = Color.White,
+        backgroundColor: Color = BoxBackground,
         showPopup: Boolean,
         onClickOutside: () -> Unit,
         content: @Composable () -> Unit
@@ -410,7 +414,7 @@ class UserInfoActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color.Black.copy(alpha = 0.2f))
+                    .background(color = Black.copy(alpha = 0.2f))
                     .blur(
                         radius = 10.dp,
                         edgeTreatment = BlurredEdgeTreatment(RoundedCornerShape(8.dp))
