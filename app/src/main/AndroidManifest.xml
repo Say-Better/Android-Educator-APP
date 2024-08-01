@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    
+    <!-- Add these Features -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <!-- Add these Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +22,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SaybetterEducator"
         tools:targetApi="31">
+
+        <provider
+            android:authorities="com.example.saybettereducator.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
@@ -27,7 +48,17 @@
 
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.videoCall.VideoCallActivity"/>
+        <activity android:name=".ui.videoCall.VideoCallActivity" />
+
+        <activity
+            android:name=".ui.userinfo.UserInfoActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

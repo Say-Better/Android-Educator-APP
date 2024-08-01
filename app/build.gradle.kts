@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -71,4 +72,6 @@ dependencies {
 
     // 바텀네비 종속성
     implementation("androidx.navigation:navigation-compose:2.7.4")
+
+    implementation("io.coil-kt:coil-compose:2.1.0")
 }
