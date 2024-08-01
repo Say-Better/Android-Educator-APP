@@ -37,6 +37,7 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.MainActivity
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
+import com.example.saybettereducator.ui.userinfo.UserInfoActivity
 
 class LoginActivity : ComponentActivity() {
 
@@ -109,7 +110,7 @@ class LoginActivity : ComponentActivity() {
                 .background(Color.White)
                 .clickable{
                     finish()
-                    intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    intent = Intent(this@LoginActivity, UserInfoActivity::class.java)
                     startActivity(intent)
                 }
         ) {

@@ -56,6 +56,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.MainActivity
 import com.example.saybettereducator.ui.theme.Black
 import com.example.saybettereducator.ui.theme.Gray
 import com.example.saybettereducator.ui.theme.GrayW40
@@ -94,7 +95,11 @@ class UserInfoActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(navController, startDestination = "userInfoScreen") {
                 composable("userInfoScreen") { UserInfoScreen(navController, profileImageUri) }
-                composable("loginSuccessScreen") { LoginSuccessScreen(navController) }
+                composable("loginSuccessScreen") { LoginSuccessScreen(navController){
+                    intent = Intent(this@UserInfoActivity, MainActivity::class.java)
+                    intent.putExtra("userid", "testUser")
+                    startActivity(intent)
+                } }
             }
         }
     }
@@ -146,10 +151,13 @@ class UserInfoActivity : ComponentActivity() {
     }
 
     @Composable
-    fun LoginSuccessScreen(navController: NavController) {
+    fun LoginSuccessScreen(
+        navController: NavController,
+        goMainActivity: (() -> Unit)? = null
+    ) {
         Scaffold(
             topBar = { TopBar() },
-            bottomBar = { BottomBar(navController, "null", "시작하기") }
+            bottomBar = { BottomBar(navController, "null", "시작하기", goMainActivity) }
         ) { innerPadding -> LoginSuccessContent(innerPadding) }
     }
 
@@ -358,6 +366,7 @@ class UserInfoActivity : ComponentActivity() {
         navController: NavController,
         route: String,
         text: String,
+        goMainActivity: (() -> Unit)? = null
     ) {
         Column(
             modifier = Modifier
@@ -373,7 +382,10 @@ class UserInfoActivity : ComponentActivity() {
                         color = MainGreen,
                         shape = RoundedCornerShape(size = 32.dp)
                     )
-                    .clickable { navController.navigate(route) }
+                    .clickable {
+                        if(goMainActivity == null) { navController.navigate(route) }
+                        else { goMainActivity() }
+                    }
             ) {
                 Text(
                     text = text,
