@@ -50,6 +50,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Black
@@ -87,7 +91,11 @@ class UserInfoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            UserInfoScreen(profileImageUri)
+            val navController = rememberNavController()
+            NavHost(navController, startDestination = "userInfoScreen") {
+                composable("userInfoScreen") { UserInfoScreen(navController, profileImageUri) }
+                composable("loginSuccessScreen") { LoginSuccessScreen(navController) }
+            }
         }
     }
 
@@ -126,18 +134,74 @@ class UserInfoActivity : ComponentActivity() {
     @Preview(showBackground = true, widthDp = 360, heightDp = 800)
     @Composable
     fun UserInfoScreenPreview() {
-        UserInfoScreen(profileImageUri)
+        val navController = rememberNavController()
+        UserInfoScreen(navController, profileImageUri)
+    }
+
+    @Preview(showBackground = true, widthDp = 360, heightDp = 800)
+    @Composable
+    fun LoginSuccessScreenPreview() {
+        val navController = rememberNavController()
+        LoginSuccessScreen(navController)
     }
 
     @Composable
-    fun UserInfoScreen(profileImageUri: MutableState<Uri?>) {
+    fun LoginSuccessScreen(navController: NavController) {
+        Scaffold(
+            topBar = { TopBar() },
+            bottomBar = { BottomBar(navController, "null", "시작하기") }
+        ) { innerPadding -> LoginSuccessContent(innerPadding) }
+    }
+
+    @Composable
+    private fun LoginSuccessContent(innerPadding: PaddingValues) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(start = 16.dp, top = 20.dp, end = 16.dp)
+                .fillMaxWidth()
+        ) {
+            Box(modifier = Modifier.padding(bottom = 24.dp)) {
+                TitleText(
+                    title = "모든 준비가 완료되었어요.",
+                    subtitle = "원활한 앱 사용을 위해 앱 내 권한을 허용해주세요."
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.login_illust_educator),
+                    contentDescription = "Login Illustration",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(480.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun UserInfoScreen(navController: NavController, profileImageUri: MutableState<Uri?>) {
         val showPopupState = remember { mutableStateOf(false) }
         val nameState = remember { mutableStateOf("교육자") }
 
         Scaffold(
             topBar = { TopBar() },
-            bottomBar = { BottomBar() }
-        ) { innerPadding -> MainContent(innerPadding, showPopupState, nameState, profileImageUri) }
+            bottomBar = { BottomBar(navController, "loginSuccessScreen", "다음") }
+        ) { innerPadding ->
+            MainContent(
+                innerPadding,
+                showPopupState,
+                nameState,
+                profileImageUri
+            )
+        }
 
         if (showPopupState.value) {
             ProfilePopup(showPopupState)
@@ -273,7 +337,10 @@ class UserInfoActivity : ComponentActivity() {
                 .fillMaxWidth()
         ) {
             Box(modifier = Modifier.padding(bottom = 50.dp)) {
-                TitleText()
+                TitleText(
+                    title = "로그인에 성공했어요!",
+                    subtitle = "시작하기 전 기본 설정이 필요해요."
+                )
             }
 
             Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
@@ -287,7 +354,11 @@ class UserInfoActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun BottomBar() {
+    private fun BottomBar(
+        navController: NavController,
+        route: String,
+        text: String,
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -302,9 +373,10 @@ class UserInfoActivity : ComponentActivity() {
                         color = MainGreen,
                         shape = RoundedCornerShape(size = 32.dp)
                     )
+                    .clickable { navController.navigate(route) }
             ) {
                 Text(
-                    text = "다음",
+                    text = text,
                     style = PretendardTypography.buttonLarge.copy(White),
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -388,28 +460,20 @@ class UserInfoActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun TitleText() {
+    private fun TitleText(title: String, subtitle: String) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
-            modifier = Modifier
-                .width(187.dp)
-                .height(47.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "로그인에 성공했어요!",
+                text = title,
                 style = PretendardTypography.headlineMedium.copy(Black),
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(24.dp)
             )
 
             Text(
-                text = "시작하기 전 기본 설정이 필요해요.",
+                text = subtitle,
                 style = PretendardTypography.bodySmall.copy(GrayW40),
-                modifier = Modifier
-                    .width(187.dp)
-                    .height(18.dp)
             )
         }
     }
@@ -495,7 +559,10 @@ class UserInfoActivity : ComponentActivity() {
                         modifier = Modifier
                             .width(popupWidth.dp)
                             .height(popupHeight.dp)
-                            .background(backgroundColor, shape = RoundedCornerShape(popupRadius.dp))
+                            .background(
+                                backgroundColor,
+                                shape = RoundedCornerShape(popupRadius.dp)
+                            )
                             .clip(RoundedCornerShape(popupRadius.dp)),
                         contentAlignment = Alignment.Center
                     ) {
