@@ -30,7 +30,7 @@ class MainService : Service(), MainRepository.Listener {
 
     companion object {
         var listener : CallEventListener? = null
-        //        var endCallListener : EndCallListener? = null
+        var endCallListener : EndCallListener? = null
         var localSurfaceView : SurfaceViewRenderer? = null
         var remoteSurfaceView : SurfaceViewRenderer? = null
     }
@@ -115,12 +115,23 @@ class MainService : Service(), MainRepository.Listener {
     }
 
     override fun endCall() {
-
+        //remote peer로부터 통화 종료 신호를 받은 경우
+        endCallAndRestartRepository()
     }
 
     //MainActivity에서 구현됨
     interface CallEventListener {
         fun onCallReceived(model: DataModel)
+    }
+
+    private fun endCallAndRestartRepository() {
+        mainRepository.endCall()
+        endCallListener?.onCallEnded()
+        mainRepository.initWebrtcClient(userid!!)
+    }
+
+    interface EndCallListener {
+        fun onCallEnded()
     }
 
 

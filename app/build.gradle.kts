@@ -2,14 +2,13 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
+    id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
 
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
 
-    //Hilt 종속성 추가
-    kotlin("kapt")
-    id("com.google.dagger.hilt.android")
+
 }
 
 android {

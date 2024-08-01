@@ -1,6 +1,8 @@
 package com.example.saybettereducator.utils.webrtc.webrtcClient
 
 import android.content.Context
+import android.view.ViewGroup
+import androidx.compose.ui.unit.dp
 import com.example.saybettereducator.model.remote.dto.DataModel
 import com.example.saybettereducator.model.remote.dto.DataModelType
 import com.google.gson.Gson
@@ -19,14 +21,14 @@ import org.webrtc.SessionDescription
 import org.webrtc.SurfaceTextureHelper
 import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoTrack
-import java.lang.IllegalStateException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 @Singleton
 class WebRTCClient @Inject constructor(
-    private val context : Context,
-    private val gson : Gson
+    private val context: Context,
+    private val gson: Gson,
 ) {
     // class variables
     var listener: Listener? = null
@@ -49,6 +51,8 @@ class WebRTCClient @Inject constructor(
         mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
         mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
     }
+    var isLocalViewInit = false
+    var isRemoteViewInit = false
 
     // call variables
     private lateinit var localSurfaceView : SurfaceViewRenderer
@@ -84,7 +88,7 @@ class WebRTCClient @Inject constructor(
             }).createPeerConnectionFactory()
     }
     fun initializeWebrtcClient(
-        userid: String, observer: PeerConnection.Observer
+        userid: String, observer: PeerConnection.Observer,
     ){
         this.userid = userid
         localTrackId = "${userid}_track"
@@ -194,16 +198,23 @@ class WebRTCClient @Inject constructor(
             setMirror(false)
             setEnableHardwareScaler(true)
             init(eglBaseContext, null)
+
+            val params: ViewGroup.LayoutParams = view.layoutParams
+            params.width = 328
+            params.height = 196
+            view.setLay
         }
     }
     fun initRemoteSurfaceView(view : SurfaceViewRenderer) {
         this.remoteSurfaceView = view
         initSurfaceView(view)
+        this.isRemoteViewInit = true
     }
     fun initLocalSurfaceView(localView: SurfaceViewRenderer) {
         this.localSurfaceView = localView
         initSurfaceView(localView)
         startLocalStreaming(localView)
+        this.isLocalViewInit = true
     }
     private fun startLocalStreaming(localView: SurfaceViewRenderer) {
         localStream = peerConnectionFactory.createLocalMediaStream(localStreamId)

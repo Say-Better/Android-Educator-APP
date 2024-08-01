@@ -38,4 +38,18 @@ class MainServiceRepository @Inject constructor(
         context.startForegroundService(intent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun sendEndCall() {
+        val intent = Intent(context, MainService::class.java)
+        intent.action = MainServiceActions.END_CALL.name
+        startServiceIntent(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun switchCamera() {
+        val intent = Intent(context, MainService::class.java)
+        intent.action = MainServiceActions.SWITCH_CAMERA.name
+        startServiceIntent(intent)
+    }
+
 }
