@@ -1,10 +1,15 @@
 package com.example.saybettereducator.ui
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,12 +36,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +56,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
+import com.example.saybettereducator.model.remote.dto.DataModel
 import com.example.saybettereducator.ui.calendar.CalendarScreen
 import com.example.saybettereducator.ui.home.HomeScreen
 import com.example.saybettereducator.ui.learner.LearnerScreen
@@ -58,13 +67,53 @@ import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.theme.montserratFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.ui.videoCall.VideoCallActivity
+import com.example.saybettereducator.utils.permission.checkAndRequestPermissions
+import com.example.saybettereducator.utils.webrtc.repository.MainRepository
+import com.example.saybettereducator.utils.webrtc.service.MainService
+import com.example.saybettereducator.utils.webrtc.service.MainServiceRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity : ComponentActivity(), MainService.CallEventListener {
+
+    data class TestDialogState(
+        val isClick : Boolean = false,
+        val onClickSure: () -> Unit = {},
+        val onClickCancel: () -> Unit = {},
+    )
+
+    private val customAlertDialogState = mutableStateOf(TestDialogState())
+
+    private var userid : String? = null
+    private var currentReceivedModel: DataModel? = null
+    private val testUser: String = "helloYI"
+
+    //Hilt 의존성 주입
+    @Inject lateinit var mainRepository : MainRepository
+    @Inject lateinit var mainServiceRepository : MainServiceRepository
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MainScreen()
         }
+        init()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun init(){
+        userid = intent.getStringExtra("userid")
+        if(userid == null) finish()
+
+        MainService.listener = this
+        startMyService()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun startMyService() {
+        mainServiceRepository.startService(userid!!)
     }
 
     @Preview(widthDp = 360, heightDp = 800)
@@ -78,12 +127,37 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainScreen() {
-        val scrollState = rememberScrollState()
         val navController = rememberNavController()
 
         // currentRoute 값 추출
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
+
+        var isCaller: Boolean? = null
+
+        val context = LocalContext.current
+
+        /** 요청할 권한 **/
+        val permissions = arrayOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA
+        )
+
+        val launcherMultiplePermissions = rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissionsMap ->
+            val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
+            /** 권한 요청시 동의 했을 경우 **/
+            if (areGranted) {
+                Log.d("test5", "권한이 동의되었습니다.")
+                resetDialogState(customAlertDialogState)
+//                StartVideoCall(testUser, isCaller!!)
+            }
+            /** 권한 요청시 거부 했을 경우 **/
+            else {
+                Log.d("test5", "권한이 거부되었습니다.")
+            }
+        }
 
         Scaffold(
             topBar = {
@@ -211,14 +285,36 @@ class MainActivity : ComponentActivity() {
                 composable("home") {
                     HomeScreen(
                         onClickSolution = {
-                            intent = Intent(this@MainActivity, VideoCallActivity::class.java)
-                            startActivity(intent)
+                            isCaller = true
+                            checkAndRequestPermissions(
+                                context,
+                                permissions,
+                                launcherMultiplePermissions,
+                                onPermissionsGranted = {    //권한이 이미 다 있을 때
+                                    Log.d("permission", "Permission Granted, Go VideoCall!")
+                                    StartVideoCall(testUser, isCaller!!)
+                                }
+                            )
                         }
                     )
                 }
                 composable("learner") { LearnerScreen() }
                 composable("solution") { SolutionScreen() }
                 composable("calendar") { CalendarScreen() }
+            }
+        }
+    }
+
+    //Video call 클릭되었을 때
+    private fun StartVideoCall(targetUserid : String, isCaller: Boolean) {
+        mainRepository.sendConnectionRequest(targetUserid) {
+            if(it) {
+                //videocall 시작해야함
+                //educator 되면 수정
+                intent = Intent(this@MainActivity, VideoCallActivity::class.java)
+                intent.putExtra("target", targetUserid)
+                intent.putExtra("isCaller", isCaller)
+                startActivity(intent)
             }
         }
     }
@@ -243,5 +339,14 @@ class MainActivity : ComponentActivity() {
                     .align(Alignment.CenterVertically)
             )
         }
+    }
+
+    override fun onCallReceived(model: DataModel) {
+        Log.d("MainService", "call receive by ${model.sender}")
+        this.currentReceivedModel = model
+    }
+
+    fun resetDialogState(state: MutableState<TestDialogState>) {
+        state.value = TestDialogState()
     }
 }
