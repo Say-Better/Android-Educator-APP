@@ -44,6 +44,7 @@ import com.example.saybettereducator.utils.customClick.CustomClickEvent
 import com.example.saybettereducator.utils.webrtc.repository.MainRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import com.example.saybettereducator.ui.userinfo.UserInfoActivity
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
@@ -138,10 +139,11 @@ class LoginActivity : ComponentActivity() {
                 .fillMaxWidth()
                 .border((1.5).dp, Color.Black, RoundedCornerShape(100.dp))
                 .background(Color.White)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = CustomClickEvent
-                ) { login() }
+                .clickable{
+                    finish()
+                    intent = Intent(this@LoginActivity, UserInfoActivity::class.java)
+                    startActivity(intent)
+                }
         ) {
             Row(
                 modifier = Modifier

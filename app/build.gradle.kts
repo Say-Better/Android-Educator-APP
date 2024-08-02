@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.firebase.database.ktx)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -80,6 +81,7 @@ dependencies {
 
     // 바텀네비 종속성
     implementation("androidx.navigation:navigation-compose:2.7.4")
+
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
@@ -96,4 +98,6 @@ dependencies {
 
     //Gson 종속성 추가
     implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation("io.coil-kt:coil-compose:2.1.0")
 }
