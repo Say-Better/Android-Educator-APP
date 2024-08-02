@@ -21,11 +21,6 @@
     <!-- Foreground Service Notification 관련 권한 설정 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Camera 권한 설정 -->
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <!-- Camera 가 필수 기능이 아님을 명시함 -->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application

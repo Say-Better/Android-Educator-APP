@@ -199,10 +199,9 @@ class WebRTCClient @Inject constructor(
             setEnableHardwareScaler(true)
             init(eglBaseContext, null)
 
-            val params: ViewGroup.LayoutParams = view.layoutParams
-            params.width = 328
-            params.height = 196
-            view.setLay
+//            val params: ViewGroup.LayoutParams = view.layoutParams
+//            params.width = 328
+//            params.height = 196
         }
     }
     fun initRemoteSurfaceView(view : SurfaceViewRenderer) {
