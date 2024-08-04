@@ -165,4 +165,8 @@ class MainRepository @Inject constructor(
     fun switchCamera() {
         webRTCClient.switchCamera()
     }
+
+    fun toggleAudio(shouldBeMuted : Boolean) {
+        webRTCClient.toggleAudio(shouldBeMuted)
+    }
 }

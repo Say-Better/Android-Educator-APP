@@ -55,10 +55,16 @@ class MainService : Service(), MainRepository.Listener {
                 SETUP_VIEWS.name -> handleSetupViews(incomingIntent)
                 END_CALL.name -> handleEndCall()
                 SWITCH_CAMERA.name -> handleSwitchCamera()
+                TOGGLE_AUDIO.name -> handleToggleAudio(incomingIntent)
                 else -> Unit
             }
         }
         return START_STICKY
+    }
+
+    private fun handleToggleAudio(incomingIntent: Intent) {
+        val shouldBeMuted = incomingIntent.getBooleanExtra("shouldBeMuted", true)
+        mainRepository.toggleAudio(shouldBeMuted)
     }
 
     private fun handleSetupViews(incomingIntent: Intent) {

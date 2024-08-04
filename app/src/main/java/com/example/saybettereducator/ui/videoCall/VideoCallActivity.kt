@@ -273,6 +273,7 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
                         .background(Color.Gray)
                         .clickable {
                             micClicked = !micClicked
+                            serviceRepository.toggleAudio(micClicked)
                         }
                 ) {
                     Icon(
