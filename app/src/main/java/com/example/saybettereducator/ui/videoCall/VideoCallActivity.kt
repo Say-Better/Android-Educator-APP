@@ -283,11 +283,16 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
                         modifier = Modifier.padding(top = 8.dp, start = 8.dp)
                     )
                 }
+
                 Box(
                     modifier = Modifier
                         .size(width = 40.dp, height = 40.dp)
                         .clip(CircleShape)
                         .background(Color.Gray)
+                        .clickable {
+                            cameraClicked = !cameraClicked
+                            serviceRepository.toggleVideo(cameraClicked)
+                        }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.cam),
