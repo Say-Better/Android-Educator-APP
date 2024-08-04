@@ -52,4 +52,20 @@ class MainServiceRepository @Inject constructor(
         startServiceIntent(intent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun toggleAudio(shouldBeMuted : Boolean) {
+        val intent = Intent(context, MainService::class.java)
+        intent.action = MainServiceActions.TOGGLE_AUDIO.name
+        intent.putExtra("shouldBeMuted", shouldBeMuted)
+        startServiceIntent(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun toggleVideo(shouldBeMuted: Boolean) {
+        val intent = Intent(context, MainService::class.java)
+        intent.action = MainServiceActions.TOGGLE_VIDEO.name
+        intent.putExtra("shouldBeMuted", shouldBeMuted)
+        startServiceIntent(intent)
+    }
+
 }
