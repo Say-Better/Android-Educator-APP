@@ -248,8 +248,12 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private @Composable
     fun SolutionBottomBar() {
+        var micClicked: Boolean by remember { mutableStateOf(false) }
+        var cameraClicked: Boolean by remember { mutableStateOf(false) }
+
         Surface(
             color = DarkGray,
             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
@@ -267,6 +271,9 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
                         .size(width = 40.dp, height = 40.dp)
                         .clip(CircleShape)
                         .background(Color.Gray)
+                        .clickable {
+                            micClicked = !micClicked
+                        }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.mic),
@@ -317,6 +324,9 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
                         .size(width = 40.dp, height = 40.dp)
                         .clip(CircleShape)
                         .background(Color.Gray)
+                        .clickable {
+                            serviceRepository.switchCamera()
+                        }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.cam_switch),

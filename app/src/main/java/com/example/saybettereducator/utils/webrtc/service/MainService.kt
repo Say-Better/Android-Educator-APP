@@ -35,6 +35,9 @@ class MainService : Service(), MainRepository.Listener {
         var remoteSurfaceView : SurfaceViewRenderer? = null
     }
 
+    private fun handleSwitchCamera() {
+        mainRepository.switchCamera()
+    }
 
     //생성되면 NotificationManager 가져오기
     override fun onCreate() {
@@ -50,6 +53,8 @@ class MainService : Service(), MainRepository.Listener {
             when(incomingIntent.action) {
                 START_SERVICE.name -> handleStartService(incomingIntent)
                 SETUP_VIEWS.name -> handleSetupViews(incomingIntent)
+                END_CALL.name -> handleEndCall()
+                SWITCH_CAMERA.name -> handleSwitchCamera()
                 else -> Unit
             }
         }
@@ -112,6 +117,14 @@ class MainService : Service(), MainRepository.Listener {
         Log.d(TAG, "onLatestEventReceived: $data")
         listener?.onCallReceived(data)
 
+    }
+
+    private fun handleEndCall() {
+        //1. we have to send a signal to other peer that call is ended
+        mainRepository.sendEndCall()
+
+        //2. end out call process and restart our webrtc client
+        endCallAndRestartRepository()
     }
 
     override fun endCall() {
