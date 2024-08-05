@@ -1,4 +1,4 @@
-package com.example.saybettereducator.model.remote.dto
+package com.example.saybettereducator.data.model
 
 enum class DataModelType {
     StartAudioCall, StartVideoCall, Offer, Answer, IceCandidates, EndCall

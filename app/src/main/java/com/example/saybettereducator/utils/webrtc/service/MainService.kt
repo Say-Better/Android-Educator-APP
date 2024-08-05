@@ -9,7 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.example.saybettereducator.model.remote.dto.DataModel
+import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.utils.webrtc.repository.MainRepository
 import com.example.saybettereducator.utils.webrtc.service.MainServiceActions.*
 import dagger.hilt.android.AndroidEntryPoint
