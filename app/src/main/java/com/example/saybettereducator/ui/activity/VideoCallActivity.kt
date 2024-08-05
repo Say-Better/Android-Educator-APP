@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.videoCall
+package com.example.saybettereducator.ui.activity
 
 import android.os.Build
 import android.os.Bundle
@@ -49,7 +49,6 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.DeepDarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
-import com.example.saybettereducator.ui.theme.MainGreen_85
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.utils.customClick.CustomClickEvent
 import com.example.saybettereducator.utils.webrtc.service.MainService
