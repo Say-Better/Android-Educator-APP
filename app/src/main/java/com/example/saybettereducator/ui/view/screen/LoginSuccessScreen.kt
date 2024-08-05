@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.view.components.BottomBar
+import com.example.saybettereducator.ui.view.components.TitleText
+import com.example.saybettereducator.ui.view.components.TopBar
 
 @Composable
 fun LoginSuccessScreen(
