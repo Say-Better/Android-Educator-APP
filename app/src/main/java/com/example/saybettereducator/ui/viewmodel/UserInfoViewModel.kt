@@ -1,49 +1,49 @@
 package com.example.saybettereducator.ui.viewmodel
 
 import android.net.Uri
-import androidx.lifecycle.ViewModel
+import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.UserInfoIntent
 import com.example.saybettereducator.ui.model.UserInfoState
+import com.example.saybettereducator.ui.sideeffect.UserInfoSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
 @HiltViewModel
-class UserInfoViewModel : ViewModel() {
-    private val _state = MutableStateFlow(UserInfoState())
-    val state: MutableStateFlow<UserInfoState> get() = _state
+class UserInfoViewModel @Inject constructor(
+) : MviViewModel<UserInfoState, UserInfoSideEffect, UserInfoIntent>(UserInfoState()) {
 
-    fun processIntent(intent: UserInfoIntent) {
+    override fun handleIntent(intent: UserInfoIntent) {
         when (intent) {
             is UserInfoIntent.Refresh -> loadProfile()
             is UserInfoIntent.UpdateProfileImage -> updateProfileImage(intent.uri)
             is UserInfoIntent.UpdateName -> updateName(intent.name)
-            is UserInfoIntent.UpdateShowPopup -> showPopup(intent.showPopup)
-            is UserInfoIntent.UpdateOpenCamera -> openCamera(intent.openCamera)
-            is UserInfoIntent.UpdateOpenGallery -> openGallery(intent.openGallery)
+            is UserInfoIntent.ShowPopup -> showPopup(intent.showPopup)
+            is UserInfoIntent.OpenCamera -> openCamera(intent.openCamera)
+            is UserInfoIntent.OpenGallery -> openGallery(intent.openGallery)
         }
     }
 
     private fun loadProfile() {
-        TODO("Not yet implemented")
+        // Handle loading profile logic
     }
 
     private fun updateProfileImage(uri: Uri) {
-        _state.value = _state.value.copy(profileImageUrl = uri)
+        updateState { it.copy(profileImageUrl = uri) }
     }
 
     private fun updateName(name: String) {
-        _state.value = _state.value.copy(name = name)
+        updateState { it.copy(name = name) }
     }
 
     private fun showPopup(show: Boolean) {
-        _state.value = _state.value.copy(showPopup = show)
+        updateState { it.copy(showPopup = show) }
     }
 
-    private fun openCamera(openCamera: Boolean) {
-        _state.value = _state.value.copy(openCamera = openCamera)
+    private fun openCamera(open: Boolean) {
+        updateState { it.copy(openCamera = open) }
     }
 
-    private fun openGallery(openGallery: Boolean) {
-        _state.value = _state.value.copy(openGallery = openGallery)
+    private fun openGallery(open: Boolean) {
+        updateState { it.copy(openGallery = open) }
     }
 }
