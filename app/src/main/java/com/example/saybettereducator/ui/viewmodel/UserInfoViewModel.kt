@@ -20,14 +20,24 @@ class UserInfoViewModel @Inject constructor(
             is UserInfoIntent.ShowPopup -> showPopup(intent.showPopup)
             is UserInfoIntent.OpenCamera -> openCamera(intent.openCamera)
             is UserInfoIntent.OpenGallery -> openGallery(intent.openGallery)
+            is UserInfoIntent.NavigateHome -> navigateToHome()
+            is UserInfoIntent.NavigateLoginSuccess -> navigateToLoginSuccess()
         }
+    }
+
+    private fun navigateToHome() {
+        postSideEffect(UserInfoSideEffect.NavigateHome)
+    }
+
+    private fun navigateToLoginSuccess() {
+        postSideEffect(UserInfoSideEffect.NavigateLoginSuccess)
     }
 
     private fun loadProfile() {
         // Handle loading profile logic
     }
 
-    private fun updateProfileImage(uri: Uri) {
+    private fun updateProfileImage(uri: Uri?) {
         updateState { it.copy(profileImageUrl = uri) }
     }
 
