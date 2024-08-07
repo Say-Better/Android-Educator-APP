@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.saybettereducator.ui.view.screen.HomeScreen
+import com.example.saybettereducator.ui.view.screen.UserInfoScreen
 
 /**
  * App의 Navigation을 정의합니다.
@@ -15,7 +15,7 @@ import com.example.saybettereducator.ui.view.screen.HomeScreen
 fun AppNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = NavDestinations.Home.url) {
         composable(NavDestinations.Home.url) {
-            HomeScreen(navController)
+            // HomeScreen()
         }
 
         composable(NavDestinations.Learner.url) {
@@ -29,6 +29,10 @@ fun AppNavHost(navController: NavHostController) {
         composable(NavDestinations.Solution.url) {
             // SolutionScreen()
         }
+
+        composable(NavDestinations.UserInfo.url) {
+            UserInfoScreen(navController)
+        }
     }
 }
 
@@ -41,4 +45,5 @@ sealed class NavDestinations(val url: String) {
     object Learner : NavDestinations("learner")
     object Calendar : NavDestinations("calendar")
     object Solution : NavDestinations("solution")
+    object UserInfo : NavDestinations("user_info")
 }

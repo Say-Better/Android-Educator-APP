@@ -20,21 +20,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
-import com.example.saybettereducator.ui.view.components.BottomBar
+import com.example.saybettereducator.ui.view.components.UserInfoBottomBar
 import com.example.saybettereducator.ui.view.components.TitleText
-import com.example.saybettereducator.ui.view.components.TopBar
+import com.example.saybettereducator.ui.view.components.UserInfoTopAppBar
 
 @Composable
 fun LoginSuccessScreen(
     navController: NavController, goMainActivity: (() -> Unit)? = null
 ) {
-    Scaffold(topBar = { TopBar() },
+    Scaffold(topBar = { UserInfoTopAppBar() },
         bottomBar = {
-            BottomBar(
-                navController,
-                "null",
+            UserInfoBottomBar(
                 "시작하기",
-                goMainActivity
+                onBottomBarClick = {
+                    goMainActivity?.invoke()
+                }
             )
         }) { innerPadding -> LoginSuccessContent(innerPadding) }
 }

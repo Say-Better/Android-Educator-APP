@@ -135,7 +135,7 @@ class LoginActivity : ComponentActivity() {
                 .background(Color.White)
                 .clickable{
                     finish()
-                    intent = Intent(this@LoginActivity, UserInfoActivity::class.java)
+                    intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                 }
         ) {
