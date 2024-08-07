@@ -90,6 +90,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     //Hilt 종속성 추가
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.google.dagger:hilt-android:2.46")
     kapt("com.google.dagger:hilt-android-compiler:2.46")
 
