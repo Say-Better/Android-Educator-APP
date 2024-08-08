@@ -41,8 +41,8 @@ fun ProfilePopup(
     showPopupState: Boolean,
     onShowPopup: (Boolean) -> Unit,
     onProfileImageChange: (Uri) -> Unit,
-    onOpenCamera: (Boolean) -> Unit,
-    onOpenGallery: (Boolean) -> Unit
+    onOpenCamera: () -> Unit,
+    onOpenGallery: () -> Unit
 ) {
     PopupBox(
         popupWidth = 328f,
@@ -66,8 +66,8 @@ fun ProfilePopup(
 private fun PopupOptions(
     onShowPopup: (Boolean) -> Unit,
     onProfileImageChange: (Uri) -> Unit,
-    onOpenCamera: (Boolean) -> Unit,
-    onOpenGallery: (Boolean) -> Unit
+    onOpenCamera: () -> Unit,
+    onOpenGallery: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -76,11 +76,11 @@ private fun PopupOptions(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PopupOptionItem("카메라로 촬영", onShowPopup) {
-            onOpenCamera(true)
+            onOpenCamera()
         }
         Divider()
         PopupOptionItem("갤러리에서 선택", onShowPopup) {
-            onOpenGallery(true)
+            onOpenGallery()
         }
         Divider()
         PopupOptionItem("기본 이미지 사용", onShowPopup) {

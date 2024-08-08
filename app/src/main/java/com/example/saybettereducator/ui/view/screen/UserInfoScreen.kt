@@ -1,5 +1,9 @@
 package com.example.saybettereducator.ui.view.screen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,11 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.ui.common.showErrorSnackBar
 import com.example.saybettereducator.ui.intent.UserInfoIntent
 import com.example.saybettereducator.ui.model.UserInfoState
@@ -32,6 +38,8 @@ import com.example.saybettereducator.ui.view.components.TitleText
 import com.example.saybettereducator.ui.view.components.UserInfoBottomBar
 import com.example.saybettereducator.ui.view.components.UserInfoTopAppBar
 import com.example.saybettereducator.ui.viewmodel.UserInfoViewModel
+import com.example.saybettereducator.utils.image.CameraUtil
+import com.example.saybettereducator.utils.image.GalleryUtil
 import kotlinx.coroutines.CoroutineScope
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -39,6 +47,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun UserInfoScreen(navController: NavController, viewModel: UserInfoViewModel = hiltViewModel()) {
+    val context = LocalContext.current
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val viewState by viewModel.collectAsState()
@@ -54,13 +63,35 @@ fun UserInfoScreen(navController: NavController, viewModel: UserInfoViewModel = 
         }
     }
 
-    UserInfoScreen(viewState, snackbarHostState, viewModel::handleIntent)
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let { viewModel.handleIntent(UserInfoIntent.OnGalleryPictureTaken(it)) }
+    }
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { uri ->
+        uri.let { viewModel.handleIntent(UserInfoIntent.OnCameraPictureTaken) }
+    }
+
+    val galleryUtil = remember { GalleryUtil(context) }
+    val cameraUtil = remember { CameraUtil(context) }
+
+    UserInfoScreen(
+        state = viewState,
+        snackbarHostState = snackbarHostState,
+        galleryUtil = galleryUtil,
+        cameraUtil = cameraUtil,
+        galleryLauncher = galleryLauncher,
+        cameraLauncher = cameraLauncher,
+        action = viewModel::handleIntent
+    )
 }
 
 @Composable
 private fun UserInfoScreen(
     state: UserInfoState,
     snackbarHostState: SnackbarHostState,
+    galleryUtil: GalleryUtil,
+    cameraUtil: CameraUtil,
+    galleryLauncher: ActivityResultLauncher<String>,
+    cameraLauncher: ActivityResultLauncher<Uri>,
     action: (UserInfoIntent) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
@@ -113,8 +144,8 @@ private fun UserInfoScreen(
         state.showPopup,
         { action(UserInfoIntent.ShowPopup(it)) },
         { action(UserInfoIntent.UpdateProfileImage(it)) },
-        { action(UserInfoIntent.OpenCamera(true)) },
-        { action(UserInfoIntent.OpenGallery(true)) }
+        { cameraUtil.openCamera(cameraLauncher) },
+        { galleryUtil.openGallery(galleryLauncher) }
     )
 }
 
@@ -124,15 +155,11 @@ private fun UserInfoScreen(
 )
 @Composable
 fun UserInfoScreenPreview() {
+    val navController = rememberNavController()
     SaybetterEducatorTheme {
         UserInfoScreen(
-            UserInfoState(
-                name = "교육자",
-                profileImageUrl = null,
-                showPopup = false
-            ),
-            SnackbarHostState(),
-        ) {}
+            navController = navController,
+        )
     }
 }
 

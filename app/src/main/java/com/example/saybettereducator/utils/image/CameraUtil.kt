@@ -3,31 +3,19 @@ package com.example.saybettereducator.utils.image
 import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.core.content.FileProvider
 import java.io.File
 
 class CameraUtil(private val context: Context) {
-    private lateinit var cameraImageUri: Uri
+    private var imageUri: Uri? = null
 
-    @Composable
-    fun openCamera(onTakePicture: (Uri) -> Unit) {
-        val imageFile = File.createTempFile("profile_image", ".jpg", context.cacheDir).apply {
-            createNewFile()
-            deleteOnExit()
-        }
-        cameraImageUri =
-            FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", imageFile)
-        takePicture(onTakePicture).launch(cameraImageUri)
+    fun openCamera(launcher: ActivityResultLauncher<Uri>): Uri? {
+        val imageFile = File(context.cacheDir, "camera_image.jpg")
+        imageUri = FileProvider.getUriForFile(context, "${context.packageName}.provider", imageFile)
+        launcher.launch(imageUri!!)
+        return imageUri
     }
-
-    @Composable
-    fun takePicture(onTakePicture: (Uri) -> Unit) =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) {
-                onTakePicture(cameraImageUri)
-            }
-        }
 }
-

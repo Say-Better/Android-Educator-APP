@@ -18,11 +18,17 @@ class UserInfoViewModel @Inject constructor(
             is UserInfoIntent.UpdateProfileImage -> updateProfileImage(intent.uri)
             is UserInfoIntent.UpdateName -> updateName(intent.name)
             is UserInfoIntent.ShowPopup -> showPopup(intent.showPopup)
-            is UserInfoIntent.OpenCamera -> openCamera(intent.openCamera)
-            is UserInfoIntent.OpenGallery -> openGallery(intent.openGallery)
             is UserInfoIntent.NavigateHome -> navigateToHome()
             is UserInfoIntent.NavigateLoginSuccess -> navigateToLoginSuccess()
+            is UserInfoIntent.OnGalleryPictureTaken -> onGalleryPictureTaken()
+            is UserInfoIntent.OnCameraPictureTaken -> onCameraPictureTaken()
         }
+    }
+
+    private fun onGalleryPictureTaken() {
+    }
+
+    private fun onCameraPictureTaken() {
     }
 
     private fun navigateToHome() {
@@ -47,13 +53,5 @@ class UserInfoViewModel @Inject constructor(
 
     private fun showPopup(show: Boolean) {
         updateState { it.copy(showPopup = show) }
-    }
-
-    private fun openCamera(open: Boolean) {
-        updateState { it.copy(openCamera = open) }
-    }
-
-    private fun openGallery(open: Boolean) {
-        updateState { it.copy(openGallery = open) }
     }
 }
