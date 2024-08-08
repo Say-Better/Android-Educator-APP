@@ -1,16 +1,16 @@
-package com.example.saybettereducator.ui.learner
+package com.example.saybettereducator.ui.view.screen
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun LearnerScreen() {
-    Text(text = "Learner")
+fun CalendarScreen() {
+    Text(text = "Calendar")
 }
 
 @Preview
 @Composable
-fun LearnerScreenPreview() {
-    LearnerScreen()
+fun CalendarScreenPreview() {
+    CalendarScreen()
 }

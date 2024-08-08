@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.splash
+package com.example.saybettereducator.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.saybettereducator.R
-import com.example.saybettereducator.ui.login.LoginActivity
 import kotlinx.coroutines.delay
 
 

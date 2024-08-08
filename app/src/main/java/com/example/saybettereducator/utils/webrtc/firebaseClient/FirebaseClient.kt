@@ -1,8 +1,8 @@
 package com.example.saybettereducator.utils.webrtc.firebaseClient
 
 import android.util.Log
-import com.example.saybettereducator.model.remote.dto.DataModel
-import com.example.saybettereducator.model.remote.dto.UserStatus
+import com.example.saybettereducator.domain.model.DataModel
+import com.example.saybettereducator.domain.model.UserStatus
 import com.example.saybettereducator.utils.FirebaseFieldNames.LATEST_EVENT
 import com.example.saybettereducator.utils.FirebaseFieldNames.STATUS
 import com.example.saybettereducator.utils.MyEventListener
