@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.view.components.UserInfoBottomBar
-import com.example.saybettereducator.ui.view.components.TitleText
+import com.example.saybettereducator.ui.view.components.UserInfoTitleText
 import com.example.saybettereducator.ui.view.components.UserInfoTopAppBar
 
 @Composable
@@ -55,7 +55,7 @@ private fun LoginSuccessContent(innerPadding: PaddingValues) {
             .fillMaxWidth()
     ) {
         Box(modifier = Modifier.padding(bottom = 24.dp)) {
-            TitleText(
+            UserInfoTitleText(
                 title = "모든 준비가 완료되었어요.", subtitle = "원활한 앱 사용을 위해 앱 내 권한을 허용해주세요."
             )
         }

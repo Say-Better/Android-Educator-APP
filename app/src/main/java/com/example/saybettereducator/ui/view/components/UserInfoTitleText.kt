@@ -13,7 +13,7 @@ import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.PretendardTypography
 
 @Composable
-fun TitleText(title: String, subtitle: String) {
+fun UserInfoTitleText(title: String, subtitle: String) {
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,

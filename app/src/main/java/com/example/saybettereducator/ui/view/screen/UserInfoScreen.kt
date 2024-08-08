@@ -34,7 +34,7 @@ import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.view.components.NameInputBox
 import com.example.saybettereducator.ui.view.components.ProfileImageCard
 import com.example.saybettereducator.ui.view.components.ProfilePopup
-import com.example.saybettereducator.ui.view.components.TitleText
+import com.example.saybettereducator.ui.view.components.UserInfoTitleText
 import com.example.saybettereducator.ui.view.components.UserInfoBottomBar
 import com.example.saybettereducator.ui.view.components.UserInfoTopAppBar
 import com.example.saybettereducator.ui.viewmodel.UserInfoViewModel
@@ -116,7 +116,7 @@ private fun UserInfoScreen(
 
                 item {
                     Box(modifier = Modifier.padding(bottom = 50.dp)) {
-                        TitleText(
+                        UserInfoTitleText(
                             title = "로그인에 성공했어요!", subtitle = "시작하기 전 기본 설정이 필요해요."
                         )
                     }
