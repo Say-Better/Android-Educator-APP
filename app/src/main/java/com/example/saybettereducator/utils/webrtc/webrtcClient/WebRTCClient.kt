@@ -1,8 +1,8 @@
 package com.example.saybettereducator.utils.webrtc.webrtcClient
 
 import android.content.Context
-import com.example.saybettereducator.data.model.DataModel
-import com.example.saybettereducator.data.model.DataModelType
+import com.example.saybettereducator.domain.model.DataModel
+import com.example.saybettereducator.domain.model.DataModelType
 import com.google.gson.Gson
 import org.webrtc.AudioTrack
 import org.webrtc.Camera2Enumerator

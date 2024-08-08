@@ -1,8 +1,8 @@
 package com.example.saybettereducator.utils.webrtc.repository
 
-import com.example.saybettereducator.data.model.DataModel
-import com.example.saybettereducator.data.model.DataModelType.*
-import com.example.saybettereducator.data.model.UserStatus
+import com.example.saybettereducator.domain.model.DataModel
+import com.example.saybettereducator.domain.model.DataModelType.*
+import com.example.saybettereducator.domain.model.UserStatus
 import com.example.saybettereducator.utils.webrtc.firebaseClient.FirebaseClient
 import com.example.saybettereducator.utils.webrtc.webrtcClient.MyPeerObserver
 import com.example.saybettereducator.utils.webrtc.webrtcClient.WebRTCClient

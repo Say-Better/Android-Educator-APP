@@ -1,4 +1,4 @@
-package com.example.saybettereducator.data.model
+package com.example.saybettereducator.domain.model
 
 enum class DataModelType {
     StartAudioCall, StartVideoCall, Offer, Answer, IceCandidates, EndCall
