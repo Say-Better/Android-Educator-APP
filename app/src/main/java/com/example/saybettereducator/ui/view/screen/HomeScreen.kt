@@ -182,7 +182,7 @@ fun SolutionCardScroll(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun SolutionCard(
     onClickSolution: () -> Unit
@@ -316,5 +316,5 @@ fun LearnerMiniProfile(modifier: Modifier = Modifier) {
 @Preview(widthDp = 360, heightDp = 680)
 @Composable
 fun HomeScreenPreview() {
-//    HomeScreen()
+    HomeScreen {}
 }

@@ -1,10 +1,22 @@
 package com.example.saybettereducator.ui.navigation
 
+import android.Manifest
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.saybettereducator.ui.view.screen.CalendarScreen
+import com.example.saybettereducator.ui.view.screen.HomeScreen
+import com.example.saybettereducator.ui.view.screen.LearnerScreen
+import com.example.saybettereducator.ui.view.screen.SolutionScreen
 import com.example.saybettereducator.ui.view.screen.UserInfoScreen
+import com.example.saybettereducator.utils.permission.checkAndRequestPermissions
 
 /**
  * App의 Navigation을 정의합니다.
@@ -13,21 +25,51 @@ import com.example.saybettereducator.ui.view.screen.UserInfoScreen
  */
 @Composable
 fun AppNavHost(navController: NavHostController) {
+    val context = LocalContext.current
+
+    val permissions = arrayOf(
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.CAMERA
+    )
+
+    val launcherMultiplePermissions = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissionsMap ->
+        val areGranted = permissionsMap.values.reduce { acc, next -> acc && next }
+        if (areGranted) {
+            Log.d("test5", "Permissions granted.")
+        } else {
+            Log.d("test5", "Permissions denied.")
+        }
+    }
+
     NavHost(navController = navController, startDestination = NavDestinations.Home.url) {
         composable(NavDestinations.Home.url) {
-            // HomeScreen()
+            HomeScreen(
+                onClickSolution = {
+                    checkAndRequestPermissions(
+                        context,
+                        permissions,
+                        launcherMultiplePermissions,
+                        onPermissionsGranted = {
+                            Log.d("permission", "Permission Granted, Go VideoCall!")
+                            // Start video call logic here
+                        }
+                    )
+                }
+            )
         }
 
         composable(NavDestinations.Learner.url) {
-            // LearnerScreen()
+            LearnerScreen()
         }
 
         composable(NavDestinations.Calendar.url) {
-            // CalendarScreen()
+            CalendarScreen()
         }
 
         composable(NavDestinations.Solution.url) {
-            // SolutionScreen()
+            SolutionScreen()
         }
 
         composable(NavDestinations.UserInfo.url) {

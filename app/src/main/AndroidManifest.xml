@@ -32,7 +32,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SaybetterEducator"
-        android:name=".utils.MyApplication"
+        android:name=".config.SayBetterApplication"
         tools:targetApi="31">
 
         <provider
@@ -59,6 +59,7 @@
         </activity>
 
         <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.MaActivity" />
         <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.VideoCallActivity" />
 

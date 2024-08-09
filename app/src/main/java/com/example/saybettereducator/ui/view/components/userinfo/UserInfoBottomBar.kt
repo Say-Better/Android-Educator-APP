@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.view.components
+package com.example.saybettereducator.ui.view.components.userinfo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.PretendardTypography
 import com.example.saybettereducator.ui.theme.White
