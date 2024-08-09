@@ -59,10 +59,10 @@ class LoginActivity : ComponentActivity() {
                             Log.d("login", "로그인 실패, $reason")
                         } else {
                             Log.d("login", "로그인 성공")
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java)
+                                .putExtra("userid", testid)
+                            )
                             finish()
-                            intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            intent.putExtra("userid", testid)
-                            startActivity(intent)
                         }
                     }
                 }
@@ -76,9 +76,10 @@ class LoginActivity : ComponentActivity() {
         LoginScreen(
             login = {
                 finish()
-                intent = Intent(this@LoginActivity, MainActivity::class.java)
-                intent.putExtra("userid", testid)
-                startActivity(intent)
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java)
+                    .putExtra("userid", testid)
+                )
+                finish()
             }
         )
     }
@@ -133,11 +134,7 @@ class LoginActivity : ComponentActivity() {
                 .fillMaxWidth()
                 .border((1.5).dp, Color.Black, RoundedCornerShape(100.dp))
                 .background(Color.White)
-                .clickable{
-                    finish()
-                    intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                }
+                .clickable{ login() }
         ) {
             Row(
                 modifier = Modifier

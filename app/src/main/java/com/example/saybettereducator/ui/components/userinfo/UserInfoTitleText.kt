@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.view.components
+package com.example.saybettereducator.ui.components.userinfo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
