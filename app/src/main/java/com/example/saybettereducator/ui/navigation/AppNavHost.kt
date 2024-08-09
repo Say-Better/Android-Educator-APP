@@ -5,17 +5,15 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.saybettereducator.ui.view.screen.CalendarScreen
-import com.example.saybettereducator.ui.view.screen.HomeScreen
-import com.example.saybettereducator.ui.view.screen.LearnerScreen
-import com.example.saybettereducator.ui.view.screen.SolutionScreen
-import com.example.saybettereducator.ui.view.screen.UserInfoScreen
+import com.example.saybettereducator.ui.view.HomeScreen
+import com.example.saybettereducator.ui.view.LearnerScreen
+import com.example.saybettereducator.ui.view.SolutionScreen
+import com.example.saybettereducator.ui.view.UserInfoScreen
 import com.example.saybettereducator.utils.permission.checkAndRequestPermissions
 
 /**

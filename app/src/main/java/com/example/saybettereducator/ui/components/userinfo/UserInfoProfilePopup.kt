@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.view.components.userinfo
+package com.example.saybettereducator.ui.components.userinfo
 
 import android.net.Uri
 import androidx.compose.foundation.Image

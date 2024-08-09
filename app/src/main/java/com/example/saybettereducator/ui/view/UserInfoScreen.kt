@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.view.screen
+package com.example.saybettereducator.ui.view
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,12 +31,12 @@ import com.example.saybettereducator.ui.intent.UserInfoIntent
 import com.example.saybettereducator.ui.model.UserInfoState
 import com.example.saybettereducator.ui.sideeffect.UserInfoSideEffect
 import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
-import com.example.saybettereducator.ui.view.components.userinfo.NameInputBox
-import com.example.saybettereducator.ui.view.components.userinfo.ProfileImageCard
-import com.example.saybettereducator.ui.view.components.userinfo.ProfilePopup
-import com.example.saybettereducator.ui.view.components.userinfo.UserInfoTitleText
-import com.example.saybettereducator.ui.view.components.userinfo.UserInfoBottomBar
-import com.example.saybettereducator.ui.view.components.userinfo.UserInfoTopAppBar
+import com.example.saybettereducator.ui.components.userinfo.NameInputBox
+import com.example.saybettereducator.ui.components.userinfo.ProfileImageCard
+import com.example.saybettereducator.ui.components.userinfo.ProfilePopup
+import com.example.saybettereducator.ui.components.userinfo.UserInfoTitleText
+import com.example.saybettereducator.ui.components.userinfo.UserInfoBottomBar
+import com.example.saybettereducator.ui.components.userinfo.UserInfoTopAppBar
 import com.example.saybettereducator.ui.viewmodel.UserInfoViewModel
 import com.example.saybettereducator.utils.image.CameraUtil
 import com.example.saybettereducator.utils.image.GalleryUtil

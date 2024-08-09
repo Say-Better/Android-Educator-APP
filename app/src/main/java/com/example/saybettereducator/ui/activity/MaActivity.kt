@@ -47,9 +47,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.DataModel
 import com.example.saybettereducator.ui.view.screen.CalendarScreen
-import com.example.saybettereducator.ui.view.screen.HomeScreen
-import com.example.saybettereducator.ui.view.screen.LearnerScreen
-import com.example.saybettereducator.ui.view.screen.SolutionScreen
+import com.example.saybettereducator.ui.view.HomeScreen
+import com.example.saybettereducator.ui.view.LearnerScreen
+import com.example.saybettereducator.ui.view.SolutionScreen
 import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.montserratFont

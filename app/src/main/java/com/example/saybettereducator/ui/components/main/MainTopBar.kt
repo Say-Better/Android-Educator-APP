@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.view.components.main
+package com.example.saybettereducator.ui.components.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.view.screen
+package com.example.saybettereducator.ui.view
 
 import android.util.Log
 import androidx.compose.foundation.Image

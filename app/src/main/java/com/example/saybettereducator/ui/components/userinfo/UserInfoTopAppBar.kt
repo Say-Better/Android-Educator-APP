@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.view.components.userinfo
+package com.example.saybettereducator.ui.components.userinfo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
