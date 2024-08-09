@@ -24,7 +24,7 @@ import com.example.saybettereducator.utils.permission.checkAndRequestPermissions
  * @param navController: App의 Navigation을 제어하는 Controller입니다.
  */
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun AppNavHost(navController: NavHostController, startVideoCall: (String, Boolean) -> Unit) {
     val context = LocalContext.current
 
     val permissions = arrayOf(
@@ -53,7 +53,7 @@ fun AppNavHost(navController: NavHostController) {
                         launcherMultiplePermissions,
                         onPermissionsGranted = {
                             Log.d("permission", "Permission Granted, Go VideoCall!")
-                            // Start video call logic here
+                            startVideoCall("targetUserId", true)  // 여기서 적절한 값을 전달합니다.
                         }
                     )
                 }
