@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">saybetterEducator</string>
+
+    <!-- 솔루션 진행 -->
+    <string name="solution_progress_chance_title">의사소통기회</string>
+    <string name="solution_progress_chance">소통기회부여</string>
+    <string name="solution_progress_timer">타이머</string>
+    <string name="solution_progress_mode_title">보기 모드</string>
+    <string name="solution_progress_symbol_title">상징 카드</string>
 </resources>

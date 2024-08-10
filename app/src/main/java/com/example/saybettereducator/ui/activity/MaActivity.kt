@@ -46,7 +46,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.DataModel
-import com.example.saybettereducator.ui.view.screen.CalendarScreen
+import com.example.saybettereducator.ui.view.CalendarScreen
 import com.example.saybettereducator.ui.view.HomeScreen
 import com.example.saybettereducator.ui.view.LearnerScreen
 import com.example.saybettereducator.ui.view.SolutionScreen

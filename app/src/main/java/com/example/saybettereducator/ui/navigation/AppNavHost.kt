@@ -9,9 +9,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.saybettereducator.ui.view.screen.CalendarScreen
+import com.example.saybettereducator.ui.view.CalendarScreen
 import com.example.saybettereducator.ui.view.HomeScreen
 import com.example.saybettereducator.ui.view.LearnerScreen
+import com.example.saybettereducator.ui.view.SolutionProgressScreen
 import com.example.saybettereducator.ui.view.SolutionScreen
 import com.example.saybettereducator.ui.view.UserInfoScreen
 import com.example.saybettereducator.utils.permission.checkAndRequestPermissions
@@ -67,7 +68,7 @@ fun AppNavHost(navController: NavHostController, startVideoCall: (String, Boolea
         }
 
         composable(NavDestinations.Solution.url) {
-            SolutionScreen()
+            SolutionProgressScreen()
         }
 
         composable(NavDestinations.UserInfo.url) {
