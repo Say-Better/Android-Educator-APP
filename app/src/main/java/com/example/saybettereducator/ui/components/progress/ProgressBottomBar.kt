@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -91,7 +92,7 @@ fun ProgressBottomBar() {
                 modifier = Modifier
                     .clip(RoundedCornerShape(28.dp))
                     .alpha(0.8f)
-                    .background(MainGreen)
+                    .background(Red)
                     .size(width = 152.dp, height = 40.dp)
                     .clickable { },
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween,
@@ -104,7 +105,7 @@ fun ProgressBottomBar() {
                     modifier = Modifier.padding(start = 21.5.dp)
                 )
                 Text(
-                    text = "솔루션 시작",
+                    text = "솔루션 종료",
                     fontSize = 16.sp,
                     color = Color.White,
                     fontFamily = FontFamily(pretendardMediumFont),

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.Gray100
+import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
@@ -39,7 +40,7 @@ fun ProgressLearningMode1() {
             .padding(horizontal = 16.dp)
             .border(
                 width = 1.dp,
-                color = Gray100,
+                color = Gray5B,
                 shape = RoundedCornerShape(size = 16.dp)
             )
             .fillMaxWidth()
@@ -80,7 +81,7 @@ fun ProgressLearningMode1() {
                         lineHeight = 22.4.sp,
                         fontFamily = FontFamily(pretendardMediumFont),
                         fontWeight = FontWeight(500),
-                        color = Gray100,
+                        color = Gray5B,
                         textAlign = TextAlign.Center,
                     )
                 )

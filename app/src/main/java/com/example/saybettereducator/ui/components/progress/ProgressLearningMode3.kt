@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.Gray100
+import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 
 @Composable
@@ -36,7 +37,7 @@ fun ProgressLearningMode3(modifier: Modifier = Modifier) {
         modifier
             .border(
                 width = 1.dp,
-                color = Gray100,
+                color = Gray5B,
                 shape = RoundedCornerShape(size = 16.dp)
             )
             .height(205.dp)

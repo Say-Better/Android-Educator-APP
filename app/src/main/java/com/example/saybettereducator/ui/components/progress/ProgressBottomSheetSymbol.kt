@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.times
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Gray100
 import com.example.saybettereducator.ui.theme.Gray50
+import com.example.saybettereducator.ui.theme.Gray5B
+import com.example.saybettereducator.ui.theme.Gray5B50
 
 @Composable
 fun ProgressBottomSheetSymbol(
@@ -72,7 +74,7 @@ fun SymbolCard(
                 Spacer(modifier = Modifier.height(8.dp)) // 이미지와 텍스트 사이 간격 조절
                 Text(
                     text = "텍스트 상징",
-                    color = Gray100,
+                    color = Gray5B,
                     fontSize = 12.sp
                 )
             }
@@ -85,12 +87,12 @@ fun SymbolCard(
                     .padding(itemPadding)
                     .aspectRatio(1f)
                     .fillMaxWidth(0.25f) // 전체 너비의 1/4
-                    .background(Color.Gray, RoundedCornerShape(8.dp))
+                    .background(Gray5B50, RoundedCornerShape(8.dp))
                     .clickable { onItemClick(item) },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.learner_cam), // 여기에 실제 이미지 리소스를 사용하세요.
+                    painter = painterResource(id = R.drawable.learner_cam),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -100,7 +102,7 @@ fun SymbolCard(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Gray50), // 반투명 배경
+                        .background(Gray5B50, RoundedCornerShape(8.dp)), // 반투명 배경
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

@@ -31,7 +31,7 @@ import androidx.compose.ui.window.Popup
 import coil.compose.rememberAsyncImagePainter
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Black
-import com.example.saybettereducator.ui.theme.Gray
+import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.PretendardTypography
 import com.example.saybettereducator.ui.theme.White
@@ -130,7 +130,7 @@ private fun PopupHeader(onShowPopup: (Boolean) -> Unit) {
 
         Text(
             text = "프로필 설정",
-            style = PretendardTypography.headlineMedium.copy(Gray),
+            style = PretendardTypography.headlineMedium.copy(Gray5B),
             modifier = Modifier.align(Alignment.CenterVertically)
         )
 

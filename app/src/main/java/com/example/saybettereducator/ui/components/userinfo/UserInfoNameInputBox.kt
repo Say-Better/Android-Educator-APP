@@ -19,7 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Black
-import com.example.saybettereducator.ui.theme.Gray
+import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.PretendardTypography
 
 @Composable
@@ -28,7 +28,7 @@ fun NameInputBox(
 ) {
     Text(
         text = "이름",
-        style = PretendardTypography.bodySmall.copy(Gray),
+        style = PretendardTypography.bodySmall.copy(Gray5B),
         modifier = Modifier.padding(bottom = 12.dp)
     )
 

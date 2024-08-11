@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.montserratFont
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +52,7 @@ fun ProgressTopBar() {
                         fontSize = 12.sp,
                         lineHeight = 15.6.sp,
                         fontFamily = FontFamily(montserratFont),
-                        color = Color.Gray,
+                        color = Gray5B,
                     )
                 }
             },
@@ -63,7 +64,7 @@ fun ProgressTopBar() {
         Icon(
             painter = painterResource(id = R.drawable.progress_volume),
             contentDescription = "솔루션 볼륨 조절 버튼",
-            tint = Color.Gray,
+            tint = Gray5B,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 15.dp, end = 16.dp)

@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.saybettereducator.ui.theme.Gray100
+import com.example.saybettereducator.ui.theme.Gray5B
 
 @Composable
 fun ProgressBasicBtn(
@@ -33,7 +33,7 @@ fun ProgressBasicBtn(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
-            .background(Gray100, shape = RoundedCornerShape(8.dp))
+            .background(Gray5B, shape = RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .padding(start = 8.dp, end = 12.dp, top = 4.dp, bottom = 4.dp)
     ) {
