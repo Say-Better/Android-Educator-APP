@@ -36,10 +36,24 @@ class WebRTCClient @Inject constructor(
     private val eglBaseContext = EglBase.create().eglBaseContext
     private val peerConnectionFactory by lazy { createPeerConnectionFactory() }
     private var peerConnection: PeerConnection? = null
-    private val iceServer = listOf(
+    private val iceServers = listOf(
+        PeerConnection.IceServer.builder("stun:stun.relay.metered.ca:80").createIceServer(),
+        PeerConnection.IceServer.builder("turn:global.relay.metered.ca:80")
+            .setUsername("3034a2e47ead957a5246ff2d")
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer(),
+        PeerConnection.IceServer.builder("turn:global.relay.metered.ca:80?transport=tcp")
+            .setUsername("3034a2e47ead957a5246ff2d")
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer(),
+        PeerConnection.IceServer.builder("turn:global.relay.metered.ca:443")
+            .setUsername("3034a2e47ead957a5246ff2d")
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer(),
         PeerConnection.IceServer.builder("turns:global.relay.metered.ca:443?transport=tcp")
             .setUsername("3034a2e47ead957a5246ff2d")
-            .setPassword("zAyeHrbfgXr6T/sr").createIceServer()
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer()
     )
     private val localVideoSource by lazy { peerConnectionFactory.createVideoSource(false) }
     private val localAudioSource by lazy { peerConnectionFactory.createAudioSource(MediaConstraints()) }
@@ -94,7 +108,7 @@ class WebRTCClient @Inject constructor(
         peerConnection = createPeerConnection(observer)
     }
     private fun createPeerConnection(observer: PeerConnection.Observer): PeerConnection? {
-        return peerConnectionFactory.createPeerConnection(iceServer, observer)
+        return peerConnectionFactory.createPeerConnection(iceServers, observer)
     }
 
     // negotiation section
