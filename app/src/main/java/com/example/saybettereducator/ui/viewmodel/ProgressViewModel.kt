@@ -1,8 +1,7 @@
 package com.example.saybettereducator.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
 import com.example.saybettereducator.R
-import com.example.saybettereducator.domain.model.SymbolCard
+import com.example.saybettereducator.domain.model.Symbol
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.ProgressIntent
 import com.example.saybettereducator.ui.model.ProgressState
@@ -34,11 +33,11 @@ class ProgressViewModel @Inject constructor(
 
     private fun loadSymbols() {
         val symbols = listOf(
-            SymbolCard(1, "Symbol 1", R.drawable.symbol_go),
-            SymbolCard(2, "Symbol 2", R.drawable.symbol_shy),
-            SymbolCard(3, "Symbol 3", R.drawable.symbol_rice),
-            SymbolCard(4, "Symbol 4", R.drawable.symbol_hello),
-            SymbolCard(5, "Symbol 5", R.drawable.symbol_hungry),
+            Symbol(1, "Symbol 1", R.drawable.symbol_go),
+            Symbol(2, "Symbol 2", R.drawable.symbol_shy),
+            Symbol(3, "Symbol 3", R.drawable.symbol_rice),
+            Symbol(4, "Symbol 4", R.drawable.symbol_hello),
+            Symbol(5, "Symbol 5", R.drawable.symbol_hungry),
             // Add more symbols as needed
         )
         _state.update { it.copy(symbols = symbols) }

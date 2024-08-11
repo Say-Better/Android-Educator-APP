@@ -7,11 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.saybettereducator.domain.model.SymbolCard
+import com.example.saybettereducator.domain.model.Symbol
 
 @Composable
 fun ProgressBottomSheet(
-    symbols: List<SymbolCard>,
+    symbols: List<Symbol>,
     onModeSelected: (Int) -> Unit
 ) {
     Column(modifier = Modifier

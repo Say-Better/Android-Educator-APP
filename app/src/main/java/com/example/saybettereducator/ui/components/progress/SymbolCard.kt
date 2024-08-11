@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,69 +23,90 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.DarkGray
-import com.example.saybettereducator.ui.theme.Gray100
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.LightGray
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
+import com.example.saybettereducator.ui.theme.pretendardRegularFont
 
 @Composable
-fun ProgressLearningMode2() {
+fun SymbolCard(mode: Int, modifier: Modifier = Modifier) {
+    val outRound = when(mode) { 1,2,3 -> 16.dp else -> 8.dp }
+    val inRound = when(mode) { 1,2,3 -> 12.dp else -> 4.dp }
+    val innerPadding = when(mode) { 1 -> 12.dp 2,3 -> 8.dp else -> 5.dp }
     Box(
-        Modifier
-            .padding(horizontal = 12.dp)
+        modifier
             .border(
                 width = 1.dp,
                 color = Gray5B,
-                shape = RoundedCornerShape(size = 16.dp)
+                shape = RoundedCornerShape(size = outRound)
             )
-            .fillMaxWidth()
-            .height(216.dp)
             .background(
                 color = DarkGray,
-                shape = RoundedCornerShape(size = 16.dp)
+                shape = RoundedCornerShape(size = outRound)
             ),
-        contentAlignment = Alignment.Center // Box 내에서 중앙 정렬
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
+            Column(
                 modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                    .padding(innerPadding)
                     .fillMaxWidth()
-                    .height(148.dp)
+                    .weight(1f)
                     .background(
                         color = LightGray,
-                        shape = RoundedCornerShape(size = 12.dp)
+                        shape = RoundedCornerShape(size = inRound)
                     ),
-                contentAlignment = Alignment.Center // Image를 중앙에 배치
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.progress_add_symbol),
                     contentDescription = null,
-                    modifier = Modifier.size(32.dp) // 이미지 크기 고정
+                    modifier = Modifier.size(32.dp)
                 )
+                if (mode == 1) {
+                    Text(
+                        text = stringResource(id = R.string.progress_learning_select_symbol),
+                        modifier = Modifier.padding(top = 16.dp),
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 22.4.sp,
+                            fontFamily = FontFamily(pretendardRegularFont),
+                            fontWeight = FontWeight(500),
+                            color = Gray5B,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
             }
+            Spacer(modifier = Modifier.weight(0.05f))
             Text(
                 text = "-",
-                modifier = Modifier.padding(top = 18.dp),
                 style = TextStyle(
                     fontSize = 18.sp,
-                    lineHeight = 25.2.sp,
                     fontFamily = FontFamily(pretendardBoldFont),
                     fontWeight = FontWeight(500),
                     color = Color.White,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center
                 )
             )
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(0.07f))
         }
     }
+}
+
+@Preview
+@Composable
+fun SymbolCardPreview() {
+    SymbolCard(1)
 }

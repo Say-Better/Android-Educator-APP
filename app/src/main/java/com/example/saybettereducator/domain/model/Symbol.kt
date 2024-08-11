@@ -1,6 +1,6 @@
 package com.example.saybettereducator.domain.model
 
-data class SymbolCard(
+data class Symbol(
     val id: Int,
     val name: String,
     val imageRes: Int

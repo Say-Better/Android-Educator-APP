@@ -20,14 +20,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.times
 import com.example.saybettereducator.R
-import com.example.saybettereducator.domain.model.SymbolCard
+import com.example.saybettereducator.domain.model.Symbol
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.Gray5B50
 
 @Composable
 fun ProgressBottomSheetSymbol(
-    symbols: List<SymbolCard>,
-    onItemClick: (SymbolCard) -> Unit,
+    symbols: List<Symbol>,
+    onItemClick: (Symbol) -> Unit,
     onAddClick: () -> Unit
 ) {
     Spacer(modifier = Modifier.size(20.dp))
@@ -40,8 +40,8 @@ fun ProgressBottomSheetSymbol(
 
 @Composable
 fun SymbolCard(
-    symbol: List<SymbolCard>,
-    onItemClick: (SymbolCard) -> Unit,
+    symbol: List<Symbol>,
+    onItemClick: (Symbol) -> Unit,
     onAddClick: () -> Unit
 ) {
     val itemPadding = 4.dp
