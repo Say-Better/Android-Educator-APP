@@ -30,6 +30,7 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.Gray100
 import com.example.saybettereducator.ui.theme.Gray5B
+import com.example.saybettereducator.ui.theme.LightGray
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
@@ -62,7 +63,7 @@ fun ProgressLearningMode1() {
                     .fillMaxWidth()
                     .height(280.dp)
                     .background(
-                        color = Color(0xFFEFEFEF),
+                        color = LightGray,
                         shape = RoundedCornerShape(size = 12.dp)
                     ),
                 verticalArrangement = Arrangement.Center,

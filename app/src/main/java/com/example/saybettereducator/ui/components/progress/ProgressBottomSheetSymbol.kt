@@ -20,29 +20,28 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.times
 import com.example.saybettereducator.R
-import com.example.saybettereducator.ui.theme.Gray100
-import com.example.saybettereducator.ui.theme.Gray50
+import com.example.saybettereducator.domain.model.SymbolCard
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.Gray5B50
 
 @Composable
 fun ProgressBottomSheetSymbol(
-    items: List<String>,
-    onItemClick: (String) -> Unit,
+    symbols: List<SymbolCard>,
+    onItemClick: (SymbolCard) -> Unit,
     onAddClick: () -> Unit
 ) {
     Spacer(modifier = Modifier.size(20.dp))
 
     ProgressBottomSheetTitle(R.string.progress_symbol_title)
 
-    SymbolCard(items, onItemClick, onAddClick)
+    SymbolCard(symbols, onItemClick, onAddClick)
 }
 
 
 @Composable
 fun SymbolCard(
-    items: List<String>,
-    onItemClick: (String) -> Unit,
+    symbol: List<SymbolCard>,
+    onItemClick: (SymbolCard) -> Unit,
     onAddClick: () -> Unit
 ) {
     val itemPadding = 4.dp
@@ -80,19 +79,19 @@ fun SymbolCard(
             }
         }
 
-        items(items.size) { index ->
-            val item = items[index]
+        items(symbol.size) { index ->
+            val item = symbol[index]
             Box(
                 modifier = Modifier
                     .padding(itemPadding)
                     .aspectRatio(1f)
                     .fillMaxWidth(0.25f) // 전체 너비의 1/4
                     .background(Gray5B50, RoundedCornerShape(8.dp))
-                    .clickable { onItemClick(item) },
+                    .clickable { onItemClick(symbol[index]) },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.learner_cam),
+                    painter = painterResource(id = symbol[index].imageRes),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -106,7 +105,7 @@ fun SymbolCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = item,
+                        text = symbol[index].name,
                         color = Color.White,
                         fontSize = 12.sp,
                     )
@@ -119,9 +118,8 @@ fun SymbolCard(
 @Preview
 @Composable
 fun ProgressSymbolViewPreview() {
-    val items = List(20) { "Item ${it + 1}" } // 예시로 19개의 아이템 생성
     ProgressBottomSheetSymbol(
-        items = items,
+        symbols = emptyList(),
         onItemClick = { clickedItem ->
             println("Clicked on: $clickedItem")
         },

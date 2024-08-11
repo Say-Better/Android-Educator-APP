@@ -29,6 +29,7 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.Gray100
 import com.example.saybettereducator.ui.theme.Gray5B
+import com.example.saybettereducator.ui.theme.LightGray
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 
 @Composable
@@ -58,7 +59,7 @@ fun ProgressLearningMode3(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .height(138.dp)
                     .background(
-                        color = Color.White,
+                        color = LightGray,
                         shape = RoundedCornerShape(size = 12.dp)
                     ),
                 contentAlignment = Alignment.Center // Image를 중앙에 배치

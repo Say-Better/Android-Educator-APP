@@ -21,6 +21,7 @@ val BoxBackground = Color(0xFFF6F6F6)
 val Transparent = Color(0x00ff0000)
 
 val White = Color(0xFFFFFFFF)
+val LightGray = Color(0xFFEFEFEF)
 val Gray5B = Color(0xFF5B5B5B)
 val Gray5B50 = Color(0x805B5B5B)
 val Gray50 = Color(0xFFF9FAFB)

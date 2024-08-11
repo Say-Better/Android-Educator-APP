@@ -23,6 +23,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -36,33 +37,45 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.components.progress.ProgressBottomBar
 import com.example.saybettereducator.ui.components.progress.ProgressBottomSheet
 import com.example.saybettereducator.ui.components.progress.ProgressLearningView
 import com.example.saybettereducator.ui.components.progress.ProgressTopBar
+import com.example.saybettereducator.ui.intent.ProgressIntent
+import com.example.saybettereducator.ui.model.ProgressState
 import com.example.saybettereducator.ui.theme.BottomBar
 import com.example.saybettereducator.ui.theme.DarkGray
+import com.example.saybettereducator.ui.viewmodel.ProgressViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ProgressScreen(viewModel: ProgressViewModel = hiltViewModel()) {
+    val viewState by viewModel.state.collectAsState()
+
+    ProgressScreen(
+        state = viewState,
+        onIntent = viewModel::handleIntent
+    )
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SolutionProgressScreen() {
+fun ProgressScreen(
+    state: ProgressState,
+    onIntent: (ProgressIntent) -> Unit
+) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(initialValue = SheetValue.PartiallyExpanded)
     )
     val scope = rememberCoroutineScope()
-    var selectedMode by remember { mutableIntStateOf(1) }
 
     Scaffold(
-        topBar = {
-            ProgressTopBar()
-        },
-        bottomBar = {
-            ProgressBottomBar()
-        }
+        topBar = { ProgressTopBar() },
+        bottomBar = { ProgressBottomBar() }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -76,7 +89,7 @@ fun SolutionProgressScreen() {
                     .background(color = Color.Black)
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                ProgressLearningView(selectedMode)
+                ProgressLearningView(state.selectedMode)
                 Spacer(modifier = Modifier.weight(1f))
                 VideoSection()
                 Spacer(modifier = Modifier.weight(1f))
@@ -86,8 +99,9 @@ fun SolutionProgressScreen() {
                 scaffoldState = bottomSheetScaffoldState,
                 sheetContent = {
                     ProgressBottomSheet(
+                        symbols = state.symbols,
                         onModeSelected = { mode ->
-                            selectedMode = mode
+                            onIntent(ProgressIntent.SelectMode(mode))
                         }
                     )
                 },
@@ -95,14 +109,12 @@ fun SolutionProgressScreen() {
                     DragHandle(bottomSheetScaffoldState, scope)
                 },
                 sheetContainerColor = DarkGray,
-                sheetPeekHeight = 30.dp, // 초기 바텀시트가 보여지는 높이
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                sheetPeekHeight = 30.dp,
+                modifier = Modifier.align(Alignment.BottomCenter)
             ) {}
         }
     }
 }
-
 
 @Composable
 fun VideoSection() {
@@ -158,6 +170,6 @@ fun DragHandle(bottomSheetScaffoldState: BottomSheetScaffoldState, scope: Corout
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(widthDp = 360, heightDp = 800)
 @Composable
-fun SolutionProgressScreenPreview() {
-    SolutionProgressScreen()
+fun ProgressScreenPreview() {
+    ProgressScreen()
 }

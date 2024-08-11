@@ -36,7 +36,6 @@ import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProgressBottomBar() {
     var micClicked: Boolean by remember { mutableStateOf(false) }
