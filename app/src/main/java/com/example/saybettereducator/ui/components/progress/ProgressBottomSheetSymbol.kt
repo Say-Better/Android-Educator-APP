@@ -18,9 +18,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.times
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.theme.Gray100
+import com.example.saybettereducator.ui.theme.Gray50
 
 @Composable
 fun ProgressBottomSheetSymbol(
@@ -71,7 +72,7 @@ fun SymbolCard(
                 Spacer(modifier = Modifier.height(8.dp)) // 이미지와 텍스트 사이 간격 조절
                 Text(
                     text = "텍스트 상징",
-                    color = colorResource(id = R.color.grey_100),
+                    color = Gray100,
                     fontSize = 12.sp
                 )
             }
@@ -99,7 +100,7 @@ fun SymbolCard(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(colorResource(id = R.color.gray_50)), // 반투명 배경
+                        .background(Gray50), // 반투명 배경
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,9 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -29,8 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.theme.DarkGray
+import com.example.saybettereducator.ui.theme.Gray100
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
-import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
 @Composable
 fun ProgressLearningMode3(modifier: Modifier = Modifier) {
@@ -38,12 +36,12 @@ fun ProgressLearningMode3(modifier: Modifier = Modifier) {
         modifier
             .border(
                 width = 1.dp,
-                color = colorResource(id = R.color.grey_100),
+                color = Gray100,
                 shape = RoundedCornerShape(size = 16.dp)
             )
             .height(205.dp)
             .background(
-                color = colorResource(id = R.color.dark_gray),
+                color = DarkGray,
                 shape = RoundedCornerShape(size = 16.dp)
             ),
         contentAlignment = Alignment.Center // Box 내에서 중앙 정렬

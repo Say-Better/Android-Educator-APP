@@ -98,7 +98,7 @@ fun ProgressBottomBar() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.solution_start_btn_icon),
+                    painter = painterResource(id = R.drawable.solution_end_btn),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.padding(start = 21.5.dp)

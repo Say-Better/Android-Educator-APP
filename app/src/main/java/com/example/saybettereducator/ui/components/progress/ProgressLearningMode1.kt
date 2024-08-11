@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -28,6 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.theme.DarkGray
+import com.example.saybettereducator.ui.theme.Gray100
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
@@ -38,13 +39,13 @@ fun ProgressLearningMode1() {
             .padding(horizontal = 16.dp)
             .border(
                 width = 1.dp,
-                color = colorResource(id = R.color.grey_100),
+                color = Gray100,
                 shape = RoundedCornerShape(size = 16.dp)
             )
             .fillMaxWidth()
             .height(376.dp)
             .background(
-                color = colorResource(id = R.color.dark_gray),
+                color = DarkGray,
                 shape = RoundedCornerShape(size = 16.dp)
             ),
         contentAlignment = Alignment.Center
@@ -79,7 +80,7 @@ fun ProgressLearningMode1() {
                         lineHeight = 22.4.sp,
                         fontFamily = FontFamily(pretendardMediumFont),
                         fontWeight = FontWeight(500),
-                        color = colorResource( R.color.grey_100),
+                        color = Gray100,
                         textAlign = TextAlign.Center,
                     )
                 )
