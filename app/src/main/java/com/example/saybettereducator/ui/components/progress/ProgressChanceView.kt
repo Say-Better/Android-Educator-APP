@@ -22,7 +22,7 @@ fun ProgressChanceView(
 ) {
     Spacer(modifier = Modifier.size(8.dp))
 
-    ProgressBottomSheetTitle(title = R.string.solution_progress_chance_title)
+    ProgressBottomSheetTitle(title = R.string.progress_chance_title)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -34,7 +34,7 @@ fun ProgressChanceView(
         ) {
             ProgressBasicBtn(
                 resId = R.drawable.progress_chance_btn,
-                desc = R.string.solution_progress_chance,
+                desc = R.string.progress_chance,
                 onClick = onChanceClick
             )
             Spacer(modifier = Modifier.size(8.dp))
@@ -53,7 +53,7 @@ fun ProgressChanceView(
         ) {
             ProgressBasicBtn(
                 resId = R.drawable.progress_timer,
-                desc = R.string.solution_progress_timer,
+                desc = R.string.progress_timer,
                 onClick = onTimerClick
             )
             Spacer(modifier = Modifier.size(8.dp))

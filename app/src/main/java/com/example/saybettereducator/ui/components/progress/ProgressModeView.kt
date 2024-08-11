@@ -22,11 +22,11 @@ import com.example.saybettereducator.R
 fun ProgressModeView(
     onModeSelected: (Int) -> Unit
 ) {
-    var selectedMode by remember { mutableIntStateOf(0) }
+    var selectedMode by remember { mutableIntStateOf(1) }
 
     Spacer(modifier = Modifier.size(20.dp))
 
-    ProgressBottomSheetTitle(R.string.solution_progress_mode_title)
+    ProgressBottomSheetTitle(R.string.progress_mode_title)
 
     Row(
         modifier = Modifier

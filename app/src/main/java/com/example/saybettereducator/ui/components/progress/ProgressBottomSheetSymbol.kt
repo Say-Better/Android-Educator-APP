@@ -8,12 +8,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,14 +23,14 @@ import androidx.compose.ui.unit.times
 import com.example.saybettereducator.R
 
 @Composable
-fun ProgressSymbolView(
+fun ProgressBottomSheetSymbol(
     items: List<String>,
     onItemClick: (String) -> Unit,
     onAddClick: () -> Unit
 ) {
     Spacer(modifier = Modifier.size(20.dp))
 
-    ProgressBottomSheetTitle(R.string.solution_progress_symbol_title)
+    ProgressBottomSheetTitle(R.string.progress_symbol_title)
 
     SymbolCard(items, onItemClick, onAddClick)
 }
@@ -119,7 +117,7 @@ fun SymbolCard(
 @Composable
 fun ProgressSymbolViewPreview() {
     val items = List(20) { "Item ${it + 1}" } // 예시로 19개의 아이템 생성
-    ProgressSymbolView(
+    ProgressBottomSheetSymbol(
         items = items,
         onItemClick = { clickedItem ->
             println("Clicked on: $clickedItem")
