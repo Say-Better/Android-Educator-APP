@@ -25,6 +25,7 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.Symbol
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.Gray5B50
+import com.example.saybettereducator.ui.theme.Transparent
 
 @Composable
 fun ProgressBottomSheetSymbol(
@@ -97,7 +98,7 @@ fun BottomSheetSymbolCard(
                     .aspectRatio(1f)
                     .fillMaxWidth(0.25f)
                     .background(
-                        if (isSelected) Color.Gray else Color.White,
+                        Color.White,
                         RoundedCornerShape(8.dp)
                     )
                     .clickable {
@@ -114,16 +115,22 @@ fun BottomSheetSymbolCard(
                         .fillMaxSize()
                         .clip(RoundedCornerShape(8.dp))
                 )
-                if (isSelected) {
-                    Text(
-                        text = item.name,
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(4.dp)
-                    )
-                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = if (isSelected) Transparent else Gray5B50,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                )
+                Text(
+                    text = item.name,
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(4.dp)
+                )
             }
         }
     }
