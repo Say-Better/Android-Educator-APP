@@ -18,7 +18,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.saybettereducator.domain.model.DataModel
+import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.ui.components.MainBottomNavigationBar
 import com.example.saybettereducator.ui.navigation.AppNavHost
 import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme

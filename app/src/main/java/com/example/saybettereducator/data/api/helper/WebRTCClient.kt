@@ -1,8 +1,8 @@
 package com.example.saybettereducator.data.api.helper
 
 import android.content.Context
-import com.example.saybettereducator.domain.model.DataModel
-import com.example.saybettereducator.domain.model.DataModelType
+import com.example.saybettereducator.data.model.DataModel
+import com.example.saybettereducator.data.model.DataModelType
 import com.example.saybettereducator.utils.webrtcObserver.MySdpObserver
 import com.google.gson.Gson
 import org.webrtc.AudioTrack
