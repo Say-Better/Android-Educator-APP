@@ -55,9 +55,9 @@ import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.montserratFont
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.utils.permission.checkAndRequestPermissions
-import com.example.saybettereducator.utils.webrtc.repository.MainRepository
-import com.example.saybettereducator.utils.webrtc.service.MainService
-import com.example.saybettereducator.utils.webrtc.service.MainServiceRepository
+import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.service.MainService
+import com.example.saybettereducator.data.repository.MainServiceRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

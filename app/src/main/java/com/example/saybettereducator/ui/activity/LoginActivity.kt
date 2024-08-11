@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
-import com.example.saybettereducator.utils.webrtc.repository.MainRepository
+import com.example.saybettereducator.data.repository.MainRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

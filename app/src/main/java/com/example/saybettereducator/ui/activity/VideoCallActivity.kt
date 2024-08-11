@@ -51,9 +51,9 @@ import com.example.saybettereducator.ui.theme.DeepDarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.utils.customClick.CustomClickEvent
-import com.example.saybettereducator.utils.webrtc.service.MainService
-import com.example.saybettereducator.utils.webrtc.service.MainServiceRepository
-import com.example.saybettereducator.utils.webrtc.webrtcClient.WebRTCClient
+import com.example.saybettereducator.data.service.MainService
+import com.example.saybettereducator.data.repository.MainServiceRepository
+import com.example.saybettereducator.data.api.helper.WebRTCClient
 import dagger.hilt.android.AndroidEntryPoint
 import org.webrtc.SurfaceViewRenderer
 import javax.inject.Inject

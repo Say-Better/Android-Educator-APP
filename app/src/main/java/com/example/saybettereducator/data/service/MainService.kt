@@ -1,4 +1,4 @@
-package com.example.saybettereducator.utils.webrtc.service
+package com.example.saybettereducator.data.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,8 +10,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.saybettereducator.domain.model.DataModel
-import com.example.saybettereducator.utils.webrtc.repository.MainRepository
-import com.example.saybettereducator.utils.webrtc.service.MainServiceActions.*
+import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.model.MainServiceActions.*
 import dagger.hilt.android.AndroidEntryPoint
 import org.webrtc.SurfaceViewRenderer
 import javax.inject.Inject

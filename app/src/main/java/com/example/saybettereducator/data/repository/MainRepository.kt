@@ -1,11 +1,11 @@
-package com.example.saybettereducator.utils.webrtc.repository
+package com.example.saybettereducator.data.repository
 
 import com.example.saybettereducator.domain.model.DataModel
 import com.example.saybettereducator.domain.model.DataModelType.*
 import com.example.saybettereducator.domain.model.UserStatus
-import com.example.saybettereducator.utils.webrtc.firebaseClient.FirebaseClient
-import com.example.saybettereducator.utils.webrtc.webrtcClient.MyPeerObserver
-import com.example.saybettereducator.utils.webrtc.webrtcClient.WebRTCClient
+import com.example.saybettereducator.data.api.helper.FirebaseClient
+import com.example.saybettereducator.utils.webrtcObserver.MyPeerObserver
+import com.example.saybettereducator.data.api.helper.WebRTCClient
 import com.google.gson.Gson
 import org.webrtc.IceCandidate
 import org.webrtc.MediaStream
