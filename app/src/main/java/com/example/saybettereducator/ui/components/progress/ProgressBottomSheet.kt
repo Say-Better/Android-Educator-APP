@@ -12,15 +12,25 @@ import com.example.saybettereducator.domain.model.Symbol
 @Composable
 fun ProgressBottomSheet(
     symbols: List<Symbol>,
-    onModeSelected: (Int) -> Unit
+    selectedSymbols: List<Symbol>,
+    onModeSelected: (Int) -> Unit,
+    onItemClick: (Symbol) -> Unit,
+    onAddClick: () -> Unit
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 20.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ) {
         ProgressChanceView(onChanceClick = {}, onTimerClick = {})
         ProgressModeView(onModeSelected = onModeSelected)
 
-        ProgressBottomSheetSymbol(symbols = symbols, onItemClick = {}, onAddClick = {})
+        ProgressBottomSheetSymbol(
+            symbols = symbols,
+            selectedSymbols = selectedSymbols,
+            onItemClick = onItemClick,
+            onAddClick = onAddClick
+        )
     }
 }
 
@@ -28,5 +38,5 @@ fun ProgressBottomSheet(
 @Preview
 @Composable
 fun ProgressBottomSheetPreview() {
-    ProgressBottomSheet(emptyList(), {})
+    ProgressBottomSheet(emptyList(), emptyList(), {}, {}, {})
 }

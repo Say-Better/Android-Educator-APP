@@ -1,5 +1,6 @@
 package com.example.saybettereducator.ui.components.progress
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.times
 import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.Symbol
@@ -27,6 +29,7 @@ import com.example.saybettereducator.ui.theme.Gray5B50
 @Composable
 fun ProgressBottomSheetSymbol(
     symbols: List<Symbol>,
+    selectedSymbols: List<Symbol>,
     onItemClick: (Symbol) -> Unit,
     onAddClick: () -> Unit
 ) {
@@ -34,21 +37,27 @@ fun ProgressBottomSheetSymbol(
 
     ProgressBottomSheetTitle(R.string.progress_symbol_title)
 
-    SymbolCard(symbols, onItemClick, onAddClick)
+    BottomSheetSymbolCard(symbols, selectedSymbols, onItemClick, onAddClick)
 }
 
 
 @Composable
-fun SymbolCard(
-    symbol: List<Symbol>,
+fun BottomSheetSymbolCard(
+    symbols: List<Symbol>,
+    selectedSymbols: List<Symbol>,
     onItemClick: (Symbol) -> Unit,
     onAddClick: () -> Unit
 ) {
     val itemPadding = 4.dp
+    val columns = 4 // 4열 고정
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp // 화면 너비
+    val itemHeight = (screenWidth - (itemPadding * (columns - 1))) / columns // 각 아이템의 너비 = 높이
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
         modifier = Modifier
-            .height(2 * 100.dp)
+            .fillMaxWidth()
+            .height(itemHeight * 2 + itemPadding),
     ) {
         item {
             // 첫 번째 아이템은 '아이템 추가' 버튼
@@ -79,35 +88,40 @@ fun SymbolCard(
             }
         }
 
-        items(symbol.size) { index ->
-            val item = symbol[index]
+        items(symbols.size) { index ->
+            val item = symbols[index]
+            val isSelected = selectedSymbols.contains(item)
             Box(
                 modifier = Modifier
-                    .padding(itemPadding)
+                    .padding(4.dp)
                     .aspectRatio(1f)
-                    .fillMaxWidth(0.25f) // 전체 너비의 1/4
-                    .background(Gray5B50, RoundedCornerShape(8.dp))
-                    .clickable { onItemClick(symbol[index]) },
+                    .fillMaxWidth(0.25f)
+                    .background(
+                        if (isSelected) Color.Gray else Color.White,
+                        RoundedCornerShape(8.dp)
+                    )
+                    .clickable {
+                        onItemClick(item)
+                        Log.d("BottomSheetSymbolCard", "Item clicked: $item")
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = symbol[index].imageRes),
+                    painter = painterResource(id = item.imageRes),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(8.dp))
                 )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Gray5B50, RoundedCornerShape(8.dp)), // 반투명 배경
-                    contentAlignment = Alignment.Center
-                ) {
+                if (isSelected) {
                     Text(
-                        text = symbol[index].name,
+                        text = item.name,
                         color = Color.White,
                         fontSize = 12.sp,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(4.dp)
                     )
                 }
             }
@@ -120,6 +134,7 @@ fun SymbolCard(
 fun ProgressSymbolViewPreview() {
     ProgressBottomSheetSymbol(
         symbols = emptyList(),
+        selectedSymbols = emptyList(),
         onItemClick = { clickedItem ->
             println("Clicked on: $clickedItem")
         },

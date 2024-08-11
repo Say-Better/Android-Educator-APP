@@ -1,6 +1,7 @@
 package com.example.saybettereducator.ui.view
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,7 +24,6 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -50,10 +50,13 @@ import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.viewmodel.ProgressViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
 fun ProgressScreen(viewModel: ProgressViewModel = hiltViewModel()) {
-    val viewState by viewModel.state.collectAsState()
+    val viewState by viewModel.collectAsState()
+
+    Log.d("ProgressScreen", "Recomposing with state: $viewState")
 
     ProgressScreen(
         state = viewState,
@@ -68,6 +71,8 @@ fun ProgressScreen(
     state: ProgressState,
     onIntent: (ProgressIntent) -> Unit
 ) {
+    Log.d("ProgressScreen", "Recomposing with state: $state")
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(initialValue = SheetValue.PartiallyExpanded)
     )
@@ -89,7 +94,11 @@ fun ProgressScreen(
                     .background(color = Color.Black)
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                ProgressLearningView(state.selectedMode)
+                ProgressLearningView(
+                    selectedMode = state.selectedMode,
+                    selectedSymbols = state.selectedSymbols,
+                    allSymbols = state.symbols
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 VideoSection()
                 Spacer(modifier = Modifier.weight(1f))
@@ -100,9 +109,18 @@ fun ProgressScreen(
                 sheetContent = {
                     ProgressBottomSheet(
                         symbols = state.symbols,
+                        selectedSymbols = state.selectedSymbols,
                         onModeSelected = { mode ->
                             onIntent(ProgressIntent.SelectMode(mode))
-                        }
+                        },
+                        onItemClick = { symbol ->
+                            if (state.selectedSymbols.contains(symbol)) {
+                                onIntent(ProgressIntent.DeselectSymbol(symbol))
+                            } else {
+                                onIntent(ProgressIntent.SelectSymbol(symbol))
+                            }
+                        },
+                        onAddClick = {}
                     )
                 },
                 sheetDragHandle = {

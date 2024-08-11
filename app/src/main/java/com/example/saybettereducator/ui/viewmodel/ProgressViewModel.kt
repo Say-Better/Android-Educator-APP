@@ -1,5 +1,6 @@
 package com.example.saybettereducator.ui.viewmodel
 
+import android.util.Log
 import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.Symbol
 import com.example.saybettereducator.ui.common.MviViewModel
@@ -21,29 +22,44 @@ class ProgressViewModel @Inject constructor(
             is ProgressIntent.SelectMode -> selectMode(intent.mode)
             is ProgressIntent.AddSymbolClicked -> {}
             is ProgressIntent.SymbolClicked -> {}
+            is ProgressIntent.SelectSymbol -> {
+                selectSymbol(intent.symbol)
+            }
+            is ProgressIntent.DeselectSymbol -> {
+                deselectSymbol(intent.symbol)
+            }
         }
     }
-
-    private val _state = MutableStateFlow(ProgressState())
-    val state: StateFlow<ProgressState> = _state
 
     init {
         loadSymbols()
     }
 
     private fun loadSymbols() {
-        val symbols = listOf(
-            Symbol(1, "Symbol 1", R.drawable.symbol_go),
-            Symbol(2, "Symbol 2", R.drawable.symbol_shy),
-            Symbol(3, "Symbol 3", R.drawable.symbol_rice),
-            Symbol(4, "Symbol 4", R.drawable.symbol_hello),
-            Symbol(5, "Symbol 5", R.drawable.symbol_hungry),
-            // Add more symbols as needed
-        )
-        _state.update { it.copy(symbols = symbols) }
+        val symbols = List(20) { i ->
+            Symbol(i + 1, "Symbol ${i + 1}", R.drawable.symbol_go)
+        }
+        updateState { it.copy(symbols = symbols) }
     }
 
-    fun selectMode(mode: Int) {
-        _state.update { it.copy(selectedMode = mode) }
+    private fun selectMode(mode: Int) {
+        updateState { it.copy(selectedMode = mode) }
     }
+
+    private fun selectSymbol(symbol: Symbol) {
+        updateState { state ->
+            val newSelectedSymbols = state.selectedSymbols + symbol
+            Log.d("ProgressViewModel", "Symbol selected: $symbol, updated selectedSymbols: $newSelectedSymbols")
+            state.copy(selectedSymbols = newSelectedSymbols)
+        }
+    }
+
+    private fun deselectSymbol(symbol: Symbol) {
+        updateState { state ->
+            val newSelectedSymbols = state.selectedSymbols - symbol
+            Log.d("ProgressViewModel", "Symbol deselected: $symbol, updated selectedSymbols: $newSelectedSymbols")
+            state.copy(selectedSymbols = newSelectedSymbols)
+        }
+    }
+
 }
