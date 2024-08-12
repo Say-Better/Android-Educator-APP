@@ -1,10 +1,10 @@
-package com.example.saybettereducator.utils.webrtc.firebaseClient
+package com.example.saybettereducator.data.api.helper
 
 import android.util.Log
-import com.example.saybettereducator.domain.model.DataModel
-import com.example.saybettereducator.domain.model.UserStatus
-import com.example.saybettereducator.utils.FirebaseFieldNames.LATEST_EVENT
-import com.example.saybettereducator.utils.FirebaseFieldNames.STATUS
+import com.example.saybettereducator.data.model.DataModel
+import com.example.saybettereducator.data.model.UserStatus
+import com.example.saybettereducator.data.model.FirebaseFieldNames.LATEST_EVENT
+import com.example.saybettereducator.data.model.FirebaseFieldNames.STATUS
 import com.example.saybettereducator.utils.MyEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference

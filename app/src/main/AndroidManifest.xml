@@ -32,7 +32,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SaybetterEducator"
-        android:name=".config.SayBetterApplication"
+        android:name=".di.SayBetterApplication"
         tools:targetApi="31">
 
         <provider
@@ -65,7 +65,7 @@
 
         <!-- 시그널링 서버와 지속적으로 데이터를 주고받아야 하므로 DataSync type으로 명시 -->
         <service
-            android:name=".utils.webrtc.service.MainService"
+            android:name=".data.service.MainService"
             android:foregroundServiceType="dataSync"/>
     </application>
 </manifest>

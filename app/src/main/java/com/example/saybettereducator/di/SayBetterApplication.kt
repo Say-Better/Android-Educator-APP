@@ -1,4 +1,4 @@
-package com.example.saybettereducator.config
+package com.example.saybettereducator.di
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

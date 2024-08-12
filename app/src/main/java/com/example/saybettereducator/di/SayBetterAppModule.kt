@@ -1,4 +1,4 @@
-package com.example.saybettereducator.utils.module
+package com.example.saybettereducator.di
 
 import android.content.Context
 import com.google.firebase.database.DatabaseReference
@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+class SayBetterAppModule {
 
     @Provides
     fun provideDataBaseInstance() : FirebaseDatabase = FirebaseDatabase.getInstance()
