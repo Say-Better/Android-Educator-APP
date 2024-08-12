@@ -3,13 +3,17 @@ package com.example.saybettereducator.ui.viewmodel
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.Symbol
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.ProgressIntent
+import com.example.saybettereducator.ui.intent.ResponseFilterType
 import com.example.saybettereducator.ui.model.ProgressState
 import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +31,7 @@ class ProgressViewModel @Inject constructor(
             is ProgressIntent.StartVoicePlayback -> startVoicePlayback(intent.symbol)
             is ProgressIntent.StopVoicePlayback -> stopVoicePlayback()
             is ProgressIntent.ToggleBottomSheet -> toggleBottomSheet()
+            is ProgressIntent.ApplyResponseFilter -> applyResponseFilter(intent.filterType)
         }
     }
 
@@ -119,5 +124,16 @@ class ProgressViewModel @Inject constructor(
         super.onCleared()
         textToSpeech.stop()
         textToSpeech.shutdown()
+    }
+
+
+    private fun applyResponseFilter(filterType: ResponseFilterType) {
+        updateState { it.copy(responseFilter = filterType) }
+
+        // 3초 후에 필터를 자동으로 제거
+        viewModelScope.launch {
+            delay(3000) // 3초 대기
+            updateState { it.copy(responseFilter = ResponseFilterType.NONE) }
+        }
     }
 }

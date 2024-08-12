@@ -12,4 +12,9 @@ sealed class ProgressIntent {
     data class StartVoicePlayback(val symbol: Symbol) : ProgressIntent()
     data object StopVoicePlayback : ProgressIntent()
     data object ToggleBottomSheet : ProgressIntent()
+    data class ApplyResponseFilter(val filterType: ResponseFilterType) : ProgressIntent()
+}
+
+enum class ResponseFilterType {
+    YES, NO, NONE
 }

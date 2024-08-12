@@ -21,23 +21,23 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.components.progress.ProgressBottomBar
@@ -45,12 +45,12 @@ import com.example.saybettereducator.ui.components.progress.ProgressBottomSheet
 import com.example.saybettereducator.ui.components.progress.ProgressLearningView
 import com.example.saybettereducator.ui.components.progress.ProgressTopBar
 import com.example.saybettereducator.ui.intent.ProgressIntent
+import com.example.saybettereducator.ui.intent.ResponseFilterType
 import com.example.saybettereducator.ui.model.ProgressState
 import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
 import com.example.saybettereducator.ui.theme.BottomBar
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.viewmodel.ProgressViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -142,7 +142,7 @@ fun ProgressScreen(
                     }
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                VideoSection()
+                VideoSection(responseFilter = state.responseFilter)
                 Spacer(modifier = Modifier.weight(1f))
             }
 
@@ -178,7 +178,7 @@ fun ProgressScreen(
 
 
 @Composable
-fun VideoSection() {
+fun VideoSection(responseFilter: ResponseFilterType) {
     Row {
         Image(
             painter = painterResource(id = R.drawable.educator_cam),
@@ -188,17 +188,42 @@ fun VideoSection() {
                 .clip(RoundedCornerShape(8.dp))
                 .size(width = 128.dp, height = 75.dp)
         )
-        Image(
-            painter = painterResource(id = R.drawable.learner_cam),
-            contentDescription = "학습자 캠",
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
                 .padding(start = 8.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .size(width = 128.dp, height = 75.dp)
-        )
+                .background(
+                    color = when (responseFilter) {
+                        ResponseFilterType.YES -> Color(0x5FD39999)
+                        ResponseFilterType.NO -> Color(0xF0464699)
+                        else -> Color.Transparent
+                    }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.learner_cam),
+                contentDescription = "학습자 캠",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            if (responseFilter != ResponseFilterType.NONE) {
+                Text(
+                    text = when (responseFilter) {
+                        ResponseFilterType.YES -> "예"
+                        ResponseFilterType.NO -> "아니오"
+                        else -> ""
+                    },
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
     }
 }
+
 
 @Composable
 fun DragHandle(
