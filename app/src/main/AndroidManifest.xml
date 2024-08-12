@@ -32,7 +32,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SaybetterEducator"
-        android:name=".config.SayBetterApplication"
+        android:name=".di.SayBetterApplication"
         tools:targetApi="31">
 
         <provider

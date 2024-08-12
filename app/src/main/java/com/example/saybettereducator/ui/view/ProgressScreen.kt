@@ -64,7 +64,7 @@ fun ProgressScreen(viewModel: ProgressViewModel = hiltViewModel()) {
     )
     val scope = rememberCoroutineScope()
 
-// SideEffect 처리
+    // SideEffect 처리
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is ProgressSideEffect.OpenBottomSheet -> {
@@ -80,12 +80,29 @@ fun ProgressScreen(viewModel: ProgressViewModel = hiltViewModel()) {
         }
     }
 
+
+    // 바텀시트 상태 변화를 감지하여 뷰모델에 알림
+    LaunchedEffect(scaffoldState.bottomSheetState.currentValue) {
+        when (scaffoldState.bottomSheetState.currentValue) {
+            SheetValue.Expanded -> {
+                if (!viewState.isBottomSheetOpen) {
+                    viewModel.handleIntent(ProgressIntent.ToggleBottomSheet)
+                }
+            }
+            SheetValue.PartiallyExpanded -> {
+                if (viewState.isBottomSheetOpen) {
+                    viewModel.handleIntent(ProgressIntent.ToggleBottomSheet)
+                }
+            }
+            else -> { /* No action needed */ }
+        }
+    }
+
     Log.d("ProgressScreen", "Recomposing with state: $viewState")
 
     ProgressScreen(
         state = viewState,
         scaffoldState = scaffoldState,
-        scope = scope,
         onIntent = viewModel::handleIntent
     )
 }
@@ -95,7 +112,6 @@ fun ProgressScreen(viewModel: ProgressViewModel = hiltViewModel()) {
 fun ProgressScreen(
     state: ProgressState,
     scaffoldState: BottomSheetScaffoldState,
-    scope: CoroutineScope,
     onIntent: (ProgressIntent) -> Unit
 ) {
     Log.d("ProgressScreen", "Recomposing with state: $state")

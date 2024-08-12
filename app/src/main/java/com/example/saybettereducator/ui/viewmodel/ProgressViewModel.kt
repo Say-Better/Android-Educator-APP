@@ -1,5 +1,7 @@
 package com.example.saybettereducator.ui.viewmodel
 
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.Symbol
@@ -12,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
+    private val textToSpeech: TextToSpeech
 ) : MviViewModel<ProgressState, ProgressSideEffect, ProgressIntent>(ProgressState()) {
     override fun handleIntent(intent: ProgressIntent) {
         when (intent) {
@@ -23,12 +26,23 @@ class ProgressViewModel @Inject constructor(
             is ProgressIntent.SymbolClicked -> handleSymbolClicked(intent.symbol)
             is ProgressIntent.StartVoicePlayback -> startVoicePlayback(intent.symbol)
             is ProgressIntent.StopVoicePlayback -> stopVoicePlayback()
-            is ProgressIntent.ToggleBottomSheet -> handleToggleBottomSheet()
+            is ProgressIntent.ToggleBottomSheet -> toggleBottomSheet()
         }
     }
 
     init {
         loadSymbols()
+
+        textToSpeech.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+            override fun onStart(utteranceId: String?) {}
+            override fun onDone(utteranceId: String?) {
+                stopVoicePlayback()
+                Log.d("ProgressViewModel", "Voice playback completed")
+            }
+            override fun onError(utteranceId: String?) {
+                Log.e("ProgressViewModel", "Voice playback error")
+            }
+        })
     }
 
     private fun loadSymbols() {
@@ -61,9 +75,15 @@ class ProgressViewModel @Inject constructor(
     private fun handleSymbolClicked(symbol: Symbol?) {
         val currentState = container.stateFlow.value
         when {
-            symbol == null -> handleToggleBottomSheet()
-            currentState.playingSymbol == symbol -> stopVoicePlayback()
-            else -> startVoicePlayback(symbol)
+            symbol == null -> {
+                toggleBottomSheet()
+            }
+            currentState.playingSymbol == symbol -> {
+                stopVoicePlayback()
+            }
+            else -> {
+                startVoicePlayback(symbol)
+            }
         }
     }
 
@@ -71,27 +91,33 @@ class ProgressViewModel @Inject constructor(
         updateState {
             it.copy(isVoicePlaying = true, playingSymbol = symbol)
         }
-        // 여기에 음성 재생 로직 추가
-        // 예: TTS 또는 미디어 플레이어를 통해 재생
+
+        textToSpeech.speak(symbol.name, TextToSpeech.QUEUE_FLUSH, null, null)
         Log.d("ProgressViewModel", "Voice playback started for symbol: $symbol")
     }
 
     private fun stopVoicePlayback() {
+        textToSpeech.stop()
         updateState {
             it.copy(isVoicePlaying = false, playingSymbol = null)
         }
-        // 여기에 음성 중지 로직 추가
         Log.d("ProgressViewModel", "Voice playback stopped")
     }
 
-    private fun handleToggleBottomSheet() {
+    private fun toggleBottomSheet() {
         val currentState = container.stateFlow.value
-        if (currentState.isBottomSheetOpen) {
-            postSideEffect(ProgressSideEffect.CloseBottomSheet)
-            updateState { it.copy(isBottomSheetOpen = false) }
+        val sideEffect = if (currentState.isBottomSheetOpen) {
+            ProgressSideEffect.CloseBottomSheet
         } else {
-            postSideEffect(ProgressSideEffect.OpenBottomSheet)
-            updateState { it.copy(isBottomSheetOpen = true) }
+            ProgressSideEffect.OpenBottomSheet
         }
+        postSideEffect(sideEffect)
+        updateState { it.copy(isBottomSheetOpen = !currentState.isBottomSheetOpen) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        textToSpeech.stop()
+        textToSpeech.shutdown()
     }
 }
