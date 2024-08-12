@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.saybettereducator.ui.view.screen.CalendarScreen
+import com.example.saybettereducator.ui.view.CalendarScreen
 import com.example.saybettereducator.ui.view.HomeScreen
 import com.example.saybettereducator.ui.view.LearnerScreen
 import com.example.saybettereducator.ui.view.SolutionScreen
@@ -51,7 +51,7 @@ fun AppNavHost(navController: NavHostController, startVideoCall: (String, Boolea
                         launcherMultiplePermissions,
                         onPermissionsGranted = {
                             Log.d("permission", "Permission Granted, Go VideoCall!")
-                            startVideoCall("targetUserId", true)  // 여기서 적절한 값을 전달합니다.
+                            startVideoCall("helloYI", true)  // 여기서 적절한 값을 전달합니다.
                         }
                     )
                 }

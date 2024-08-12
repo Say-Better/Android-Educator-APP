@@ -1,6 +1,7 @@
 package com.example.saybettereducator.data.api.helper
 
 import android.content.Context
+import android.graphics.PixelFormat
 import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.model.DataModelType
 import com.example.saybettereducator.utils.webrtcObserver.MySdpObserver
@@ -210,11 +211,8 @@ class WebRTCClient @Inject constructor(
         view.run {
             setMirror(false)
             setEnableHardwareScaler(true)
+//            holder.setFormat(PixelFormat.TRANSPARENT)
             init(eglBaseContext, null)
-
-//            val params: ViewGroup.LayoutParams = view.layoutParams
-//            params.width = 328
-//            params.height = 196
         }
     }
     fun initRemoteSurfaceView(view : SurfaceViewRenderer) {
