@@ -22,14 +22,19 @@ import com.example.saybettereducator.domain.model.Symbol
 fun ProgressLearningView(
     selectedMode: Int,
     selectedSymbols: List<Symbol>,
-    allSymbols: List<Symbol>
+    allSymbols: List<Symbol>,
+    playingSymbol: Symbol?,
+    onSymbolClick: (Symbol?) -> Unit
 ) {
     Log.d("ProgressLearningView", "Recomposing with selectedSymbols: $selectedSymbols")
     when (selectedMode) {
         1 -> {
+            val symbol = selectedSymbols.getOrNull(0)
             SymbolCard(
                 mode = selectedMode,
-                symbol = selectedSymbols.getOrNull(0),
+                symbol = symbol,
+                isPlaying = symbol != null && symbol == playingSymbol,
+                onSymbolClick = { onSymbolClick(symbol) },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
@@ -44,9 +49,12 @@ fun ProgressLearningView(
                     .fillMaxWidth()
             ) {
                 for (i in 0 until 2) {
+                    val symbol = selectedSymbols.getOrNull(i)
                     SymbolCard(
                         mode = selectedMode,
-                        symbol = selectedSymbols.getOrNull(i),
+                        symbol = symbol,
+                        isPlaying = symbol != null && symbol == playingSymbol,
+                        onSymbolClick = { onSymbolClick(symbol) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(216.dp)
@@ -66,9 +74,12 @@ fun ProgressLearningView(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         for (j in 0 until 2) {
                             val index = i * 2 + j
+                            val symbol = selectedSymbols.getOrNull(index)
                             SymbolCard(
                                 mode = selectedMode,
-                                symbol = selectedSymbols.getOrNull(index),
+                                symbol = symbol,
+                                isPlaying = symbol != null && symbol == playingSymbol,
+                                onSymbolClick = { onSymbolClick(symbol) },
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(205.dp)
@@ -112,6 +123,8 @@ fun ProgressLearningView(
                                     SymbolCard(
                                         mode = selectedMode,
                                         symbol = symbol,
+                                        isPlaying = symbol == playingSymbol,
+                                        onSymbolClick = { onSymbolClick(symbol) },
                                         modifier = Modifier
                                             .weight(1f)
                                             .height(131.dp)
@@ -132,10 +145,14 @@ fun ProgressLearningView(
     }
 }
 
-
-
 @Preview
 @Composable
 fun ProgressLearningPreview() {
-    ProgressLearningView(1, emptyList(), emptyList())
+    ProgressLearningView(
+        selectedMode = 1,
+        selectedSymbols = emptyList(),
+        allSymbols = emptyList(),
+        playingSymbol = null,
+        onSymbolClick = {}
+    )
 }

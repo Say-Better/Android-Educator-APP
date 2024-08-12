@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,20 +33,25 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.Symbol
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.Gray5B
+import com.example.saybettereducator.ui.theme.HighlightBorder
 import com.example.saybettereducator.ui.theme.LightGray
+import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
-import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.ui.theme.pretendardRegularFont
 
 @Composable
 fun SymbolCard(
     mode: Int,
     symbol: Symbol?,
+    isPlaying: Boolean,
+    onSymbolClick: (Symbol?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val outRound = when(mode) { 1,2,3 -> 16.dp else -> 8.dp }
     val inRound = when(mode) { 1,2,3 -> 12.dp else -> 4.dp }
     val innerPadding = when(mode) { 1 -> 12.dp 2,3 -> 8.dp else -> 5.dp }
+    val borderColor = if (isPlaying) HighlightBorder else Gray5B
+    val textColor = if (isPlaying) HighlightBorder else Color.White
     Log.d("SymbolCard", "Recomposing with symbol: $symbol")
 
     val myFont = remember { FontFamily(pretendardRegularFont) }
@@ -56,13 +61,13 @@ fun SymbolCard(
         modifier
             .border(
                 width = 1.dp,
-                color = Gray5B,
+                color = borderColor,
                 shape = RoundedCornerShape(size = outRound)
             )
             .background(
                 color = DarkGray,
                 shape = RoundedCornerShape(size = outRound)
-            ),
+            ).clickable { onSymbolClick(symbol) },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -125,7 +130,7 @@ fun SymbolCard(
                     fontSize = 18.sp,
                     fontFamily = FontFamily(pretendardBoldFont),
                     fontWeight = FontWeight(500),
-                    color = Color.White,
+                    color = textColor,
                     textAlign = TextAlign.Center
                 )
             )
@@ -137,5 +142,5 @@ fun SymbolCard(
 @Preview
 @Composable
 fun SymbolCardPreview() {
-    SymbolCard(1, null)
+    SymbolCard(1, null, false, {})
 }

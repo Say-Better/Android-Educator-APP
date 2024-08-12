@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.Gray5B
+import com.example.saybettereducator.ui.theme.HighlightBorder
 import com.example.saybettereducator.ui.theme.montserratFont
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProgressTopBar() {
+fun ProgressTopBar(isPlaying: Boolean) {
+    val iconTint = if (isPlaying) HighlightBorder else Gray5B
     Box(
         modifier = Modifier
             .height(60.dp)
@@ -63,12 +65,11 @@ fun ProgressTopBar() {
 
         Icon(
             painter = painterResource(id = R.drawable.progress_volume),
-            contentDescription = "솔루션 볼륨 조절 버튼",
-            tint = Gray5B,
+            contentDescription = "솔루션 진행 음성 표시",
+            tint = iconTint,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 15.dp, end = 16.dp)
-                .clickable { /* 설정 항목 구현 */ }
         )
     }
 }

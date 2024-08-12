@@ -79,7 +79,7 @@ fun ProgressScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        topBar = { ProgressTopBar() },
+        topBar = { ProgressTopBar(isPlaying = state.isVoicePlaying) },
         bottomBar = { ProgressBottomBar() }
     ) { innerPadding ->
         Box(
@@ -97,7 +97,11 @@ fun ProgressScreen(
                 ProgressLearningView(
                     selectedMode = state.selectedMode,
                     selectedSymbols = state.selectedSymbols,
-                    allSymbols = state.symbols
+                    allSymbols = state.symbols,
+                    playingSymbol = state.playingSymbol,
+                    onSymbolClick = { symbol ->
+                        onIntent(ProgressIntent.SymbolClicked(symbol))
+                    }
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 VideoSection()
