@@ -48,8 +48,8 @@ class ProgressViewModel @Inject constructor(
         textToSpeech.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
             override fun onStart(utteranceId: String?) {}
             override fun onDone(utteranceId: String?) {
-                stopVoicePlayback()
                 Log.d("ProgressViewModel", "Voice playback completed")
+                stopVoicePlayback()
             }
             override fun onError(utteranceId: String?) {
                 Log.e("ProgressViewModel", "Voice playback error")
@@ -95,7 +95,7 @@ class ProgressViewModel @Inject constructor(
                     communicationState = CommunicationType.Communicating,
                     timerTime = it.timerMaxTime
                 )
-                }
+            }
             setTimer()
         }
         else stopCommunication()
@@ -143,24 +143,20 @@ class ProgressViewModel @Inject constructor(
     private fun handleSymbolClicked(symbol: Symbol?) {
         val currentState = container.stateFlow.value
         when {
-            symbol == null -> {
-                toggleBottomSheet()
-            }
-            currentState.playingSymbol == symbol -> {
-                stopVoicePlayback()
-            }
-            else -> {
-                startVoicePlayback(symbol)
-            }
+            symbol == null -> { toggleBottomSheet() }
+            currentState.playingSymbol == symbol -> { stopVoicePlayback() }
+            else -> { startVoicePlayback(symbol) }
         }
     }
 
     private fun startVoicePlayback(symbol: Symbol) {
+        val utteranceId = symbol.id.toString() // 각 심볼의 ID를 사용하여 고유한 utteranceId 설정
+
         updateState {
             it.copy(isVoicePlaying = true, playingSymbol = symbol)
         }
 
-        textToSpeech.speak(symbol.name, TextToSpeech.QUEUE_FLUSH, null, null)
+        textToSpeech.speak(symbol.name, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
         Log.d("ProgressViewModel", "Voice playback started for symbol: $symbol")
     }
 
