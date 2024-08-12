@@ -1,4 +1,4 @@
-package com.example.saybettereducator.utils.webrtc.webrtcClient
+package com.example.saybettereducator.utils.webrtcObserver
 
 import org.webrtc.DataChannel
 import org.webrtc.IceCandidate

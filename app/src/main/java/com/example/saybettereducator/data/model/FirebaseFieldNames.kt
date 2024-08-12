@@ -1,4 +1,4 @@
-package com.example.saybettereducator.utils
+package com.example.saybettereducator.data.model
 
 object FirebaseFieldNames {
     const val STATUS = "status"

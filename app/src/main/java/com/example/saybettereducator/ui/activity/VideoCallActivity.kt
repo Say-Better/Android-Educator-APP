@@ -2,6 +2,7 @@ package com.example.saybettereducator.ui.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore.Video
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -38,23 +39,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
+import androidx.graphics.shapes.RoundedPolygon
+import androidx.graphics.shapes.toPath
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.DeepDarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.utils.customClick.CustomClickEvent
-import com.example.saybettereducator.utils.webrtc.service.MainService
-import com.example.saybettereducator.utils.webrtc.service.MainServiceRepository
-import com.example.saybettereducator.utils.webrtc.webrtcClient.WebRTCClient
+import com.example.saybettereducator.data.service.MainService
+import com.example.saybettereducator.data.repository.MainServiceRepository
+import com.example.saybettereducator.data.api.helper.WebRTCClient
+import com.example.saybettereducator.ui.intent.VideoCallIntent
+import com.example.saybettereducator.ui.sideeffect.VideoCallSideEffect
+import com.example.saybettereducator.ui.viewmodel.VideoCallViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 import org.webrtc.SurfaceViewRenderer
 import javax.inject.Inject
 
@@ -112,29 +125,33 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
             finish()
         }
 
-        isCaller = intent.getBooleanExtra("isCaller", true)
-
         // MainService에서 SurfaceView를 관리하도록 위임
         MainService.localSurfaceView = SurfaceViewRenderer(this)
         MainService.remoteSurfaceView = SurfaceViewRenderer(this)
+
+        isCaller = intent.getBooleanExtra("isCaller", true)
 
         // Activity에 표시될 SurfaceViewRenderer를 MainService 멤버변수에 연결하고 serviceRepo를 통해 초기화하도록 명령
         serviceRepository.setupViews(isCaller, target!!)
 
         MainService.endCallListener = this
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun VideoCallView(
-
-    ) {
+    fun VideoCallView(viewModel: VideoCallViewModel = hiltViewModel()) {
         var isStart by remember { mutableStateOf(false) }
         val isCameraOn by remember {
-            mutableStateOf(true)
+            mutableStateOf(false)
         }
+        val viewState by viewModel.collectAsState()
+        viewModel.collectSideEffect {
+            when(it) {
+                is VideoCallSideEffect.PeerConnectionSuccess -> viewModel.handleIntent(VideoCallIntent.OnRemoteViewReady)
+            }
+        }
+
 
         Scaffold(
             topBar = {
@@ -187,38 +204,43 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
                         .padding(innerPadding)
                         .fillMaxSize()
                 ) {
-                    if(isCameraOn /*&& webRTCClient.isLocalViewInit*/){
+                    // educator cam
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .padding(top = 53.dp)
+                            .size(width = 328.dp, height = 196.dp)
+                            .background(
+                                color = Color.DarkGray,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                    ) {
                         LocalVideoRenderer(
                             modifier = Modifier
                                 .size(width = 328.dp, height = 196.dp)
                                 .clip(RoundedCornerShape(16.dp))
                         )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.educator_cam),
-                            contentDescription = "교육자 캠",
-                            modifier = Modifier
-                                .size(width = 328.dp, height = 196.dp)
-                        )
                     }
 
 
-                    if(isCameraOn /*&& webRTCClient.isRemoteViewInit*/) {
-                        RemoteVideoRenderer(
-                            modifier = Modifier
-                                .padding(top = 12.dp)
-                                .size(width = 328.dp, height = 196.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.learner_cam),
-                            contentDescription = "학습자 캠",
-                            modifier = Modifier
-                                .padding(top = 12.dp)
-                                .size(width = 328.dp, height = 196.dp)
-
-                        )
+                    // learner cam
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .padding(top = 12.dp)
+                            .size(width = 328.dp, height = 196.dp)
+                            .background(
+                                color = Color.DarkGray,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                    ) {
+                        if (viewState.isPeerConnected){
+                            RemoteVideoRenderer(
+                                modifier = Modifier
+                                    .size(width = 328.dp, height = 196.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
+                        }
                     }
 
 

@@ -20,9 +20,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.times
 import com.example.saybettereducator.R
-import com.example.saybettereducator.domain.model.Symbol
+import com.example.saybettereducator.data.model.Symbol
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.Gray5B50
 import com.example.saybettereducator.ui.theme.Transparent

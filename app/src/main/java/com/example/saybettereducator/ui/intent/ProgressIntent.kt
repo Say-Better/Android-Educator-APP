@@ -1,7 +1,6 @@
 package com.example.saybettereducator.ui.intent
 
-import com.example.saybettereducator.domain.model.Symbol
-import com.example.saybettereducator.ui.model.CommunicationType
+import com.example.saybettereducator.data.model.Symbol
 import com.example.saybettereducator.ui.model.ResponseFilterType
 
 sealed class ProgressIntent {

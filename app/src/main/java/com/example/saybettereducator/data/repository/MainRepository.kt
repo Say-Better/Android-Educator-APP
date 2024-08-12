@@ -1,11 +1,12 @@
-package com.example.saybettereducator.utils.webrtc.repository
+package com.example.saybettereducator.data.repository
 
-import com.example.saybettereducator.domain.model.DataModel
-import com.example.saybettereducator.domain.model.DataModelType.*
-import com.example.saybettereducator.domain.model.UserStatus
-import com.example.saybettereducator.utils.webrtc.firebaseClient.FirebaseClient
-import com.example.saybettereducator.utils.webrtc.webrtcClient.MyPeerObserver
-import com.example.saybettereducator.utils.webrtc.webrtcClient.WebRTCClient
+import com.example.saybettereducator.data.model.DataModel
+import com.example.saybettereducator.data.model.DataModelType.*
+import com.example.saybettereducator.data.model.UserStatus
+import com.example.saybettereducator.data.api.helper.FirebaseClient
+import com.example.saybettereducator.utils.webrtcObserver.MyPeerObserver
+import com.example.saybettereducator.data.api.helper.WebRTCClient
+import com.example.saybettereducator.ui.activity.VideoCallActivity
 import com.google.gson.Gson
 import org.webrtc.IceCandidate
 import org.webrtc.MediaStream
@@ -22,6 +23,7 @@ class MainRepository @Inject constructor(
     private val gson : Gson
 ) : WebRTCClient.Listener {
     var listener : Listener? = null
+    var connectionListener : ConnectionListener? = null
     private var target : String? = null
     private var remoteView: SurfaceViewRenderer? = null
 
@@ -101,11 +103,16 @@ class MainRepository @Inject constructor(
 
             override fun onConnectionChange(newState: PeerConnection.PeerConnectionState?) {
                 super.onConnectionChange(newState)
+
+                // Peer 간 연결되었을 때!!
                 if(newState == PeerConnection.PeerConnectionState.CONNECTED) {
                     // 1. change my status to in call
                     changeMyStatus(UserStatus.IN_CALL)
                     // 2. clear latest event inside my user section in firebase database
                     firebaseClient.clearLatestEvent()
+
+                    // 3. 이벤트 보내기 (VideoCallViewModel에 구현)
+                    connectionListener?.onPeerConnectionReady()
                 }
             }
         })
@@ -136,6 +143,10 @@ class MainRepository @Inject constructor(
     interface Listener {
         fun onLatestEventReceived(data : DataModel)
         fun endCall()
+    }
+
+    interface ConnectionListener {
+        fun onPeerConnectionReady()
     }
 
     override fun onTransferEventToSocket(data: DataModel) {

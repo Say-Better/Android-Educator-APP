@@ -5,7 +5,7 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.saybettereducator.R
-import com.example.saybettereducator.domain.model.Symbol
+import com.example.saybettereducator.data.model.Symbol
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.ProgressIntent
 import com.example.saybettereducator.ui.model.CommunicationType

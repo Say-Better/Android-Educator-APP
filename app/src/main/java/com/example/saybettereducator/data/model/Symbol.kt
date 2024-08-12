@@ -1,4 +1,4 @@
-package com.example.saybettereducator.domain.model
+package com.example.saybettereducator.data.model
 
 data class Symbol(
     val id: Int,

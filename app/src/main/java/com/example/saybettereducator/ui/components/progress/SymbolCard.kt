@@ -30,12 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
-import com.example.saybettereducator.domain.model.Symbol
+import com.example.saybettereducator.data.model.Symbol
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.HighlightBorder
 import com.example.saybettereducator.ui.theme.LightGray
-import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
 import com.example.saybettereducator.ui.theme.pretendardRegularFont
 

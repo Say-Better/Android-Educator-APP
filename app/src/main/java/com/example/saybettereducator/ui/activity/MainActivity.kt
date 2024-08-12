@@ -18,14 +18,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.saybettereducator.domain.model.DataModel
+import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.ui.components.MainBottomNavigationBar
 import com.example.saybettereducator.ui.navigation.AppNavHost
 import com.example.saybettereducator.ui.theme.SaybetterEducatorTheme
 import com.example.saybettereducator.ui.components.main.MainTopBar
-import com.example.saybettereducator.utils.webrtc.repository.MainRepository
-import com.example.saybettereducator.utils.webrtc.service.MainService
-import com.example.saybettereducator.utils.webrtc.service.MainServiceRepository
+import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.service.MainService
+import com.example.saybettereducator.data.repository.MainServiceRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

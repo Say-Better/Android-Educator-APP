@@ -1,6 +1,6 @@
 package com.example.saybettereducator.ui.model
 
-import com.example.saybettereducator.domain.model.Symbol
+import com.example.saybettereducator.data.model.Symbol
 
 data class ProgressState(
     val selectedMode: Int = 1, // 보기 모드

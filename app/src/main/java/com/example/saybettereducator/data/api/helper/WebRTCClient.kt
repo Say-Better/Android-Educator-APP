@@ -1,8 +1,10 @@
-package com.example.saybettereducator.utils.webrtc.webrtcClient
+package com.example.saybettereducator.data.api.helper
 
 import android.content.Context
-import com.example.saybettereducator.domain.model.DataModel
-import com.example.saybettereducator.domain.model.DataModelType
+import android.graphics.PixelFormat
+import com.example.saybettereducator.data.model.DataModel
+import com.example.saybettereducator.data.model.DataModelType
+import com.example.saybettereducator.utils.webrtcObserver.MySdpObserver
 import com.google.gson.Gson
 import org.webrtc.AudioTrack
 import org.webrtc.Camera2Enumerator
@@ -36,10 +38,24 @@ class WebRTCClient @Inject constructor(
     private val eglBaseContext = EglBase.create().eglBaseContext
     private val peerConnectionFactory by lazy { createPeerConnectionFactory() }
     private var peerConnection: PeerConnection? = null
-    private val iceServer = listOf(
+    private val iceServers = listOf(
+        PeerConnection.IceServer.builder("stun:stun.relay.metered.ca:80").createIceServer(),
+        PeerConnection.IceServer.builder("turn:global.relay.metered.ca:80")
+            .setUsername("3034a2e47ead957a5246ff2d")
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer(),
+        PeerConnection.IceServer.builder("turn:global.relay.metered.ca:80?transport=tcp")
+            .setUsername("3034a2e47ead957a5246ff2d")
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer(),
+        PeerConnection.IceServer.builder("turn:global.relay.metered.ca:443")
+            .setUsername("3034a2e47ead957a5246ff2d")
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer(),
         PeerConnection.IceServer.builder("turns:global.relay.metered.ca:443?transport=tcp")
             .setUsername("3034a2e47ead957a5246ff2d")
-            .setPassword("zAyeHrbfgXr6T/sr").createIceServer()
+            .setPassword("zAyeHrbfgXr6T/sr")
+            .createIceServer()
     )
     private val localVideoSource by lazy { peerConnectionFactory.createVideoSource(false) }
     private val localAudioSource by lazy { peerConnectionFactory.createAudioSource(MediaConstraints()) }
@@ -94,7 +110,7 @@ class WebRTCClient @Inject constructor(
         peerConnection = createPeerConnection(observer)
     }
     private fun createPeerConnection(observer: PeerConnection.Observer): PeerConnection? {
-        return peerConnectionFactory.createPeerConnection(iceServer, observer)
+        return peerConnectionFactory.createPeerConnection(iceServers, observer)
     }
 
     // negotiation section
@@ -195,11 +211,8 @@ class WebRTCClient @Inject constructor(
         view.run {
             setMirror(false)
             setEnableHardwareScaler(true)
+//            holder.setFormat(PixelFormat.TRANSPARENT)
             init(eglBaseContext, null)
-
-//            val params: ViewGroup.LayoutParams = view.layoutParams
-//            params.width = 328
-//            params.height = 196
         }
     }
     fun initRemoteSurfaceView(view : SurfaceViewRenderer) {

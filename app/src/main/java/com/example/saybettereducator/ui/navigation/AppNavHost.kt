@@ -51,7 +51,7 @@ fun AppNavHost(navController: NavHostController, startVideoCall: (String, Boolea
                         launcherMultiplePermissions,
                         onPermissionsGranted = {
                             Log.d("permission", "Permission Granted, Go VideoCall!")
-                            startVideoCall("targetUserId", true)  // 여기서 적절한 값을 전달합니다.
+                            startVideoCall("helloYI", true)  // 여기서 적절한 값을 전달합니다.
                         }
                     )
                 }
