@@ -8,11 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.saybettereducator.domain.model.Symbol
+import com.example.saybettereducator.ui.model.ProgressState
 
 @Composable
 fun ProgressBottomSheet(
-    symbols: List<Symbol>,
-    selectedSymbols: List<Symbol>,
+    state: ProgressState,
+    onChanceClick: () -> Unit,
+    onTimerClick: () -> Unit,
     onModeSelected: (Int) -> Unit,
     onItemClick: (Symbol) -> Unit,
     onAddClick: () -> Unit
@@ -22,12 +24,17 @@ fun ProgressBottomSheet(
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
     ) {
-        ProgressChanceView(onChanceClick = {}, onTimerClick = {})
+        // 업데이트된 컴포저블 호출
+        ProgressBottomSheetChanceView(
+            state = state,
+            onChanceClick = onChanceClick,
+            onTimerClick = onTimerClick
+        )
         ProgressModeView(onModeSelected = onModeSelected)
 
         ProgressBottomSheetSymbol(
-            symbols = symbols,
-            selectedSymbols = selectedSymbols,
+            symbols = state.symbols,
+            selectedSymbols = state.selectedSymbols,
             onItemClick = onItemClick,
             onAddClick = onAddClick
         )
@@ -38,5 +45,12 @@ fun ProgressBottomSheet(
 @Preview
 @Composable
 fun ProgressBottomSheetPreview() {
-    ProgressBottomSheet(emptyList(), emptyList(), {}, {}, {})
+    ProgressBottomSheet(
+        state = ProgressState(),
+        onModeSelected = {},
+        onItemClick = {},
+        onAddClick = {},
+        onChanceClick = {},
+        onTimerClick = {}
+    )
 }

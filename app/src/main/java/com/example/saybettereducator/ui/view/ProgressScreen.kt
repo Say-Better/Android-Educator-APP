@@ -45,11 +45,13 @@ import com.example.saybettereducator.ui.components.progress.ProgressBottomSheet
 import com.example.saybettereducator.ui.components.progress.ProgressLearningView
 import com.example.saybettereducator.ui.components.progress.ProgressTopBar
 import com.example.saybettereducator.ui.intent.ProgressIntent
-import com.example.saybettereducator.ui.intent.ResponseFilterType
 import com.example.saybettereducator.ui.model.ProgressState
+import com.example.saybettereducator.ui.model.ResponseFilterType
 import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
 import com.example.saybettereducator.ui.theme.BottomBar
 import com.example.saybettereducator.ui.theme.DarkGray
+import com.example.saybettereducator.ui.theme.MainGreen_85
+import com.example.saybettereducator.ui.theme.Red_60
 import com.example.saybettereducator.ui.viewmodel.ProgressViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -79,7 +81,6 @@ fun ProgressScreen(viewModel: ProgressViewModel = hiltViewModel()) {
             }
         }
     }
-
 
     // 바텀시트 상태 변화를 감지하여 뷰모델에 알림
     LaunchedEffect(scaffoldState.bottomSheetState.currentValue) {
@@ -114,8 +115,6 @@ fun ProgressScreen(
     scaffoldState: BottomSheetScaffoldState,
     onIntent: (ProgressIntent) -> Unit
 ) {
-    Log.d("ProgressScreen", "Recomposing with state: $state")
-
     Scaffold(
         topBar = { ProgressTopBar(isPlaying = state.isVoicePlaying) },
         bottomBar = { ProgressBottomBar() }
@@ -150,8 +149,13 @@ fun ProgressScreen(
                 scaffoldState = scaffoldState,
                 sheetContent = {
                     ProgressBottomSheet(
-                        symbols = state.symbols,
-                        selectedSymbols = state.selectedSymbols,
+                        state = state,
+                        onChanceClick = {
+                            onIntent(ProgressIntent.CommunicationClicked)
+                        },
+                        onTimerClick = {
+                            onIntent(ProgressIntent.TimerClicked)
+                        },
                         onModeSelected = { mode ->
                             onIntent(ProgressIntent.SelectMode(mode))
                         },
@@ -195,8 +199,8 @@ fun VideoSection(responseFilter: ResponseFilterType) {
                 .size(width = 128.dp, height = 75.dp)
                 .background(
                     color = when (responseFilter) {
-                        ResponseFilterType.YES -> Color(0x5FD39999)
-                        ResponseFilterType.NO -> Color(0xF0464699)
+                        ResponseFilterType.YES -> MainGreen_85
+                        ResponseFilterType.NO -> Red_60
                         else -> Color.Transparent
                     }
                 ),

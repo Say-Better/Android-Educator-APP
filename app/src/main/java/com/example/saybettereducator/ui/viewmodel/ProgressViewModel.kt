@@ -8,10 +8,12 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.domain.model.Symbol
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.ProgressIntent
-import com.example.saybettereducator.ui.intent.ResponseFilterType
+import com.example.saybettereducator.ui.model.CommunicationType
 import com.example.saybettereducator.ui.model.ProgressState
+import com.example.saybettereducator.ui.model.ResponseFilterType
 import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +22,8 @@ import javax.inject.Inject
 class ProgressViewModel @Inject constructor(
     private val textToSpeech: TextToSpeech
 ) : MviViewModel<ProgressState, ProgressSideEffect, ProgressIntent>(ProgressState()) {
+    private var timerJob: Job? = null
+
     override fun handleIntent(intent: ProgressIntent) {
         when (intent) {
             is ProgressIntent.LoadSymbols -> loadSymbols()
@@ -32,11 +36,14 @@ class ProgressViewModel @Inject constructor(
             is ProgressIntent.StopVoicePlayback -> stopVoicePlayback()
             is ProgressIntent.ToggleBottomSheet -> toggleBottomSheet()
             is ProgressIntent.ApplyResponseFilter -> applyResponseFilter(intent.filterType)
+            is ProgressIntent.CommunicationClicked -> handleCommunicationClicked()
+            is ProgressIntent.TimerClicked -> handleTimerClicked()
         }
     }
 
     init {
         loadSymbols()
+        initTimerMaxTime(10000)
 
         textToSpeech.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
             override fun onStart(utteranceId: String?) {}
@@ -75,6 +82,62 @@ class ProgressViewModel @Inject constructor(
             Log.d("ProgressViewModel", "Symbol deselected: $symbol, updated selectedSymbols: $newSelectedSymbols")
             state.copy(selectedSymbols = newSelectedSymbols)
         }
+    }
+
+    private fun initTimerMaxTime(maxTime: Long) {
+        updateState { it.copy(timerMaxTime = maxTime, timerTime = maxTime) }
+    }
+
+    private fun handleCommunicationClicked() {
+        if (container.stateFlow.value.communicationState == CommunicationType.NotCommunicating) {
+            updateState {
+                it.copy(
+                    communicationState = CommunicationType.Communicating,
+                    timerTime = it.timerMaxTime
+                )
+                }
+            setTimer()
+        }
+        else stopCommunication()
+    }
+
+    private fun handleTimerClicked() {
+        when (container.stateFlow.value.communicationState) {
+            CommunicationType.NotCommunicating -> {}
+            CommunicationType.Paused -> {
+                updateState { it.copy(communicationState = CommunicationType.Communicating) }
+                setTimer()
+            }
+            CommunicationType.Communicating -> {
+                timerJob?.cancel()
+                updateState { it.copy(communicationState = CommunicationType.Paused) }
+            }
+        }
+    }
+
+    private fun setTimer() {
+        timerJob = viewModelScope.launch {
+            while (container.stateFlow.value.timerTime > 0) {
+                delay(1000)
+                updateState { it.copy(timerTime = it.timerTime - 1000) }
+            }
+            stopCommunication()
+        }
+    }
+
+    private fun stopCommunication() {
+        timerJob?.cancel()
+        updateState {
+            it.copy(
+                communicationState = CommunicationType.NotCommunicating,
+                timerTime = it.timerMaxTime
+            )
+        }
+    }
+
+    private fun onTimerFinished() {
+        stopCommunication()
+        updateState { it.copy(communicationCount = it.communicationCount + 1) }
     }
 
     private fun handleSymbolClicked(symbol: Symbol?) {
@@ -125,7 +188,6 @@ class ProgressViewModel @Inject constructor(
         textToSpeech.stop()
         textToSpeech.shutdown()
     }
-
 
     private fun applyResponseFilter(filterType: ResponseFilterType) {
         updateState { it.copy(responseFilter = filterType) }

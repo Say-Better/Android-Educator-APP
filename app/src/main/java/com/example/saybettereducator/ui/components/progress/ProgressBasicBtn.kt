@@ -27,26 +27,28 @@ import com.example.saybettereducator.ui.theme.Gray5B
 fun ProgressBasicBtn(
     resId: Int,
     desc: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    backgroundColor: Color,
+    textColor: Color
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
-            .background(Gray5B, shape = RoundedCornerShape(8.dp))
+            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .padding(start = 8.dp, end = 12.dp, top = 4.dp, bottom = 4.dp)
     ) {
         Icon(
             painter = painterResource(id = resId),
             contentDescription = null,
-            tint = Color.White,
+            tint = textColor,
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = stringResource(desc),
-            color = Color.White,
+            color = textColor,
             fontSize = 14.sp,
             lineHeight = 18.2.sp,
             fontWeight = FontWeight(500),

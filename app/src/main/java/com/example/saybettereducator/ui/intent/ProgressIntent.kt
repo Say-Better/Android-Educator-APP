@@ -1,6 +1,8 @@
 package com.example.saybettereducator.ui.intent
 
 import com.example.saybettereducator.domain.model.Symbol
+import com.example.saybettereducator.ui.model.CommunicationType
+import com.example.saybettereducator.ui.model.ResponseFilterType
 
 sealed class ProgressIntent {
     data object LoadSymbols : ProgressIntent()
@@ -13,8 +15,7 @@ sealed class ProgressIntent {
     data object StopVoicePlayback : ProgressIntent()
     data object ToggleBottomSheet : ProgressIntent()
     data class ApplyResponseFilter(val filterType: ResponseFilterType) : ProgressIntent()
+    data object CommunicationClicked : ProgressIntent()
+    data object TimerClicked : ProgressIntent()
 }
 
-enum class ResponseFilterType {
-    YES, NO, NONE
-}
