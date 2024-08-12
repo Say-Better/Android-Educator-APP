@@ -7,5 +7,6 @@ data class ProgressState(
     val symbols: List<Symbol> = emptyList(),
     val selectedSymbols: List<Symbol> = emptyList(),
     val isVoicePlaying: Boolean = false,
-    val playingSymbol: Symbol? = null
+    val playingSymbol: Symbol? = null,
+    val isBottomSheetOpen: Boolean = false
 )

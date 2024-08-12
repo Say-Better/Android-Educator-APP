@@ -24,6 +24,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -45,38 +46,59 @@ import com.example.saybettereducator.ui.components.progress.ProgressLearningView
 import com.example.saybettereducator.ui.components.progress.ProgressTopBar
 import com.example.saybettereducator.ui.intent.ProgressIntent
 import com.example.saybettereducator.ui.model.ProgressState
+import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
 import com.example.saybettereducator.ui.theme.BottomBar
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.viewmodel.ProgressViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressScreen(viewModel: ProgressViewModel = hiltViewModel()) {
     val viewState by viewModel.collectAsState()
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(initialValue = SheetValue.PartiallyExpanded)
+    )
+    val scope = rememberCoroutineScope()
+
+// SideEffect 처리
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is ProgressSideEffect.OpenBottomSheet -> {
+                scope.launch {
+                    scaffoldState.bottomSheetState.expand()
+                }
+            }
+            is ProgressSideEffect.CloseBottomSheet -> {
+                scope.launch {
+                    scaffoldState.bottomSheetState.partialExpand()
+                }
+            }
+        }
+    }
 
     Log.d("ProgressScreen", "Recomposing with state: $viewState")
 
     ProgressScreen(
         state = viewState,
+        scaffoldState = scaffoldState,
+        scope = scope,
         onIntent = viewModel::handleIntent
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressScreen(
     state: ProgressState,
+    scaffoldState: BottomSheetScaffoldState,
+    scope: CoroutineScope,
     onIntent: (ProgressIntent) -> Unit
 ) {
     Log.d("ProgressScreen", "Recomposing with state: $state")
-
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(initialValue = SheetValue.PartiallyExpanded)
-    )
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = { ProgressTopBar(isPlaying = state.isVoicePlaying) },
@@ -109,7 +131,7 @@ fun ProgressScreen(
             }
 
             BottomSheetScaffold(
-                scaffoldState = bottomSheetScaffoldState,
+                scaffoldState = scaffoldState,
                 sheetContent = {
                     ProgressBottomSheet(
                         symbols = state.symbols,
@@ -128,7 +150,7 @@ fun ProgressScreen(
                     )
                 },
                 sheetDragHandle = {
-                    DragHandle(bottomSheetScaffoldState, scope)
+                    DragHandle(onClick = { onIntent(ProgressIntent.ToggleBottomSheet) })
                 },
                 sheetContainerColor = DarkGray,
                 sheetPeekHeight = 30.dp,
@@ -137,6 +159,7 @@ fun ProgressScreen(
         }
     }
 }
+
 
 @Composable
 fun VideoSection() {
@@ -161,23 +184,17 @@ fun VideoSection() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DragHandle(bottomSheetScaffoldState: BottomSheetScaffoldState, scope: CoroutineScope) {
+fun DragHandle(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .height(24.dp)
             .padding(vertical = 8.dp)
-            .clickable {
-                scope.launch {
-                    if (bottomSheetScaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded) {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
-                    } else {
-                        bottomSheetScaffoldState.bottomSheetState.partialExpand()
-                    }
-                }
-            }
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier

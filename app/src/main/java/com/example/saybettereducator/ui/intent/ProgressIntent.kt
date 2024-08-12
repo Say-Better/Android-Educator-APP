@@ -11,5 +11,5 @@ sealed class ProgressIntent {
     data object AddSymbolClicked : ProgressIntent()
     data class StartVoicePlayback(val symbol: Symbol) : ProgressIntent()
     data object StopVoicePlayback : ProgressIntent()
-    data object OpenBottomSheet : ProgressIntent()
+    data object ToggleBottomSheet : ProgressIntent()
 }

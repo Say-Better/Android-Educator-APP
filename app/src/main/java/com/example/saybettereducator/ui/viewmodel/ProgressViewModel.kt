@@ -8,9 +8,6 @@ import com.example.saybettereducator.ui.intent.ProgressIntent
 import com.example.saybettereducator.ui.model.ProgressState
 import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +23,7 @@ class ProgressViewModel @Inject constructor(
             is ProgressIntent.SymbolClicked -> handleSymbolClicked(intent.symbol)
             is ProgressIntent.StartVoicePlayback -> startVoicePlayback(intent.symbol)
             is ProgressIntent.StopVoicePlayback -> stopVoicePlayback()
-            is ProgressIntent.OpenBottomSheet -> openBottomSheet()
+            is ProgressIntent.ToggleBottomSheet -> handleToggleBottomSheet()
         }
     }
 
@@ -64,7 +61,7 @@ class ProgressViewModel @Inject constructor(
     private fun handleSymbolClicked(symbol: Symbol?) {
         val currentState = container.stateFlow.value
         when {
-            symbol == null -> openBottomSheet()
+            symbol == null -> handleToggleBottomSheet()
             currentState.playingSymbol == symbol -> stopVoicePlayback()
             else -> startVoicePlayback(symbol)
         }
@@ -87,8 +84,14 @@ class ProgressViewModel @Inject constructor(
         Log.d("ProgressViewModel", "Voice playback stopped")
     }
 
-    private fun openBottomSheet() {
-        // 여기에 바텀시트를 여는 로직을 추가 (상태 업데이트, 사이드 이펙트 등)
-        Log.d("ProgressViewModel", "Bottom sheet opened")
+    private fun handleToggleBottomSheet() {
+        val currentState = container.stateFlow.value
+        if (currentState.isBottomSheetOpen) {
+            postSideEffect(ProgressSideEffect.CloseBottomSheet)
+            updateState { it.copy(isBottomSheetOpen = false) }
+        } else {
+            postSideEffect(ProgressSideEffect.OpenBottomSheet)
+            updateState { it.copy(isBottomSheetOpen = true) }
+        }
     }
 }
