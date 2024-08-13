@@ -2,13 +2,16 @@ package com.example.saybettereducator.data.api.helper
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.util.Log
 import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.model.DataModelType
+import com.example.saybettereducator.utils.webrtcObserver.MyPeerObserver
 import com.example.saybettereducator.utils.webrtcObserver.MySdpObserver
 import com.google.gson.Gson
 import org.webrtc.AudioTrack
 import org.webrtc.Camera2Enumerator
 import org.webrtc.CameraVideoCapturer
+import org.webrtc.DataChannel
 import org.webrtc.DefaultVideoDecoderFactory
 import org.webrtc.DefaultVideoEncoderFactory
 import org.webrtc.EglBase
@@ -21,6 +24,7 @@ import org.webrtc.SessionDescription
 import org.webrtc.SurfaceTextureHelper
 import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoTrack
+import java.nio.ByteBuffer
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,6 +34,8 @@ class WebRTCClient @Inject constructor(
     private val context: Context,
     private val gson: Gson,
 ) {
+    val TAG = "DataChannel"
+
     // class variables
     var listener: Listener? = null
     private lateinit var userid: String
@@ -64,9 +70,9 @@ class WebRTCClient @Inject constructor(
     private val mediaConstraint = MediaConstraints().apply {
         mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"))
         mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
+        mandatory.add(MediaConstraints.KeyValuePair("RtpDataChannels", "true"))
     }
-    var isLocalViewInit = false
-    var isRemoteViewInit = false
+    private var dataChannel: DataChannel? = null
 
     // call variables
     private lateinit var localSurfaceView : SurfaceViewRenderer
@@ -108,6 +114,21 @@ class WebRTCClient @Inject constructor(
         localTrackId = "${userid}_track"
         localStreamId = "${userid}_stream"
         peerConnection = createPeerConnection(observer)
+        dataChannel = peerConnection?.createDataChannel("HelloChannel", DataChannel.Init())
+        dataChannel?.registerObserver(object : DataChannel.Observer {
+            override fun onBufferedAmountChange(p0: Long) {
+
+            }
+
+            override fun onStateChange() {
+                Log.d(TAG, "datachannel state changed to ${dataChannel!!.state()}")
+            }
+
+            override fun onMessage(p0: DataChannel.Buffer?) {
+                Log.d(TAG, p0?.data.toString())
+            }
+
+        })
     }
     private fun createPeerConnection(observer: PeerConnection.Observer): PeerConnection? {
         return peerConnectionFactory.createPeerConnection(iceServers, observer)
@@ -206,6 +227,35 @@ class WebRTCClient @Inject constructor(
         }
     }
 
+    fun initDataChannel(
+    ) {
+        try {
+
+            dataChannel?.let {
+                Log.d(TAG, "Data Channel Create Success")
+                val message = "Hello from Educator-APP!"
+                it.registerObserver(object: DataChannel.Observer{
+                    override fun onBufferedAmountChange(p0: Long) {
+
+                    }
+
+                    override fun onStateChange() {
+                        Log.d(TAG, "datachannel state changed to ${it.state()}")
+//                        it.send(DataChannel.Buffer(ByteBuffer.wrap(message.toByteArray()), false))
+                    }
+
+                    override fun onMessage(p0: DataChannel.Buffer?) {
+                        Log.d(TAG, p0?.data.toString())
+                    }
+
+                })
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "DataChannel Create Failed")
+        }
+
+    }
+
     // streaming section
     private fun initSurfaceView(view : SurfaceViewRenderer) {
         view.run {
@@ -218,13 +268,11 @@ class WebRTCClient @Inject constructor(
     fun initRemoteSurfaceView(view : SurfaceViewRenderer) {
         this.remoteSurfaceView = view
         initSurfaceView(view)
-        this.isRemoteViewInit = true
     }
     fun initLocalSurfaceView(localView: SurfaceViewRenderer) {
         this.localSurfaceView = localView
         initSurfaceView(localView)
         startLocalStreaming(localView)
-        this.isLocalViewInit = true
     }
     private fun startLocalStreaming(localView: SurfaceViewRenderer) {
         localStream = peerConnectionFactory.createLocalMediaStream(localStreamId)
@@ -269,6 +317,10 @@ class WebRTCClient @Inject constructor(
         localSurfaceView.clearImage()
         localStream?.removeTrack(localVideoTrack)
         localVideoTrack?.dispose()
+    }
+
+    fun sendToDataChannel(message: String) {
+        dataChannel?.send(DataChannel.Buffer(ByteBuffer.wrap(message.toByteArray()), false))
     }
 
     interface Listener {

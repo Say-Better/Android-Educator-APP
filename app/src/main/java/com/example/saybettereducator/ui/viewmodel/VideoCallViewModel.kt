@@ -13,7 +13,9 @@ import com.example.saybettereducator.ui.intent.VideoCallIntent
 import com.example.saybettereducator.ui.model.VideoCallState
 import com.example.saybettereducator.ui.sideeffect.VideoCallSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.webrtc.DataChannel
 import org.webrtc.SurfaceViewRenderer
+import java.nio.ByteBuffer
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +27,12 @@ class VideoCallViewModel @Inject constructor(
         when (intent) {
             is VideoCallIntent.OnRemoteViewReady -> onRemoteViewReady()
             is VideoCallIntent.SetupView -> setupView()
+            is VideoCallIntent.SendRTCMessage -> sendRTCMessage(intent.msg)
         }
+    }
+
+    private fun sendRTCMessage(msg: String) {
+        mainRepository.sendToDataChannel(msg)
     }
 
     init {

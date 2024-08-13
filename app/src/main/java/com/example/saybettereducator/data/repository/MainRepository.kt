@@ -1,5 +1,6 @@
 package com.example.saybettereducator.data.repository
 
+import android.util.Log
 import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.model.DataModelType.*
 import com.example.saybettereducator.data.model.UserStatus
@@ -8,11 +9,13 @@ import com.example.saybettereducator.utils.webrtcObserver.MyPeerObserver
 import com.example.saybettereducator.data.api.helper.WebRTCClient
 import com.example.saybettereducator.ui.activity.VideoCallActivity
 import com.google.gson.Gson
+import org.webrtc.DataChannel
 import org.webrtc.IceCandidate
 import org.webrtc.MediaStream
 import org.webrtc.PeerConnection
 import org.webrtc.SessionDescription
 import org.webrtc.SurfaceViewRenderer
+import java.nio.ByteBuffer
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,7 +29,9 @@ class MainRepository @Inject constructor(
     var connectionListener : ConnectionListener? = null
     private var target : String? = null
     private var remoteView: SurfaceViewRenderer? = null
+    private var dataChannel: DataChannel? = null
 
+    val TAG = "DataChannel"
 
     fun login(userid : String, isDone : (Boolean, String?) -> Unit) {
         firebaseClient.login(userid, isDone)
@@ -106,6 +111,7 @@ class MainRepository @Inject constructor(
 
                 // Peer 간 연결되었을 때!!
                 if(newState == PeerConnection.PeerConnectionState.CONNECTED) {
+                    Log.d(TAG, "PeerConnection CONNECTED")
                     // 1. change my status to in call
                     changeMyStatus(UserStatus.IN_CALL)
                     // 2. clear latest event inside my user section in firebase database
@@ -115,8 +121,22 @@ class MainRepository @Inject constructor(
                     connectionListener?.onPeerConnectionReady()
                 }
             }
+
+            override fun onDataChannel(p0: DataChannel?) {
+                super.onDataChannel(p0)
+                Log.d(TAG, "Educator: onDataChannel")
+                dataChannel = p0
+            }
         })
 
+    }
+
+    fun initDataChannel() {
+        webRTCClient.initDataChannel()
+    }
+
+    fun sendToDataChannel(message: String) {
+        webRTCClient.sendToDataChannel(message)
     }
 
     // firebase에서의 상태를 업데이트

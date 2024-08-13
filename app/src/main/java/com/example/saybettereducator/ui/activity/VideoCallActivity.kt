@@ -245,7 +245,11 @@ class VideoCallActivity: ComponentActivity(), MainService.EndCallListener {
 
 
                     Box(
-                        modifier = Modifier.padding(top = 35.dp)
+                        modifier = Modifier
+                            .padding(top = 35.dp)
+                            .clickable {
+                                (viewModel::handleIntent)(VideoCallIntent.SendRTCMessage("Hello!!"))
+                            }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.hellobtn),
