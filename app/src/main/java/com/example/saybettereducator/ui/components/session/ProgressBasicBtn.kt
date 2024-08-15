@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.components.progress
+package com.example.saybettereducator.ui.components.session
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.saybettereducator.ui.theme.Gray5B
 
 @Composable
 fun ProgressBasicBtn(

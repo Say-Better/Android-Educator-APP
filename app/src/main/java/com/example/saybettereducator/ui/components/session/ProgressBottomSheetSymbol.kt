@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.components.progress
+package com.example.saybettereducator.ui.components.session
 
 import android.util.Log
 import androidx.compose.foundation.background

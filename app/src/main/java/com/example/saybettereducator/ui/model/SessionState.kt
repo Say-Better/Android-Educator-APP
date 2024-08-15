@@ -1,7 +1,8 @@
 package com.example.saybettereducator.ui.model
 
-data class VideoCallState(
+data class SessionState(
     val isPeerConnected: Boolean = false,
     val isCaller: Boolean = true,
-    var target: String? = null
+    var target: String? = null,
+    val isStart: Boolean = false
 )

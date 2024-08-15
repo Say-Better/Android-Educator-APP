@@ -1,6 +1,7 @@
-package com.example.saybettereducator.ui.components.progress
+package com.example.saybettereducator.ui.components.session
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,31 +27,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
+import com.example.saybettereducator.data.repository.MainServiceRepository
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
+import com.example.saybettereducator.ui.theme.Red
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ProgressBottomBar() {
+fun SessionBottomBar(
+    isStart: Boolean,
+    serviceRepository: MainServiceRepository,
+    onStartSolution: () -> Unit
+) {
     var micClicked: Boolean by remember { mutableStateOf(false) }
     var cameraClicked: Boolean by remember { mutableStateOf(false) }
 
     Surface(
         color = DarkGray,
-        modifier = Modifier
+        modifier =
+        if (!isStart)
+            Modifier
+                .fillMaxWidth()
+                .height(109.dp)
+                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+        else Modifier
             .fillMaxWidth()
             .height(80.dp)
     ){
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp)
+                .padding(start = 20.dp, end = 20.dp, top = if (!isStart) 37.dp else 0.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -59,7 +72,7 @@ fun ProgressBottomBar() {
                     .background(Color.Gray)
                     .clickable {
                         micClicked = !micClicked
-                        //serviceRepository.toggleAudio(micClicked)
+                        serviceRepository.toggleAudio(micClicked)
                     }
             ) {
                 Icon(
@@ -77,7 +90,7 @@ fun ProgressBottomBar() {
                     .background(Color.Gray)
                     .clickable {
                         cameraClicked = !cameraClicked
-                        //serviceRepository.toggleVideo(cameraClicked)
+                        serviceRepository.toggleVideo(cameraClicked)
                     }
             ) {
                 Icon(
@@ -91,20 +104,26 @@ fun ProgressBottomBar() {
                 modifier = Modifier
                     .clip(RoundedCornerShape(28.dp))
                     .alpha(0.8f)
-                    .background(Red)
+                    .background(if (!isStart) MainGreen else Red)
                     .size(width = 152.dp, height = 40.dp)
-                    .clickable { },
+                    .clickable {
+                        if (!isStart) {
+                            onStartSolution()
+                            Log.d("SessionBottomBar", "솔루션 시작")
+                        }
+
+                    },
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.solution_end_btn),
+                    painter = painterResource(id = R.drawable.solution_start_btn_icon),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.padding(start = 21.5.dp)
                 )
                 Text(
-                    text = "솔루션 종료",
+                    text = if(!isStart) "솔루션 시작" else "솔루션 종료",
                     fontSize = 16.sp,
                     color = Color.White,
                     fontFamily = FontFamily(pretendardMediumFont),
@@ -117,7 +136,7 @@ fun ProgressBottomBar() {
                     .clip(CircleShape)
                     .background(Color.Gray)
                     .clickable {
-                        //serviceRepository.switchCamera()
+                        serviceRepository.switchCamera()
                     }
             ) {
                 Icon(
