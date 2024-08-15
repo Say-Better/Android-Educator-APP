@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -55,6 +56,7 @@ fun SessionBottomBar(
             Modifier
                 .fillMaxWidth()
                 .height(109.dp)
+                .background(Color.Black)
                 .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
         else Modifier
             .fillMaxWidth()
@@ -63,7 +65,7 @@ fun SessionBottomBar(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = if (!isStart) 37.dp else 0.dp)
+                .padding(start = 20.dp, end = 20.dp, top = if (!isStart) 37.dp else 8.dp)
         ) {
             Box(
                 modifier = Modifier

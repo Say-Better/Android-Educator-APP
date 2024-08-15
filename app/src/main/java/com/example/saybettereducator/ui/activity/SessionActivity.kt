@@ -149,12 +149,12 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
             when (scaffoldState.bottomSheetState.currentValue) {
                 SheetValue.Expanded -> {
                     if (!progressViewState.isBottomSheetOpen) {
-                        scaffoldState.bottomSheetState.expand()
+                        progressViewModel.handleIntent(ProgressIntent.ToggleBottomSheet)
                     }
                 }
                 SheetValue.PartiallyExpanded -> {
                     if (progressViewState.isBottomSheetOpen) {
-                        scaffoldState.bottomSheetState.partialExpand()
+                        progressViewModel.handleIntent(ProgressIntent.ToggleBottomSheet)
                     }
                 }
                 else -> { /* No action needed */ }
@@ -193,11 +193,15 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                 )
             }
         ) { innerPadding ->
-            Surface(color = Color.Black) {
+            Surface(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                color = Color.Black
+            ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .padding(innerPadding)
                         .fillMaxSize()
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
@@ -221,39 +225,39 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                     if(!sessionState.isStart) {
                         ReadyHelloBtn(onHelloClick = { onSessionIntent(SessionIntent.SendRTCMessage("Hello!!")) })
                         Spacer(modifier = Modifier.weight(1f))
-                    } else {
-                        BottomSheetScaffold(
-                            scaffoldState = scaffoldState,
-                            sheetContent = {
-                                ProgressBottomSheet(
-                                    state = progressState,
-                                    onChanceClick = {
-                                        onProgressIntent(ProgressIntent.CommunicationClicked)
-                                    },
-                                    onTimerClick = {
-                                        onProgressIntent(ProgressIntent.TimerClicked)
-                                    },
-                                    onModeSelected = { mode ->
-                                        onProgressIntent(ProgressIntent.SelectMode(mode))
-                                    },
-                                    onItemClick = { symbol ->
-                                        if (progressState.selectedSymbols.contains(symbol)) {
-                                            onProgressIntent(ProgressIntent.DeselectSymbol(symbol))
-                                        } else {
-                                            onProgressIntent(ProgressIntent.SelectSymbol(symbol))
-                                        }
-                                    },
-                                    onAddClick = {}
-                                )
-                            },
-                            sheetDragHandle = {
-                                DragHandle(onClick = { onProgressIntent(ProgressIntent.ToggleBottomSheet) })
-                            },
-                            sheetContainerColor = DarkGray,
-                            sheetPeekHeight = 30.dp,
-                            modifier = Modifier.fillMaxHeight()
-                        ) {}
                     }
+                }
+                if(sessionState.isStart) {
+                    BottomSheetScaffold(
+                        scaffoldState = scaffoldState,
+                        sheetContent = {
+                            ProgressBottomSheet(
+                                state = progressState,
+                                onChanceClick = {
+                                    onProgressIntent(ProgressIntent.CommunicationClicked)
+                                },
+                                onTimerClick = {
+                                    onProgressIntent(ProgressIntent.TimerClicked)
+                                },
+                                onModeSelected = { mode ->
+                                    onProgressIntent(ProgressIntent.SelectMode(mode))
+                                },
+                                onItemClick = { symbol ->
+                                    if (progressState.selectedSymbols.contains(symbol)) {
+                                        onProgressIntent(ProgressIntent.DeselectSymbol(symbol))
+                                    } else {
+                                        onProgressIntent(ProgressIntent.SelectSymbol(symbol))
+                                    }
+                                },
+                                onAddClick = {}
+                            )
+                        },
+                        sheetDragHandle = {
+                            DragHandle(onClick = { onProgressIntent(ProgressIntent.ToggleBottomSheet) })
+                        },
+                        sheetContainerColor = DarkGray,
+                        sheetPeekHeight = 30.dp
+                    ) {}
                 }
             }
         }

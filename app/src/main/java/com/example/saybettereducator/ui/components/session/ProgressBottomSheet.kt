@@ -24,7 +24,6 @@ fun ProgressBottomSheet(
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
     ) {
-        // 업데이트된 컴포저블 호출
         ProgressBottomSheetChanceView(
             state = state,
             onChanceClick = onChanceClick,
