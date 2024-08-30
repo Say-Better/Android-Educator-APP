@@ -1,4 +1,4 @@
-package com.example.saybettereducator.ui.components.progress
+package com.example.saybettereducator.ui.components.session
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

@@ -7,7 +7,6 @@ import com.example.saybettereducator.data.model.UserStatus
 import com.example.saybettereducator.data.api.helper.FirebaseClient
 import com.example.saybettereducator.utils.webrtcObserver.MyPeerObserver
 import com.example.saybettereducator.data.api.helper.WebRTCClient
-import com.example.saybettereducator.ui.activity.VideoCallActivity
 import com.google.gson.Gson
 import org.webrtc.DataChannel
 import org.webrtc.IceCandidate
@@ -15,7 +14,6 @@ import org.webrtc.MediaStream
 import org.webrtc.PeerConnection
 import org.webrtc.SessionDescription
 import org.webrtc.SurfaceViewRenderer
-import java.nio.ByteBuffer
 import javax.inject.Inject
 import javax.inject.Singleton
 

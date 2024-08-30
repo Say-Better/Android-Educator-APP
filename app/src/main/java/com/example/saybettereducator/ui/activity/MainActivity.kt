@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity(), MainService.CallEventListener {
             if (it) {
                 // Video call 시작해야함
                 startActivity(
-                    Intent(this@MainActivity, VideoCallActivity::class.java)
+                    Intent(this@MainActivity, SessionActivity::class.java)
                         .putExtra("target", targetUserid).putExtra("isCaller", isCaller)
                 )
             }

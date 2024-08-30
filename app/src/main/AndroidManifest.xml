@@ -61,7 +61,7 @@
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.MaActivity" />
         <activity android:name=".ui.activity.MainActivity" />
-        <activity android:name=".ui.activity.VideoCallActivity" />
+        <activity android:name=".ui.activity.SessionActivity" />
 
         <!-- 시그널링 서버와 지속적으로 데이터를 주고받아야 하므로 DataSync type으로 명시 -->
         <service

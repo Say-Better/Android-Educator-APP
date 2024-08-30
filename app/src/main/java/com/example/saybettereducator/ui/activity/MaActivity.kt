@@ -301,7 +301,7 @@ class MaActivity : ComponentActivity(), MainService.CallEventListener {
             if (it) {
                 //videocall 시작해야함
                 //educator 되면 수정
-                intent = Intent(this@MaActivity, VideoCallActivity::class.java)
+                intent = Intent(this@MaActivity, SessionActivity::class.java)
                 intent.putExtra("target", targetUserid)
                 intent.putExtra("isCaller", isCaller)
                 startActivity(intent)
