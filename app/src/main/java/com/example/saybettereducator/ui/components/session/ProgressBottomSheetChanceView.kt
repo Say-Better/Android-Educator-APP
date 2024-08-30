@@ -34,7 +34,7 @@ fun ProgressBottomSheetChanceView(
         modifier = Modifier.fillMaxWidth()
     ) {
         ProgressBasicBtn(
-            resId = R.drawable.progress_chance_btn,
+            resId = R.drawable.ic_progress_chance_btn,
             desc = R.string.progress_chance,
             onClick = onChanceClick,
             backgroundColor = when (state.communicationState) {
@@ -54,7 +54,7 @@ fun ProgressBottomSheetChanceView(
         Spacer(modifier = Modifier.weight(1f))
 
         ProgressBasicBtn(
-            resId = R.drawable.progress_timer,
+            resId = R.drawable.ic_progress_timer,
             desc = R.string.progress_timer,
             onClick = onTimerClick,
             backgroundColor = when (state.communicationState) {

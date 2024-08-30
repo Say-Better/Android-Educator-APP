@@ -39,8 +39,8 @@ fun ProgressModeView(
         ) {
             ModeButton(
                 isSelected = selectedMode == 1,
-                activeImageRes = R.drawable.progress_mode_1_active,
-                inactiveImageRes = R.drawable.progress_mode_1,
+                activeImageRes = R.drawable.ic_progress_mode_1_active,
+                inactiveImageRes = R.drawable.ic_progress_mode_1,
                 onClick = {
                     selectedMode = 1
                     onModeSelected(1)
@@ -51,8 +51,8 @@ fun ProgressModeView(
 
             ModeButton(
                 isSelected = selectedMode == 2,
-                activeImageRes = R.drawable.progress_mode_2_active,
-                inactiveImageRes = R.drawable.progress_mode_2,
+                activeImageRes = R.drawable.ic_progress_mode_2_active,
+                inactiveImageRes = R.drawable.ic_progress_mode_2,
                 onClick = {
                     selectedMode = 2
                     onModeSelected(2)
@@ -63,8 +63,8 @@ fun ProgressModeView(
 
             ModeButton(
                 isSelected = selectedMode == 3,
-                activeImageRes = R.drawable.progress_mode_3_active,
-                inactiveImageRes = R.drawable.progress_mode_3,
+                activeImageRes = R.drawable.ic_progress_mode_3_active,
+                inactiveImageRes = R.drawable.ic_progress_mode_3,
                 onClick = {
                     selectedMode = 3
                     onModeSelected(3)
@@ -79,8 +79,8 @@ fun ProgressModeView(
         ) {
             ModeButton(
                 isSelected = selectedMode == 4,
-                activeImageRes = R.drawable.progress_mode_4_active,
-                inactiveImageRes = R.drawable.progress_mode_4,
+                activeImageRes = R.drawable.ic_progress_mode_4_active,
+                inactiveImageRes = R.drawable.ic_progress_mode_4,
                 onClick = {
                     selectedMode = 4
                     onModeSelected(4)

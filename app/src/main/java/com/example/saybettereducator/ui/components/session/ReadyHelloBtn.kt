@@ -2,7 +2,6 @@ package com.example.saybettereducator.ui.components.session
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -12,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.saybettereducator.R
-import com.example.saybettereducator.ui.intent.SessionIntent
 import com.example.saybettereducator.ui.theme.MainGreen
 
 @Composable
@@ -25,14 +23,14 @@ fun ReadyHelloBtn(onHelloClick: () -> Unit) {
             }
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.hellobtn),
+            painter = painterResource(id = R.drawable.bg_hello_btn),
             contentDescription = null,
             tint = MainGreen,
             modifier = Modifier
                 .width(72.dp)
         )
         Icon(
-            painter = painterResource(id = R.drawable.hello),
+            painter = painterResource(id = R.drawable.ic_hello),
             contentDescription = null,
             tint = Color.White,
             modifier = Modifier

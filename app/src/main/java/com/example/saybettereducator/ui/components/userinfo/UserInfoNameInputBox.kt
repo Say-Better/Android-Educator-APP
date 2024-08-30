@@ -53,7 +53,7 @@ fun NameInputBox(
                 .weight(1f),
         )
 
-        Image(painter = painterResource(id = R.drawable.cancel_button),
+        Image(painter = painterResource(id = R.drawable.ic_cancel_button),
             contentDescription = "cancell button",
             contentScale = ContentScale.None,
             modifier = Modifier

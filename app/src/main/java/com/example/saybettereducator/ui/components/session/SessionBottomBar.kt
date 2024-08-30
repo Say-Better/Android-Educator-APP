@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -78,7 +77,7 @@ fun SessionBottomBar(
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.mic),
+                    painter = painterResource(id = R.drawable.ic_mic),
                     contentDescription = "mic on/off",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 8.dp, start = 8.dp)
@@ -96,7 +95,7 @@ fun SessionBottomBar(
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.cam),
+                    painter = painterResource(id = R.drawable.ic_cam),
                     contentDescription = "camera on/off",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 14.dp, start = 10.dp)
@@ -119,7 +118,7 @@ fun SessionBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.solution_start_btn_icon),
+                    painter = painterResource(id = R.drawable.ic_solution_start_btn_icon),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.padding(start = 21.5.dp)
@@ -142,7 +141,7 @@ fun SessionBottomBar(
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.cam_switch),
+                    painter = painterResource(id = R.drawable.ic_cam_switch),
                     contentDescription = "camera switch",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 11.dp, start = 10.dp)

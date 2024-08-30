@@ -58,9 +58,32 @@ class ProgressViewModel @Inject constructor(
     }
 
     private fun loadSymbols() {
-        val symbols = List(20) { i ->
-            Symbol(i + 1, "Symbol ${i + 1}", R.drawable.symbol_go)
-        }
+        val symbols = listOf(
+            Symbol(0, "가요", R.drawable.ic_symbol_go),
+            Symbol(1, "감격하다", R.drawable.ic_symbol_moved),
+            Symbol(2, "놀라다", R.drawable.ic_symbol_surprised),
+            Symbol(4, "따분하다", R.drawable.ic_symbol_boring),
+            Symbol(5, "떨리다", R.drawable.ic_symbol_tremble),
+            Symbol(6, "미안하다", R.drawable.ic_symbol_sorry),
+            Symbol(7, "민망하다", R.drawable.ic_symbol_embarrassed),
+            Symbol(8, "반가워요", R.drawable.ic_symbol_glad),
+            Symbol(9, "밥", R.drawable.ic_symbol_rice),
+            Symbol(10, "배고파요", R.drawable.ic_symbol_hungry),
+            Symbol(11, "부끄러워요", R.drawable.ic_symbol_shy),
+            Symbol(12, "부담스럽다", R.drawable.ic_symbol_pressured),
+            Symbol(13, "부럽다", R.drawable.ic_symbol_envious),
+            Symbol(14, "뿌듯하다", R.drawable.ic_symbol_plessure),
+            Symbol(15, "상처받다", R.drawable.ic_symbol_hurt),
+            Symbol(16, "속상해요", R.drawable.ic_symbol_upset),
+            Symbol(17, "시작", R.drawable.ic_symbol_start),
+            Symbol(18, "신나요", R.drawable.ic_symbol_excited),
+            Symbol(19, "어리둥절하다", R.drawable.ic_symbol_confused),
+            Symbol(20, "우울해요", R.drawable.ic_symbol_depressed),
+            Symbol(21, "자랑스럽다", R.drawable.ic_symbol_proud),
+            Symbol(22, "짜증나다", R.drawable.ic_symbol_annoying),
+            Symbol(23, "화나요", R.drawable.ic_symbol_angry),
+            Symbol(24, "흥미롭다", R.drawable.ic_symbol_interested),
+        )
         updateState { it.copy(symbols = symbols) }
     }
 

@@ -36,7 +36,7 @@ fun UserInfoTopAppBar() {
                 .height(48.dp)
         )
         Image(
-            painter = painterResource(id = R.drawable.main_logo),
+            painter = painterResource(id = R.drawable.ic_main_logo),
             contentDescription = "main top bar logo",
             modifier = Modifier.padding(start = 16.dp, top = 14.29.dp)
         )

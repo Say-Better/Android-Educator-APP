@@ -52,7 +52,7 @@ fun Splash() {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Image(painter = painterResource(id = R.drawable.splash_logo),
+            Image(painter = painterResource(id = R.drawable.ic_splash_logo),
                 contentDescription = null,
                 modifier = Modifier
                     .width(130.36.dp)

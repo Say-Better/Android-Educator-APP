@@ -63,7 +63,7 @@ fun ProgressTopBar(isPlaying: Boolean) {
         )
 
         Icon(
-            painter = painterResource(id = R.drawable.progress_volume),
+            painter = painterResource(id = R.drawable.ic_progress_volume),
             contentDescription = "솔루션 진행 음성 표시",
             tint = iconTint,
             modifier = Modifier
