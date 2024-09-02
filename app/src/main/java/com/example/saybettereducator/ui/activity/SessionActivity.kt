@@ -226,7 +226,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                     }
 
                     // 교육자, 학습자 비디오 화면
-                    SessionVideoView(sessionState = sessionState)
+                    SessionVideoView(sessionState = sessionState, progressState = progressState)
                     Spacer(modifier = Modifier.weight(1f))
 
                     // 인사 버튼
