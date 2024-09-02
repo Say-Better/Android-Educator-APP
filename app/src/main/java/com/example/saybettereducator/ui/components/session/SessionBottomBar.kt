@@ -36,6 +36,7 @@ import com.example.saybettereducator.data.repository.MainServiceRepository
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.Red
+import com.example.saybettereducator.ui.theme.White
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -104,14 +105,13 @@ fun SessionBottomBar(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(28.dp))
-                    .alpha(0.8f)
                     .background(if (!isStart) MainGreen else Red)
                     .size(width = 152.dp, height = 40.dp)
                     .clickable {
                         if (!isStart) {
                             onStartSolution()
                             Log.d("SessionBottomBar", "솔루션 시작")
-                        }
+                        } else serviceRepository.sendEndCall()
 
                     },
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween,
@@ -120,13 +120,13 @@ fun SessionBottomBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_solution_start_btn_icon),
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = White,
                     modifier = Modifier.padding(start = 21.5.dp)
                 )
                 Text(
                     text = if(!isStart) "솔루션 시작" else "솔루션 종료",
                     fontSize = 16.sp,
-                    color = Color.White,
+                    color = White,
                     fontFamily = FontFamily(pretendardMediumFont),
                     modifier = Modifier.padding(end = 21.5.dp)
                 )

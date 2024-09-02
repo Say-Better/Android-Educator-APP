@@ -41,7 +41,7 @@ fun ProgressTopBar(isPlaying: Boolean) {
                     modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Text(
-                        text = "TV보는 상황 솔루션",
+                        text = "감정표현 상황 솔루션",
                         fontSize = 20.sp,
                         fontFamily = FontFamily(montserratFont),
                         color = Color.White,
