@@ -49,7 +49,7 @@ fun ReadyTopBar(serviceRepository: MainServiceRepository) {
                 .height(56.dp)
         )
         Icon(
-            painter = painterResource(id = R.drawable.solution_back_arrow),
+            painter = painterResource(id = R.drawable.ic_solution_back_arrow),
             contentDescription = "솔루션 종료 버튼",
             tint = Color.White,
             modifier = Modifier
@@ -62,7 +62,7 @@ fun ReadyTopBar(serviceRepository: MainServiceRepository) {
                 },
         )
         Icon(
-            painter = painterResource(id = R.drawable.dot_menu),
+            painter = painterResource(id = R.drawable.ic_dot_menu),
             contentDescription = "혹시 있을지도 모르는 자잘한 설정 항목",
             tint = Color.White,
             modifier = Modifier

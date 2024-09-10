@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -37,6 +36,7 @@ import com.example.saybettereducator.data.repository.MainServiceRepository
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.Red
+import com.example.saybettereducator.ui.theme.White
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -78,7 +78,7 @@ fun SessionBottomBar(
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.mic),
+                    painter = painterResource(id = R.drawable.ic_mic),
                     contentDescription = "mic on/off",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 8.dp, start = 8.dp)
@@ -96,7 +96,7 @@ fun SessionBottomBar(
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.cam),
+                    painter = painterResource(id = R.drawable.ic_cam),
                     contentDescription = "camera on/off",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 14.dp, start = 10.dp)
@@ -105,29 +105,28 @@ fun SessionBottomBar(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(28.dp))
-                    .alpha(0.8f)
                     .background(if (!isStart) MainGreen else Red)
                     .size(width = 152.dp, height = 40.dp)
                     .clickable {
                         if (!isStart) {
                             onStartSolution()
                             Log.d("SessionBottomBar", "솔루션 시작")
-                        }
+                        } else serviceRepository.sendEndCall()
 
                     },
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.solution_start_btn_icon),
+                    painter = painterResource(id = R.drawable.ic_solution_start_btn_icon),
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = White,
                     modifier = Modifier.padding(start = 21.5.dp)
                 )
                 Text(
                     text = if(!isStart) "솔루션 시작" else "솔루션 종료",
                     fontSize = 16.sp,
-                    color = Color.White,
+                    color = White,
                     fontFamily = FontFamily(pretendardMediumFont),
                     modifier = Modifier.padding(end = 21.5.dp)
                 )
@@ -142,7 +141,7 @@ fun SessionBottomBar(
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.cam_switch),
+                    painter = painterResource(id = R.drawable.ic_cam_switch),
                     contentDescription = "camera switch",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 11.dp, start = 10.dp)

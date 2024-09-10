@@ -66,7 +66,7 @@ private fun LoginSuccessContent(innerPadding: PaddingValues) {
                 .align(Alignment.CenterHorizontally)
         ) {
             Image(
-                painter = painterResource(R.drawable.login_illust_educator),
+                painter = painterResource(R.drawable.img_login_illust_educator),
                 contentDescription = "Login Illustration",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier

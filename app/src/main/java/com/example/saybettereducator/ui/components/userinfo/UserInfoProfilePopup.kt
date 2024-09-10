@@ -135,7 +135,7 @@ private fun PopupHeader(onShowPopup: (Boolean) -> Unit) {
         )
 
         Image(
-            painter = painterResource(R.drawable.cancel_button_2),
+            painter = painterResource(R.drawable.ic_cancel_button_2),
             contentDescription = "cancel button",
             contentScale = ContentScale.None,
             modifier = Modifier
@@ -168,7 +168,7 @@ fun ProfileImageCard(
                     .clip(RoundedCornerShape(size = 24.dp))
             )
         } ?: Image(
-            painter = painterResource(id = R.drawable.educator_profile),
+            painter = painterResource(id = R.drawable.ic_educator_profile),
             contentDescription = "Educator Profile Image",
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
@@ -179,7 +179,7 @@ fun ProfileImageCard(
                 .clip(RoundedCornerShape(size = 24.dp))
         )
 
-        Image(painter = painterResource(id = R.drawable.profile_button),
+        Image(painter = painterResource(id = R.drawable.ic_profile_button),
             contentDescription = "Profile Button",
             contentScale = ContentScale.None,
             modifier = Modifier

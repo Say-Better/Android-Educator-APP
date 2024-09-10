@@ -103,7 +103,7 @@ class LoginActivity : ComponentActivity() {
                 Spacer(modifier = Modifier.height(30.29.dp))
 
                 Image(
-                    painter = painterResource(id = R.drawable.login_raw),
+                    painter = painterResource(id = R.drawable.img_login_raw),
                     contentDescription = null,
                     modifier = Modifier
                         .width(360.dp)
@@ -143,7 +143,7 @@ class LoginActivity : ComponentActivity() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.google_logo),
+                    painter = painterResource(id = R.drawable.ic_google_logo),
                     contentDescription = "Google 소셜 로그인 버튼에 표시되는 로고"
                 )
 

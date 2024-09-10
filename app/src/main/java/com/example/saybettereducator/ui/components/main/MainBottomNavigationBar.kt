@@ -32,7 +32,7 @@ fun MainBottomNavigationBar(navController: NavHostController) {
             onClick = { navController.navigate("home") },
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.home_nav),
+                    painter = painterResource(id = R.drawable.ic_home_nav),
                     contentDescription = "bottom navigation home",
                     tint = if (currentRoute == "home") MainGreen else GrayW40
                 )
@@ -53,7 +53,7 @@ fun MainBottomNavigationBar(navController: NavHostController) {
             onClick = { navController.navigate("learner") },
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.learner_nav),
+                    painter = painterResource(id = R.drawable.ic_learner_nav),
                     contentDescription = "bottom navigation learner",
                     tint = if (currentRoute == "learner") MainGreen else GrayW40
                 )
@@ -74,7 +74,7 @@ fun MainBottomNavigationBar(navController: NavHostController) {
             onClick = { navController.navigate("solution") },
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.solution_nav),
+                    painter = painterResource(id = R.drawable.ic_solution_nav),
                     contentDescription = "bottom navigation solution",
                     tint = if (currentRoute == "solution") MainGreen else GrayW40
                 )
@@ -95,7 +95,7 @@ fun MainBottomNavigationBar(navController: NavHostController) {
             onClick = { navController.navigate("calendar") },
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.calendar_nav),
+                    painter = painterResource(id = R.drawable.ic_calendar_nav),
                     contentDescription = "bottom navigation calendar",
                     tint = if (currentRoute == "calendar") MainGreen else GrayW40
                 )

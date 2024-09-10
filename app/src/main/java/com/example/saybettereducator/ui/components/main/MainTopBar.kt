@@ -48,7 +48,7 @@ fun MainTopBar() {
                 .height(48.dp)
         )
         Image(
-            painter = painterResource(id = R.drawable.main_logo),
+            painter = painterResource(id = R.drawable.ic_main_logo),
             contentDescription = "main top bar logo",
             modifier = Modifier
                 .padding(start = 16.dp, top = 14.29.dp)
@@ -68,14 +68,14 @@ fun TopBarNavigation(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.End
     ) {
         Image(
-            painter = painterResource(id = R.drawable.alarm_bell),
+            painter = painterResource(id = R.drawable.ic_alarm_bell),
             contentDescription = "새 소식 알림 버튼",
             modifier = Modifier
                 .align(Alignment.CenterVertically)
         )
         Spacer(modifier = Modifier.width(17.dp))
         Image(
-            painter = painterResource(id = R.drawable.profile_my),
+            painter = painterResource(id = R.drawable.ic_profile_my),
             contentDescription = "교육자 프로필 버튼",
             modifier = Modifier
                 .align(Alignment.CenterVertically)

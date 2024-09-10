@@ -4,5 +4,6 @@ data class SessionState(
     val isPeerConnected: Boolean = false,
     val isCaller: Boolean = true,
     var target: String? = null,
-    val isStart: Boolean = false
+    val isStart: Boolean = false,
+    val greetState: Boolean = false
 )

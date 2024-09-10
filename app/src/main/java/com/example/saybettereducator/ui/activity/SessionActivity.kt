@@ -3,6 +3,7 @@ package com.example.saybettereducator.ui.activity
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -161,6 +162,10 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
             }
         }
 
+        BackHandler {
+            serviceRepository.sendEndCall()
+        }
+
         SessionScreen(
             sessionState = sessionViewState,
             progressState = progressViewState,
@@ -205,6 +210,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                         .fillMaxSize()
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
+
                     // 세션 진행 상징 카드 화면
                     if(sessionState.isStart) {
                         ProgressLearningView(
@@ -219,14 +225,21 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                         Spacer(modifier = Modifier.weight(1f))
                     }
 
-                    SessionVideoView(sessionState = sessionState)
+                    // 교육자, 학습자 비디오 화면
+                    SessionVideoView(sessionState = sessionState, progressState = progressState)
                     Spacer(modifier = Modifier.weight(1f))
 
+                    // 인사 버튼
                     if(!sessionState.isStart) {
-                        ReadyHelloBtn(onHelloClick = { onSessionIntent(SessionIntent.SendRTCMessage("Hello!!")) })
+                        ReadyHelloBtn(
+                            greetState = sessionState.greetState,
+                            onHelloClick = { onSessionIntent(SessionIntent.HelloClicked) }
+                        )
                         Spacer(modifier = Modifier.weight(1f))
                     }
                 }
+
+                // 세션 진행 시 바텀시트
                 if(sessionState.isStart) {
                     BottomSheetScaffold(
                         scaffoldState = scaffoldState,

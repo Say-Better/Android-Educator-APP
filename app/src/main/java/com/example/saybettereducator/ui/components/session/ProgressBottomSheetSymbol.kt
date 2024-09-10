@@ -72,7 +72,7 @@ fun BottomSheetSymbolCard(
                 verticalArrangement = Arrangement.Center // 수직 중앙 정렬
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.progress_add_symbol),
+                    painter = painterResource(id = R.drawable.ic_progress_add_symbol),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

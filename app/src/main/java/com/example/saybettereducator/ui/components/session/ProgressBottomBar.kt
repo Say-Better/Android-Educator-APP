@@ -60,7 +60,7 @@ fun ProgressBottomBar() {
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.mic),
+                    painter = painterResource(id = R.drawable.ic_mic),
                     contentDescription = "mic on/off",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 8.dp, start = 8.dp)
@@ -78,7 +78,7 @@ fun ProgressBottomBar() {
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.cam),
+                    painter = painterResource(id = R.drawable.ic_cam),
                     contentDescription = "camera on/off",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 14.dp, start = 10.dp)
@@ -95,7 +95,7 @@ fun ProgressBottomBar() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.solution_end_btn),
+                    painter = painterResource(id = R.drawable.ic_solution_end_btn),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.padding(start = 21.5.dp)
@@ -118,7 +118,7 @@ fun ProgressBottomBar() {
                     }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.cam_switch),
+                    painter = painterResource(id = R.drawable.ic_cam_switch),
                     contentDescription = "camera switch",
                     tint = Color.White,
                     modifier = Modifier.padding(top = 11.dp, start = 10.dp)

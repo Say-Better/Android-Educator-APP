@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -42,9 +43,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saybettereducator.R
+import com.example.saybettereducator.ui.theme.Black
 import com.example.saybettereducator.ui.theme.BoxBackground
+import com.example.saybettereducator.ui.theme.Gray5B25
 import com.example.saybettereducator.ui.theme.GrayW40
 import com.example.saybettereducator.ui.theme.GrayW90
+import com.example.saybettereducator.ui.theme.Transparent
+import com.example.saybettereducator.ui.theme.White
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.utils.customClick.CustomClickEvent
 
@@ -132,10 +137,17 @@ fun HomeSolutionView(
         )
 
         // 학습자 수만큼 루프
-        for (i in 1..5)
+        /*for (i in 1..5) {
             HomeSolutionViewElement(onClickSolution)
+            if(i != 5) Spacer (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .background(Color.White)
+            )
+        }*/
 
-
+        HomeSolutionViewElement(onClickSolution)
     }
 }
 
@@ -146,7 +158,7 @@ fun HomeSolutionViewElement(
     Column(modifier = Modifier.padding(top = 18.dp)) {
         Row(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(end = 16.dp, bottom = 16.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -154,12 +166,6 @@ fun HomeSolutionViewElement(
             CreateSolutionButton()
         }
         SolutionCardScroll(onClickSolution)
-        Box (
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .background(Color.White)
-        )
     }
 }
 
@@ -172,12 +178,12 @@ fun SolutionCardScroll(
     Row(
         Modifier
             .horizontalScroll(scrollState)
-            .padding(bottom = 14.dp)
+            .padding(start = 16.dp, bottom = 14.dp)
     ) {
-        for (i in 1..5) {
+        //for (i in 1..5) {
             SolutionCard(onClickSolution)
             Spacer(modifier = Modifier.width(8.dp))
-        }
+        //}
 
     }
 }
@@ -205,32 +211,69 @@ fun SolutionCard(
                 .padding(top = 16.dp, start = 12.dp)
         ) {
             Box {
+                Box(
+                    modifier = Modifier
+                        .size(72.dp, 72.dp)
+                        .offset(x = 56.dp)
+                        .shadow(
+                            elevation = 2.dp,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .background(White, RoundedCornerShape(8.dp))
+                )
+
+
                 Image(
-                    painter = painterResource(id = R.drawable.symbol_go),
+                    painter = painterResource(id = R.drawable.ic_symbol_go),
                     contentDescription = "symbol sample go",
                     modifier = Modifier
                         .size(72.dp, 72.dp)
                         .offset(x = 52.dp)
                         .shadow(
-                            elevation = 0.5.dp,
+                            elevation = 2.dp,
                             shape = RoundedCornerShape(8.dp)
                         )
-                        .clip(RoundedCornerShape(8.dp))
+                        .background(White, RoundedCornerShape(8.dp)),
+                )
+                Box(
+                    modifier = Modifier
+                        .size(72.dp, 72.dp)
+                        .offset(x = 52.dp)
+                        .background(
+                            Brush.horizontalGradient(listOf(Gray5B25, Transparent)),
+                            RoundedCornerShape(8.dp)
+                        ),
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.symbol_rice),
-                    contentDescription = "symbol sample rice",
+                    painter = painterResource(id = R.drawable.ic_symbol_excited),
+                    contentDescription = "symbol sample excited",
                     modifier = Modifier
                         .size(72.dp, 72.dp)
                         .shadow(
                             elevation = 1.dp,
                             shape = RoundedCornerShape(8.dp)
                         )
-                        .clip(RoundedCornerShape(8.dp))
+                        .background(White, RoundedCornerShape(8.dp))
                 )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .offset(56.dp)
+                ) {
+                    Text(
+                        text = "+22",
+                        color = White,
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(pretendardMediumFont),
+                        modifier = Modifier
+                            .background(Black, RoundedCornerShape(21.dp))
+                            .padding(horizontal = 7.dp)
+                    )
+                }
+
             }
             Text(
-                text = "학교생활 상황",
+                text = "감정표현 상황",
                 fontSize = 14.sp,
                 fontFamily = FontFamily(pretendardMediumFont),
                 modifier = Modifier.padding(top = 12.dp)
@@ -266,7 +309,7 @@ fun CreateSolutionButton() {
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.solution_plus),
+                painter = painterResource(id = R.drawable.ic_solution_plus),
                 contentDescription = "+",
                 tint = GrayW40,
                 modifier = Modifier.padding(end = 4.dp)
@@ -286,10 +329,10 @@ fun LearnerMiniProfile(modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Row {
             Image(
-                painter = painterResource(R.drawable.learner_profile),
+                painter = painterResource(R.drawable.ic_learner_profile),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(end = 12.dp)
+                    .padding(start = 16.dp, end = 12.dp)
                     .size(width = 48.dp, height = 48.dp)
                     .clip(RoundedCornerShape(8.dp))
             )

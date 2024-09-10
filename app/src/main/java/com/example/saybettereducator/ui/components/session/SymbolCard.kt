@@ -102,7 +102,7 @@ fun SymbolCard(
                 ) {
                     // 기본 빈 상태 표시
                     Image(
-                        painter = painterResource(id = R.drawable.progress_add_symbol),
+                        painter = painterResource(id = R.drawable.ic_progress_add_symbol),
                         contentDescription = null,
                         modifier = Modifier.size(32.dp)
                     )

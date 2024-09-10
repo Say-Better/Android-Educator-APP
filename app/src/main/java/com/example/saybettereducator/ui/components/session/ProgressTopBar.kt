@@ -41,7 +41,7 @@ fun ProgressTopBar(isPlaying: Boolean) {
                     modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Text(
-                        text = "TV보는 상황 솔루션",
+                        text = "감정표현 상황 솔루션",
                         fontSize = 20.sp,
                         fontFamily = FontFamily(montserratFont),
                         color = Color.White,
@@ -63,7 +63,7 @@ fun ProgressTopBar(isPlaying: Boolean) {
         )
 
         Icon(
-            painter = painterResource(id = R.drawable.progress_volume),
+            painter = painterResource(id = R.drawable.ic_progress_volume),
             contentDescription = "솔루션 진행 음성 표시",
             tint = iconTint,
             modifier = Modifier

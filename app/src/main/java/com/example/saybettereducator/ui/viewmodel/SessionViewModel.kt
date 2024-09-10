@@ -1,12 +1,15 @@
 package com.example.saybettereducator.ui.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.saybettereducator.data.repository.MainRepository
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.SessionIntent
 import com.example.saybettereducator.ui.model.SessionState
 import com.example.saybettereducator.ui.sideeffect.SessionSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +23,7 @@ class SessionViewModel @Inject constructor(
             is SessionIntent.SetupView -> setupView()
             is SessionIntent.SendRTCMessage -> sendRTCMessage(intent.msg)
             is SessionIntent.StartSession -> startSession()
+            is SessionIntent.HelloClicked -> onHelloClicked()
         }
     }
 
@@ -33,6 +37,14 @@ class SessionViewModel @Inject constructor(
 
     private fun setupView() {
 
+    }
+
+    private fun onHelloClicked() {
+        updateState { it.copy(greetState = true) }
+        viewModelScope.launch {
+            delay(1000) // 3초 동안 표시
+            updateState { it.copy(greetState = false) }
+        }
     }
 
     private fun onRemoteViewReady() {
