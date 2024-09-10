@@ -13,6 +13,7 @@ import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.repository.MainRepository
 import com.example.saybettereducator.data.model.MainServiceActions.*
 import dagger.hilt.android.AndroidEntryPoint
+import org.webrtc.DataChannel
 import org.webrtc.SurfaceViewRenderer
 import javax.inject.Inject
 
@@ -142,6 +143,16 @@ class MainService : Service(), MainRepository.Listener {
     override fun endCall() {
         //remote peer로부터 통화 종료 신호를 받은 경우
         endCallAndRestartRepository()
+    }
+
+    override fun onDataReceivedFromChannel(it: DataChannel.Buffer) {
+        //여기서 case 나누어 처리하기
+        Log.d("DataChannel", "Data Received")
+    }
+
+    override fun onDataChannelReceived() {
+        //DataChannel 감지한 경우
+        Log.d("DataChannel", "Receive Data Channel")
     }
 
     //MainActivity에서 구현됨

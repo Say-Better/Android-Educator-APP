@@ -7,6 +7,8 @@ import com.example.saybettereducator.data.model.UserStatus
 import com.example.saybettereducator.data.api.helper.FirebaseClient
 import com.example.saybettereducator.utils.webrtcObserver.MyPeerObserver
 import com.example.saybettereducator.data.api.helper.WebRTCClient
+import com.example.saybettereducator.utils.DataConverter
+import com.example.saybettereducator.utils.FileMetaDataType
 import com.google.gson.Gson
 import org.webrtc.DataChannel
 import org.webrtc.IceCandidate
@@ -22,7 +24,7 @@ class MainRepository @Inject constructor(
     private val firebaseClient : FirebaseClient,
     private val webRTCClient: WebRTCClient,
     private val gson : Gson
-) : WebRTCClient.Listener {
+) : WebRTCClient.Listener, WebRTCClient.ReceiverListener {
     var listener : Listener? = null
     var connectionListener : ConnectionListener? = null
     private var target : String? = null
@@ -86,6 +88,7 @@ class MainRepository @Inject constructor(
 
     fun initWebrtcClient(userid: String) {
         webRTCClient.listener = this
+        webRTCClient.receiverListener = this
         webRTCClient.initializeWebrtcClient(userid, object : MyPeerObserver() {
             override fun onAddStream(p0: MediaStream?) {
                 super.onAddStream(p0)
@@ -122,19 +125,15 @@ class MainRepository @Inject constructor(
 
             override fun onDataChannel(p0: DataChannel?) {
                 super.onDataChannel(p0)
-                Log.d(TAG, "Educator: onDataChannel")
                 dataChannel = p0
+                listener?.onDataChannelReceived()
             }
         })
 
     }
 
-    fun initDataChannel() {
-        webRTCClient.initDataChannel()
-    }
-
-    fun sendToDataChannel(message: String) {
-        webRTCClient.sendToDataChannel(message)
+    override fun onDataReceived(it: DataChannel.Buffer) {
+        listener?.onDataReceivedFromChannel(it)
     }
 
     // firebase에서의 상태를 업데이트
@@ -158,9 +157,21 @@ class MainRepository @Inject constructor(
         this.remoteView = view
     }
 
+    fun sendTextToDataChannel(text:String){
+        sendBufferToDataChannel(DataConverter.convertToBuffer(FileMetaDataType.META_DATA_TEXT,text))
+        sendBufferToDataChannel(DataConverter.convertToBuffer(FileMetaDataType.TEXT,text))
+    }
+
+    private fun sendBufferToDataChannel(buffer: DataChannel.Buffer){
+        dataChannel?.send(buffer)
+
+    }
+
     interface Listener {
         fun onLatestEventReceived(data : DataModel)
         fun endCall()
+        fun onDataReceivedFromChannel(it: DataChannel.Buffer)
+        fun onDataChannelReceived()
     }
 
     interface ConnectionListener {

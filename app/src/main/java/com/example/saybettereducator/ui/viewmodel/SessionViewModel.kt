@@ -21,15 +21,13 @@ class SessionViewModel @Inject constructor(
         when (intent) {
             is SessionIntent.OnRemoteViewReady -> onRemoteViewReady()
             is SessionIntent.SetupView -> setupView()
-            is SessionIntent.SendRTCMessage -> sendRTCMessage(intent.msg)
             is SessionIntent.StartSession -> startSession()
             is SessionIntent.HelloClicked -> onHelloClicked()
+            is SessionIntent.SendRTCMessage -> TODO()
         }
     }
 
-    private fun sendRTCMessage(msg: String) {
-        mainRepository.sendToDataChannel(msg)
-    }
+
 
     init {
         mainRepository.connectionListener = this
@@ -40,6 +38,7 @@ class SessionViewModel @Inject constructor(
     }
 
     private fun onHelloClicked() {
+        mainRepository.sendTextToDataChannel("Greeting")
         updateState { it.copy(greetState = true) }
         viewModelScope.launch {
             delay(1000) // 3초 동안 표시
