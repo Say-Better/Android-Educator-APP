@@ -3,6 +3,7 @@ package com.example.saybettereducator.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.service.MainService
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.SessionIntent
 import com.example.saybettereducator.ui.model.SessionState
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SessionViewModel @Inject constructor(
     private val mainRepository: MainRepository
-): MviViewModel<SessionState, SessionSideEffect, SessionIntent>(SessionState()), MainRepository.ConnectionListener {
+): MviViewModel<SessionState, SessionSideEffect, SessionIntent>(SessionState()), MainRepository.ConnectionListener, MainService.InteractionListener {
 
     override fun handleIntent(intent: SessionIntent) {
         when (intent) {
@@ -33,6 +34,7 @@ class SessionViewModel @Inject constructor(
 
     init {
         mainRepository.connectionListener = this
+        MainService.interactionListener = this
     }
 
     private fun setupView() {
@@ -62,5 +64,31 @@ class SessionViewModel @Inject constructor(
 
         //peer에게 Learning 모드로 전환 요청
         mainRepository.sendTextToDataChannel(SWITCH_TO_LEARNING.name)
+    }
+
+    override fun onGreeting() {
+        updateState { it.copy(remoteGreetState = true) }
+        viewModelScope.launch {
+            delay(1000) // 3초 동안 표시
+            updateState { it.copy(remoteGreetState = false) }
+        }
+    }
+
+    override fun onSwitchToLearning() {
+    }
+
+    override fun onSwitchToLayout1() {
+    }
+
+    override fun onSwitchToLayout2() {
+    }
+
+    override fun onSwitchToLayout4() {
+    }
+
+    override fun onSwitchToLayoutAll() {
+    }
+
+    override fun onSymbolHighlight() {
     }
 }

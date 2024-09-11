@@ -5,5 +5,6 @@ data class SessionState(
     val isCaller: Boolean = true,
     var target: String? = null,
     val isStart: Boolean = false,
-    val greetState: Boolean = false
+    val greetState: Boolean = false,
+    val remoteGreetState: Boolean = false
 )

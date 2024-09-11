@@ -144,6 +144,44 @@ fun SessionVideoView(
                         )
                         .clip(RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp))
                 )
+                if (sessionState.remoteGreetState) {
+                    var targetRotation by remember { mutableFloatStateOf(0f) }
+
+                    val rotationAnimation by animateFloatAsState(
+                        targetValue = targetRotation,
+                        animationSpec = tween(durationMillis = 200), label = ""
+                    )
+
+                    LaunchedEffect(Unit) {
+                        while (true) { // 상태가 true일 때 계속 반복
+                            targetRotation = 5f // 오른쪽으로 회전
+                            delay(200)
+                            targetRotation = -5f // 왼쪽으로 회전
+                            delay(200)
+                        }
+                        targetRotation = 0f // 원래 위치로 돌아옴
+                    }
+
+
+                    Box(
+                        modifier = Modifier
+                            .size(
+                                width = if (!sessionState.isStart) 328.dp else 128.dp,
+                                height = if (!sessionState.isStart) 196.dp else 75.dp
+                            )
+                            .clip(RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp))
+                            .background(Gray5B50)
+                            .graphicsLayer(
+                                rotationZ = rotationAnimation
+                            )
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_hello),
+                            contentDescription = "Hello Image",
+                            modifier = Modifier.align(Alignment.Center).size(64.dp)
+                        )
+                    }
+                }
 
                 if (progressState.responseFilter != ResponseFilterType.NONE) {
                     Box(

@@ -7,11 +7,14 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.repository.MainRepository
 import com.example.saybettereducator.data.model.MainServiceActions.*
+import com.example.saybettereducator.utils.DataConverter
+import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.AndroidEntryPoint
 import org.webrtc.DataChannel
 import org.webrtc.SurfaceViewRenderer
@@ -31,6 +34,7 @@ class MainService : Service(), MainRepository.Listener {
 
     companion object {
         var listener : CallEventListener? = null
+        var interactionListener : InteractionListener? = null
         var endCallListener : EndCallListener? = null
         var localSurfaceView : SurfaceViewRenderer? = null
         var remoteSurfaceView : SurfaceViewRenderer? = null
@@ -146,8 +150,27 @@ class MainService : Service(), MainRepository.Listener {
     }
 
     override fun onDataReceivedFromChannel(it: DataChannel.Buffer) {
-        //여기서 case 나누어 처리하기
         Log.d("DataChannel", "Data Received")
+
+        //여기서 case 나누어 처리하기
+        val model = DataConverter.convertToModel(it)
+        model?.let {
+            if (it.first == "TEXT") {
+                when(it.second) {
+                    GREETING.name -> {
+                        interactionListener?.onGreeting()
+                    }
+                    SYMBOL_HIGHLIGHT.name -> {
+
+                    }
+
+                    else -> {}
+                }
+            } else {
+                Toast.makeText(this, "received data is wrong", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     override fun onDataChannelReceived() {
@@ -170,5 +193,14 @@ class MainService : Service(), MainRepository.Listener {
         fun onCallEnded()
     }
 
+    interface InteractionListener {
+        fun onGreeting()
+        fun onSwitchToLearning()
+        fun onSwitchToLayout1()
+        fun onSwitchToLayout2()
+        fun onSwitchToLayout4()
+        fun onSwitchToLayoutAll()
+        fun onSymbolHighlight(/* symbol id send */)
+    }
 
 }
