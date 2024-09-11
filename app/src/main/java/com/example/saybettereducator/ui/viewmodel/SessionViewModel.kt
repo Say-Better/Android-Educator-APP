@@ -7,6 +7,8 @@ import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.SessionIntent
 import com.example.saybettereducator.ui.model.SessionState
 import com.example.saybettereducator.ui.sideeffect.SessionSideEffect
+import com.example.saybettereducator.utils.InstantInteractionType
+import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,7 +40,7 @@ class SessionViewModel @Inject constructor(
     }
 
     private fun onHelloClicked() {
-        mainRepository.sendTextToDataChannel("Greeting")
+        mainRepository.sendTextToDataChannel(GREETING.name)
         updateState { it.copy(greetState = true) }
         viewModelScope.launch {
             delay(1000) // 3초 동안 표시
@@ -57,5 +59,8 @@ class SessionViewModel @Inject constructor(
 
     private fun startSession() {
         updateState { it.copy(isStart = true) }
+
+        //peer에게 Learning 모드로 전환 요청
+        mainRepository.sendTextToDataChannel(SWITCH_TO_LEARNING.name)
     }
 }
