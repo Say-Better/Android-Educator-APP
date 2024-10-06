@@ -34,7 +34,8 @@ class MainService : Service(), MainRepository.Listener {
 
     companion object {
         var listener : CallEventListener? = null
-        var interactionListener : InteractionListener? = null
+        var sessionInteractionListener : SessionInteractionListener? = null
+        var progressInteractionListener : ProgressInteractionListener? = null
         var endCallListener : EndCallListener? = null
         var localSurfaceView : SurfaceViewRenderer? = null
         var remoteSurfaceView : SurfaceViewRenderer? = null
@@ -158,7 +159,7 @@ class MainService : Service(), MainRepository.Listener {
             if (it.first == "TEXT") {
                 when(it.second) {
                     GREETING.name -> {
-                        interactionListener?.onGreeting()
+                        sessionInteractionListener?.onGreeting()
                     }
                     SYMBOL_HIGHLIGHT.name -> {
 
@@ -193,13 +194,12 @@ class MainService : Service(), MainRepository.Listener {
         fun onCallEnded()
     }
 
-    interface InteractionListener {
+    interface SessionInteractionListener {
         fun onGreeting()
         fun onSwitchToLearning()
-        fun onSwitchToLayout1()
-        fun onSwitchToLayout2()
-        fun onSwitchToLayout4()
-        fun onSwitchToLayoutAll()
+    }
+
+    interface ProgressInteractionListener {
         fun onSymbolHighlight(/* symbol id send */)
     }
 

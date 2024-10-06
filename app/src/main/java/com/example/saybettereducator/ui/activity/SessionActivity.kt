@@ -39,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.saybettereducator.data.api.helper.WebRTCClient
-import com.example.saybettereducator.data.repository.MainRepository
 import com.example.saybettereducator.data.repository.MainServiceRepository
 import com.example.saybettereducator.data.service.MainService
 import com.example.saybettereducator.ui.components.session.ProgressBottomSheet
@@ -78,7 +77,6 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
 
     @Inject lateinit var webRTCClient: WebRTCClient
     @Inject lateinit var serviceRepository: MainServiceRepository
-    @Inject lateinit var mainRepository: MainRepository
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -198,7 +196,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                 SessionBottomBar(
                     sessionState.isStart,
                     serviceRepository,
-                    onStartSolution = { onSessionIntent(SessionIntent.StartSession) }
+                    onStartSolution = { onSessionIntent(SessionIntent.StartProgress) }
                 )
             }
         ) { innerPadding ->
@@ -224,22 +222,6 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                             playingSymbol = progressState.playingSymbol,
                             onSymbolClick = { symbol ->
                                 onProgressIntent(ProgressIntent.SymbolClicked(symbol))
-                            },
-                            switchLayout = { mode ->
-                                when(mode) {
-                                    1 -> {
-                                        mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_1.name)
-                                    }
-                                    2 -> {
-                                        mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_2.name)
-                                    }
-                                    3 -> {
-                                        mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_4.name)
-                                    }
-                                    4 -> {
-                                        mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_ALL.name)
-                                    }
-                                }
                             }
                         )
                         Spacer(modifier = Modifier.weight(1f))

@@ -25,12 +25,10 @@ fun ProgressLearningView(
     allSymbols: List<Symbol>,
     playingSymbol: Symbol?,
     onSymbolClick: (Symbol?) -> Unit,
-    switchLayout: (Int) -> Unit
 ) {
     Log.d("ProgressLearningView", "Recomposing with selectedSymbols: $selectedSymbols")
     when (selectedMode) {
         1 -> {
-            switchLayout(1)
             val symbol = selectedSymbols.getOrNull(0)
             SymbolCard(
                 mode = selectedMode,
@@ -45,7 +43,6 @@ fun ProgressLearningView(
         }
 
         2 -> {
-            switchLayout(2)
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -68,7 +65,6 @@ fun ProgressLearningView(
         }
 
         3 -> {
-            switchLayout(3)
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -97,7 +93,6 @@ fun ProgressLearningView(
         }
 
         4 -> {
-            switchLayout(4)
             val pageCount = (allSymbols.size + 8) / 9 // 3x3 페이지 수 계산
             val pagerState = rememberPagerState(pageCount = { pageCount })
 
@@ -158,7 +153,6 @@ fun ProgressLearningPreview() {
         selectedSymbols = emptyList(),
         allSymbols = emptyList(),
         playingSymbol = null,
-        onSymbolClick = {},
-        switchLayout = {}
+        onSymbolClick = {}
     )
 }

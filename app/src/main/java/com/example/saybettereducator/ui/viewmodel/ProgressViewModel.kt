@@ -6,12 +6,16 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.saybettereducator.R
 import com.example.saybettereducator.data.model.Symbol
+import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.service.MainService
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.ProgressIntent
 import com.example.saybettereducator.ui.model.CommunicationType
 import com.example.saybettereducator.ui.model.ProgressState
 import com.example.saybettereducator.ui.model.ResponseFilterType
 import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
+import com.example.saybettereducator.utils.InstantInteractionType
+import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -21,8 +25,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
     private val textToSpeech: TextToSpeech
-) : MviViewModel<ProgressState, ProgressSideEffect, ProgressIntent>(ProgressState()) {
+) : MviViewModel<ProgressState, ProgressSideEffect, ProgressIntent>(ProgressState()), MainService.ProgressInteractionListener {
     private var timerJob: Job? = null
+
+    @Inject lateinit var mainRepository : MainRepository
 
     override fun handleIntent(intent: ProgressIntent) {
         when (intent) {
@@ -42,6 +48,8 @@ class ProgressViewModel @Inject constructor(
     }
 
     init {
+        MainService.progressInteractionListener = this
+
         loadSymbols()
         initTimerMaxTime(10000)
 
@@ -89,6 +97,27 @@ class ProgressViewModel @Inject constructor(
 
     private fun selectMode(mode: Int) {
         updateState { it.copy(selectedMode = mode) }
+        when(mode){
+            // 1 view
+            1 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_1.name)
+            }
+
+            // 2 view
+            2 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_2.name)
+            }
+
+            // 4 view
+            3 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_4.name)
+            }
+
+            // all view
+            4 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_ALL.name)
+            }
+        }
     }
 
     private fun selectSymbol(symbol: Symbol) {
@@ -216,5 +245,9 @@ class ProgressViewModel @Inject constructor(
             delay(3000) // 3초 대기
             updateState { it.copy(responseFilter = ResponseFilterType.NONE) }
         }
+    }
+
+    override fun onSymbolHighlight() {
+
     }
 }

@@ -18,15 +18,13 @@ import javax.inject.Inject
 @HiltViewModel
 class SessionViewModel @Inject constructor(
     private val mainRepository: MainRepository
-): MviViewModel<SessionState, SessionSideEffect, SessionIntent>(SessionState()), MainRepository.ConnectionListener, MainService.InteractionListener {
+): MviViewModel<SessionState, SessionSideEffect, SessionIntent>(SessionState()), MainRepository.ConnectionListener, MainService.SessionInteractionListener {
 
     override fun handleIntent(intent: SessionIntent) {
         when (intent) {
             is SessionIntent.OnRemoteViewReady -> onRemoteViewReady()
-            is SessionIntent.SetupView -> setupView()
-            is SessionIntent.StartSession -> startSession()
+            is SessionIntent.StartProgress -> startProgress()
             is SessionIntent.HelloClicked -> onHelloClicked()
-            is SessionIntent.SendRTCMessage -> TODO()
         }
     }
 
@@ -34,11 +32,7 @@ class SessionViewModel @Inject constructor(
 
     init {
         mainRepository.connectionListener = this
-        MainService.interactionListener = this
-    }
-
-    private fun setupView() {
-
+        MainService.sessionInteractionListener = this
     }
 
     private fun onHelloClicked() {
@@ -59,7 +53,7 @@ class SessionViewModel @Inject constructor(
         postSideEffect(SessionSideEffect.PeerConnectionSuccess)
     }
 
-    private fun startSession() {
+    private fun startProgress() {
         updateState { it.copy(isStart = true) }
 
         //peer에게 Learning 모드로 전환 요청
@@ -75,20 +69,6 @@ class SessionViewModel @Inject constructor(
     }
 
     override fun onSwitchToLearning() {
-    }
 
-    override fun onSwitchToLayout1() {
-    }
-
-    override fun onSwitchToLayout2() {
-    }
-
-    override fun onSwitchToLayout4() {
-    }
-
-    override fun onSwitchToLayoutAll() {
-    }
-
-    override fun onSymbolHighlight() {
     }
 }
