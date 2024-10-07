@@ -126,6 +126,8 @@ class ProgressViewModel @Inject constructor(
             Log.d("ProgressViewModel", "Symbol selected: $symbol, updated selectedSymbols: $newSelectedSymbols")
             state.copy(selectedSymbols = newSelectedSymbols)
         }
+
+        mainRepository.sendTextToDataChannel("${SYMBOL_SELECT.name} ${symbol.id}")
     }
 
     private fun deselectSymbol(symbol: Symbol) {
@@ -134,6 +136,8 @@ class ProgressViewModel @Inject constructor(
             Log.d("ProgressViewModel", "Symbol deselected: $symbol, updated selectedSymbols: $newSelectedSymbols")
             state.copy(selectedSymbols = newSelectedSymbols)
         }
+
+        mainRepository.sendTextToDataChannel("${SYMBOL_DELETE.name} ${symbol.id}")
     }
 
     private fun initTimerMaxTime(maxTime: Long) {
@@ -197,7 +201,10 @@ class ProgressViewModel @Inject constructor(
         when {
             symbol == null -> { toggleBottomSheet() }
             currentState.playingSymbol == symbol -> { stopVoicePlayback() }
-            else -> { startVoicePlayback(symbol) }
+            else -> {
+                mainRepository.sendTextToDataChannel("${SYMBOL_HIGHLIGHT.name} ${symbol.id}")
+                startVoicePlayback(symbol)
+            }
         }
     }
 
