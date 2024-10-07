@@ -15,6 +15,7 @@ import com.example.saybettereducator.data.repository.MainRepository
 import com.example.saybettereducator.data.model.MainServiceActions.*
 import com.example.saybettereducator.utils.DataConverter
 import com.example.saybettereducator.utils.InstantInteractionType.*
+import com.example.saybettereducator.utils.RTCAudioManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.webrtc.DataChannel
 import org.webrtc.SurfaceViewRenderer
@@ -28,6 +29,7 @@ class MainService : Service(), MainRepository.Listener {
     private var userid : String? = null
 
     private lateinit var notificationManager : NotificationManager
+    private lateinit var rtcAudioManager : RTCAudioManager
 
     @Inject
     lateinit var mainRepository : MainRepository
@@ -48,6 +50,10 @@ class MainService : Service(), MainRepository.Listener {
     //생성되면 NotificationManager 가져오기
     override fun onCreate() {
         super.onCreate()
+
+        rtcAudioManager = RTCAudioManager.create(this)
+        rtcAudioManager.setDefaultAudioDevice(RTCAudioManager.AudioDevice.SPEAKER_PHONE)
+
         notificationManager = getSystemService(
             NotificationManager::class.java
         )
