@@ -63,10 +63,19 @@ class MainService : Service(), MainRepository.Listener {
                 SWITCH_CAMERA.name -> handleSwitchCamera()
                 TOGGLE_AUDIO.name -> handleToggleAudio(incomingIntent)
                 TOGGLE_VIDEO.name -> handleToggleVideo(incomingIntent)
+                STOP_SERVICE.name -> handleStopService()
                 else -> Unit
             }
         }
         return START_STICKY
+    }
+
+    private fun handleStopService() {
+        mainRepository.endCall()
+        mainRepository.logOff {
+            isServiceRunning = false
+            stopSelf()
+        }
     }
 
     private fun handleToggleVideo(incomingIntent: Intent) {

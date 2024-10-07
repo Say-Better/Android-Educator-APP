@@ -26,6 +26,7 @@ import com.example.saybettereducator.ui.components.main.MainTopBar
 import com.example.saybettereducator.data.repository.MainRepository
 import com.example.saybettereducator.data.service.MainService
 import com.example.saybettereducator.data.repository.MainServiceRepository
+import com.example.saybettereducator.utils.BackOnPressed
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -59,6 +60,10 @@ class MainActivity : ComponentActivity(), MainService.CallEventListener {
         setContent {
             SaybetterEducatorTheme {
                 val navController = rememberNavController()
+
+                BackOnPressed() {
+                    mainServiceRepository.stopService()
+                }
                 Scaffold(
                     topBar = { MainTopBar() },
                     bottomBar = { MainBottomNavigationBar(navController) }
@@ -80,6 +85,8 @@ class MainActivity : ComponentActivity(), MainService.CallEventListener {
 
         init()
     }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {

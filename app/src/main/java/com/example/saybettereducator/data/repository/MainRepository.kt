@@ -212,4 +212,6 @@ class MainRepository @Inject constructor(
     fun toggleVideo(shouldBeMuted: Boolean) {
         webRTCClient.toggleVideo(shouldBeMuted)
     }
+
+    fun logOff(function: () -> Unit) = firebaseClient.logOff(function)
 }
