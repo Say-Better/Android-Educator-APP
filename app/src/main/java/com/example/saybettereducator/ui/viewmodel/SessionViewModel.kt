@@ -8,7 +8,6 @@ import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.SessionIntent
 import com.example.saybettereducator.ui.model.SessionState
 import com.example.saybettereducator.ui.sideeffect.SessionSideEffect
-import com.example.saybettereducator.utils.InstantInteractionType
 import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -25,6 +24,7 @@ class SessionViewModel @Inject constructor(
             is SessionIntent.OnRemoteViewReady -> onRemoteViewReady()
             is SessionIntent.StartProgress -> startProgress()
             is SessionIntent.HelloClicked -> onHelloClicked()
+            is SessionIntent.ScreenShareClicked -> onScreenShareClicked(intent.isScreenCasting)
         }
     }
 
@@ -42,6 +42,10 @@ class SessionViewModel @Inject constructor(
             delay(1000) // 3초 동안 표시
             updateState { it.copy(greetState = false) }
         }
+    }
+
+    private fun onScreenShareClicked(screenCasting: Boolean) {
+        updateState { it.copy(isScreenCasting = !screenCasting) }
     }
 
     private fun onRemoteViewReady() {
