@@ -24,7 +24,7 @@ fun ProgressLearningView(
     selectedSymbols: List<Symbol>,
     allSymbols: List<Symbol>,
     playingSymbol: Symbol?,
-    onSymbolClick: (Symbol?) -> Unit
+    onSymbolClick: (Symbol?) -> Unit,
 ) {
     Log.d("ProgressLearningView", "Recomposing with selectedSymbols: $selectedSymbols")
     when (selectedMode) {

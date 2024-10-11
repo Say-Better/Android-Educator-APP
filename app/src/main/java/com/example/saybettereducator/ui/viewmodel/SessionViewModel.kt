@@ -3,10 +3,13 @@ package com.example.saybettereducator.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.service.MainService
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.SessionIntent
 import com.example.saybettereducator.ui.model.SessionState
 import com.example.saybettereducator.ui.sideeffect.SessionSideEffect
+import com.example.saybettereducator.utils.InstantInteractionType
+import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,31 +18,25 @@ import javax.inject.Inject
 @HiltViewModel
 class SessionViewModel @Inject constructor(
     private val mainRepository: MainRepository
-): MviViewModel<SessionState, SessionSideEffect, SessionIntent>(SessionState()), MainRepository.ConnectionListener {
+): MviViewModel<SessionState, SessionSideEffect, SessionIntent>(SessionState()), MainRepository.ConnectionListener, MainService.SessionInteractionListener {
 
     override fun handleIntent(intent: SessionIntent) {
         when (intent) {
             is SessionIntent.OnRemoteViewReady -> onRemoteViewReady()
-            is SessionIntent.SetupView -> setupView()
-            is SessionIntent.SendRTCMessage -> sendRTCMessage(intent.msg)
-            is SessionIntent.StartSession -> startSession()
+            is SessionIntent.StartProgress -> startProgress()
             is SessionIntent.HelloClicked -> onHelloClicked()
         }
     }
 
-    private fun sendRTCMessage(msg: String) {
-        mainRepository.sendToDataChannel(msg)
-    }
+
 
     init {
         mainRepository.connectionListener = this
-    }
-
-    private fun setupView() {
-
+        MainService.sessionInteractionListener = this
     }
 
     private fun onHelloClicked() {
+        mainRepository.sendTextToDataChannel(GREETING.name)
         updateState { it.copy(greetState = true) }
         viewModelScope.launch {
             delay(1000) // 3초 동안 표시
@@ -56,7 +53,22 @@ class SessionViewModel @Inject constructor(
         postSideEffect(SessionSideEffect.PeerConnectionSuccess)
     }
 
-    private fun startSession() {
+    private fun startProgress() {
         updateState { it.copy(isStart = true) }
+
+        //peer에게 Learning 모드로 전환 요청
+        mainRepository.sendTextToDataChannel(SWITCH_TO_LEARNING.name)
+    }
+
+    override fun onGreeting() {
+        updateState { it.copy(remoteGreetState = true) }
+        viewModelScope.launch {
+            delay(1000) // 3초 동안 표시
+            updateState { it.copy(remoteGreetState = false) }
+        }
+    }
+
+    override fun onSwitchToLearning() {
+
     }
 }

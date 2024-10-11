@@ -35,6 +35,7 @@ class WebRTCClient @Inject constructor(
     private val gson: Gson,
 ) {
     val TAG = "DataChannel"
+    var receiverListener : ReceiverListener?=null
 
     // class variables
     var listener: Listener? = null
@@ -72,7 +73,19 @@ class WebRTCClient @Inject constructor(
         mandatory.add(MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"))
         mandatory.add(MediaConstraints.KeyValuePair("RtpDataChannels", "true"))
     }
-    private var dataChannel: DataChannel? = null
+    private val dataChannelObserver = object : DataChannel.Observer {
+        override fun onBufferedAmountChange(p0: Long) {
+
+        }
+
+        override fun onStateChange() {
+        }
+
+        override fun onMessage(p0: DataChannel.Buffer?) {
+            p0?.let { receiverListener?.onDataReceived(it) }
+        }
+
+    }
 
     // call variables
     private lateinit var localSurfaceView : SurfaceViewRenderer
@@ -114,22 +127,15 @@ class WebRTCClient @Inject constructor(
         localTrackId = "${userid}_track"
         localStreamId = "${userid}_stream"
         peerConnection = createPeerConnection(observer)
-        dataChannel = peerConnection?.createDataChannel("HelloChannel", DataChannel.Init())
-        dataChannel?.registerObserver(object : DataChannel.Observer {
-            override fun onBufferedAmountChange(p0: Long) {
-
-            }
-
-            override fun onStateChange() {
-                Log.d(TAG, "datachannel state changed to ${dataChannel!!.state()}")
-            }
-
-            override fun onMessage(p0: DataChannel.Buffer?) {
-                Log.d(TAG, p0?.data.toString())
-            }
-
-        })
+        createDataChannel()
     }
+
+    private fun createDataChannel(){
+        val initDataChannel = DataChannel.Init()
+        val dataChannel = peerConnection?.createDataChannel("dataChannelLabel",initDataChannel)
+        dataChannel?.registerObserver(dataChannelObserver)
+    }
+
     private fun createPeerConnection(observer: PeerConnection.Observer): PeerConnection? {
         return peerConnectionFactory.createPeerConnection(iceServers, observer)
     }
@@ -227,35 +233,6 @@ class WebRTCClient @Inject constructor(
         }
     }
 
-    fun initDataChannel(
-    ) {
-        try {
-
-            dataChannel?.let {
-                Log.d(TAG, "Data Channel Create Success")
-                val message = "Hello from Educator-APP!"
-                it.registerObserver(object: DataChannel.Observer{
-                    override fun onBufferedAmountChange(p0: Long) {
-
-                    }
-
-                    override fun onStateChange() {
-                        Log.d(TAG, "datachannel state changed to ${it.state()}")
-//                        it.send(DataChannel.Buffer(ByteBuffer.wrap(message.toByteArray()), false))
-                    }
-
-                    override fun onMessage(p0: DataChannel.Buffer?) {
-                        Log.d(TAG, p0?.data.toString())
-                    }
-
-                })
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "DataChannel Create Failed")
-        }
-
-    }
-
     // streaming section
     private fun initSurfaceView(view : SurfaceViewRenderer) {
         view.run {
@@ -319,11 +296,11 @@ class WebRTCClient @Inject constructor(
         localVideoTrack?.dispose()
     }
 
-    fun sendToDataChannel(message: String) {
-        dataChannel?.send(DataChannel.Buffer(ByteBuffer.wrap(message.toByteArray()), false))
-    }
-
     interface Listener {
         fun onTransferEventToSocket(data: DataModel)
+    }
+
+    interface ReceiverListener{
+        fun onDataReceived(it:DataChannel.Buffer)
     }
 }

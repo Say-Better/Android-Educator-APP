@@ -58,6 +58,8 @@ import com.example.saybettereducator.ui.theme.BottomBar
 import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.viewmodel.ProgressViewModel
 import com.example.saybettereducator.ui.viewmodel.SessionViewModel
+import com.example.saybettereducator.utils.InstantInteractionType
+import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
@@ -194,7 +196,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                 SessionBottomBar(
                     sessionState.isStart,
                     serviceRepository,
-                    onStartSolution = { onSessionIntent(SessionIntent.StartSession) }
+                    onStartSolution = { onSessionIntent(SessionIntent.StartProgress) }
                 )
             }
         ) { innerPadding ->

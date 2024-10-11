@@ -70,4 +70,11 @@ class MainServiceRepository @Inject constructor(
         startServiceIntent(intent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun stopService() {
+        val intent = Intent(context, MainService::class.java)
+        intent.action = MainServiceActions.STOP_SERVICE.name
+        startServiceIntent(intent)
+    }
+
 }

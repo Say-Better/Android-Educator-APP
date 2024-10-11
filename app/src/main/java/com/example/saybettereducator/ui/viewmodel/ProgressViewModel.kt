@@ -6,12 +6,16 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.saybettereducator.R
 import com.example.saybettereducator.data.model.Symbol
+import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.service.MainService
 import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.ProgressIntent
 import com.example.saybettereducator.ui.model.CommunicationType
 import com.example.saybettereducator.ui.model.ProgressState
 import com.example.saybettereducator.ui.model.ResponseFilterType
 import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
+import com.example.saybettereducator.utils.InstantInteractionType
+import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -21,8 +25,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
     private val textToSpeech: TextToSpeech
-) : MviViewModel<ProgressState, ProgressSideEffect, ProgressIntent>(ProgressState()) {
+) : MviViewModel<ProgressState, ProgressSideEffect, ProgressIntent>(ProgressState()), MainService.ProgressInteractionListener {
     private var timerJob: Job? = null
+
+    @Inject lateinit var mainRepository : MainRepository
 
     override fun handleIntent(intent: ProgressIntent) {
         when (intent) {
@@ -42,6 +48,8 @@ class ProgressViewModel @Inject constructor(
     }
 
     init {
+        MainService.progressInteractionListener = this
+
         loadSymbols()
         initTimerMaxTime(10000)
 
@@ -62,33 +70,54 @@ class ProgressViewModel @Inject constructor(
             Symbol(0, "가요", R.drawable.ic_symbol_go),
             Symbol(1, "감격하다", R.drawable.ic_symbol_moved),
             Symbol(2, "놀라다", R.drawable.ic_symbol_surprised),
-            Symbol(4, "따분하다", R.drawable.ic_symbol_boring),
-            Symbol(5, "떨리다", R.drawable.ic_symbol_tremble),
-            Symbol(6, "미안하다", R.drawable.ic_symbol_sorry),
-            Symbol(7, "민망하다", R.drawable.ic_symbol_embarrassed),
-            Symbol(8, "반가워요", R.drawable.ic_symbol_glad),
-            Symbol(9, "밥", R.drawable.ic_symbol_rice),
-            Symbol(10, "배고파요", R.drawable.ic_symbol_hungry),
-            Symbol(11, "부끄러워요", R.drawable.ic_symbol_shy),
-            Symbol(12, "부담스럽다", R.drawable.ic_symbol_pressured),
-            Symbol(13, "부럽다", R.drawable.ic_symbol_envious),
-            Symbol(14, "뿌듯하다", R.drawable.ic_symbol_plessure),
-            Symbol(15, "상처받다", R.drawable.ic_symbol_hurt),
-            Symbol(16, "속상해요", R.drawable.ic_symbol_upset),
-            Symbol(17, "시작", R.drawable.ic_symbol_start),
-            Symbol(18, "신나요", R.drawable.ic_symbol_excited),
-            Symbol(19, "어리둥절하다", R.drawable.ic_symbol_confused),
-            Symbol(20, "우울해요", R.drawable.ic_symbol_depressed),
-            Symbol(21, "자랑스럽다", R.drawable.ic_symbol_proud),
-            Symbol(22, "짜증나다", R.drawable.ic_symbol_annoying),
-            Symbol(23, "화나요", R.drawable.ic_symbol_angry),
-            Symbol(24, "흥미롭다", R.drawable.ic_symbol_interested),
+            Symbol(3, "따분하다", R.drawable.ic_symbol_boring),
+            Symbol(4, "떨리다", R.drawable.ic_symbol_tremble),
+            Symbol(5, "미안하다", R.drawable.ic_symbol_sorry),
+            Symbol(6, "민망하다", R.drawable.ic_symbol_embarrassed),
+            Symbol(7, "반가워요", R.drawable.ic_symbol_glad),
+            Symbol(8, "밥", R.drawable.ic_symbol_rice),
+            Symbol(9, "배고파요", R.drawable.ic_symbol_hungry),
+            Symbol(10, "부끄러워요", R.drawable.ic_symbol_shy),
+            Symbol(11, "부담스럽다", R.drawable.ic_symbol_pressured),
+            Symbol(12, "부럽다", R.drawable.ic_symbol_envious),
+            Symbol(13, "뿌듯하다", R.drawable.ic_symbol_plessure),
+            Symbol(14, "상처받다", R.drawable.ic_symbol_hurt),
+            Symbol(15, "속상해요", R.drawable.ic_symbol_upset),
+            Symbol(16, "시작", R.drawable.ic_symbol_start),
+            Symbol(17, "신나요", R.drawable.ic_symbol_excited),
+            Symbol(18, "어리둥절하다", R.drawable.ic_symbol_confused),
+            Symbol(19, "우울해요", R.drawable.ic_symbol_depressed),
+            Symbol(20, "자랑스럽다", R.drawable.ic_symbol_proud),
+            Symbol(21, "짜증나다", R.drawable.ic_symbol_annoying),
+            Symbol(22, "화나요", R.drawable.ic_symbol_angry),
+            Symbol(23, "흥미롭다", R.drawable.ic_symbol_interested),
         )
         updateState { it.copy(symbols = symbols) }
     }
 
     private fun selectMode(mode: Int) {
         updateState { it.copy(selectedMode = mode) }
+        when(mode){
+            // 1 view
+            1 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_1.name)
+            }
+
+            // 2 view
+            2 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_2.name)
+            }
+
+            // 4 view
+            3 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_4.name)
+            }
+
+            // all view
+            4 -> {
+                mainRepository.sendTextToDataChannel(SWITCH_TO_LAYOUT_ALL.name)
+            }
+        }
     }
 
     private fun selectSymbol(symbol: Symbol) {
@@ -97,6 +126,8 @@ class ProgressViewModel @Inject constructor(
             Log.d("ProgressViewModel", "Symbol selected: $symbol, updated selectedSymbols: $newSelectedSymbols")
             state.copy(selectedSymbols = newSelectedSymbols)
         }
+
+        mainRepository.sendTextToDataChannel("${SYMBOL_SELECT.name} ${symbol.id}")
     }
 
     private fun deselectSymbol(symbol: Symbol) {
@@ -105,6 +136,8 @@ class ProgressViewModel @Inject constructor(
             Log.d("ProgressViewModel", "Symbol deselected: $symbol, updated selectedSymbols: $newSelectedSymbols")
             state.copy(selectedSymbols = newSelectedSymbols)
         }
+
+        mainRepository.sendTextToDataChannel("${SYMBOL_DELETE.name} ${symbol.id}")
     }
 
     private fun initTimerMaxTime(maxTime: Long) {
@@ -168,7 +201,10 @@ class ProgressViewModel @Inject constructor(
         when {
             symbol == null -> { toggleBottomSheet() }
             currentState.playingSymbol == symbol -> { stopVoicePlayback() }
-            else -> { startVoicePlayback(symbol) }
+            else -> {
+                mainRepository.sendTextToDataChannel("${SYMBOL_HIGHLIGHT.name} ${symbol.id}")
+                startVoicePlayback(symbol)
+            }
         }
     }
 
@@ -216,5 +252,9 @@ class ProgressViewModel @Inject constructor(
             delay(3000) // 3초 대기
             updateState { it.copy(responseFilter = ResponseFilterType.NONE) }
         }
+    }
+
+    override fun onSymbolHighlight() {
+
     }
 }

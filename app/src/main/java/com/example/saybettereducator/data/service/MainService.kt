@@ -7,12 +7,17 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.repository.MainRepository
 import com.example.saybettereducator.data.model.MainServiceActions.*
+import com.example.saybettereducator.utils.DataConverter
+import com.example.saybettereducator.utils.InstantInteractionType.*
+import com.example.saybettereducator.utils.RTCAudioManager
 import dagger.hilt.android.AndroidEntryPoint
+import org.webrtc.DataChannel
 import org.webrtc.SurfaceViewRenderer
 import javax.inject.Inject
 
@@ -24,12 +29,15 @@ class MainService : Service(), MainRepository.Listener {
     private var userid : String? = null
 
     private lateinit var notificationManager : NotificationManager
+    private lateinit var rtcAudioManager : RTCAudioManager
 
     @Inject
     lateinit var mainRepository : MainRepository
 
     companion object {
         var listener : CallEventListener? = null
+        var sessionInteractionListener : SessionInteractionListener? = null
+        var progressInteractionListener : ProgressInteractionListener? = null
         var endCallListener : EndCallListener? = null
         var localSurfaceView : SurfaceViewRenderer? = null
         var remoteSurfaceView : SurfaceViewRenderer? = null
@@ -42,6 +50,10 @@ class MainService : Service(), MainRepository.Listener {
     //생성되면 NotificationManager 가져오기
     override fun onCreate() {
         super.onCreate()
+
+        rtcAudioManager = RTCAudioManager.create(this)
+        rtcAudioManager.setDefaultAudioDevice(RTCAudioManager.AudioDevice.SPEAKER_PHONE)
+
         notificationManager = getSystemService(
             NotificationManager::class.java
         )
@@ -57,10 +69,19 @@ class MainService : Service(), MainRepository.Listener {
                 SWITCH_CAMERA.name -> handleSwitchCamera()
                 TOGGLE_AUDIO.name -> handleToggleAudio(incomingIntent)
                 TOGGLE_VIDEO.name -> handleToggleVideo(incomingIntent)
+                STOP_SERVICE.name -> handleStopService()
                 else -> Unit
             }
         }
         return START_STICKY
+    }
+
+    private fun handleStopService() {
+        mainRepository.endCall()
+        mainRepository.logOff {
+            isServiceRunning = false
+            stopSelf()
+        }
     }
 
     private fun handleToggleVideo(incomingIntent: Intent) {
@@ -144,6 +165,35 @@ class MainService : Service(), MainRepository.Listener {
         endCallAndRestartRepository()
     }
 
+    override fun onDataReceivedFromChannel(it: DataChannel.Buffer) {
+        Log.d("DataChannel", "Data Received")
+
+        //여기서 case 나누어 처리하기
+        val model = DataConverter.convertToModel(it)
+        model?.let {
+            if (it.first == "TEXT") {
+                when(it.second) {
+                    GREETING.name -> {
+                        sessionInteractionListener?.onGreeting()
+                    }
+                    SYMBOL_HIGHLIGHT.name -> {
+
+                    }
+
+                    else -> {}
+                }
+            } else {
+                Toast.makeText(this, "received data is wrong", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    override fun onDataChannelReceived() {
+        //DataChannel 감지한 경우
+        Log.d("DataChannel", "Receive Data Channel")
+    }
+
     //MainActivity에서 구현됨
     interface CallEventListener {
         fun onCallReceived(model: DataModel)
@@ -159,5 +209,13 @@ class MainService : Service(), MainRepository.Listener {
         fun onCallEnded()
     }
 
+    interface SessionInteractionListener {
+        fun onGreeting()
+        fun onSwitchToLearning()
+    }
+
+    interface ProgressInteractionListener {
+        fun onSymbolHighlight(/* symbol id send */)
+    }
 
 }
