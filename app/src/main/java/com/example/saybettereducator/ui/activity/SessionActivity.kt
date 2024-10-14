@@ -187,16 +187,22 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
         onSessionIntent: (SessionIntent) -> Unit,
         onProgressIntent: (ProgressIntent) -> Unit,
     )  {
+        // 두 값이 동일한 시점에 Ready View 를 표시
+        val isDisplayReady: Boolean = !(sessionState.isStart xor sessionState.isEnding)
+
         Scaffold(
             topBar = {
-                if (!sessionState.isStart) ReadyTopBar(serviceRepository)
+                if (isDisplayReady) ReadyTopBar(serviceRepository)
                 else ProgressTopBar(isPlaying = progressState.isVoicePlaying)
             },
             bottomBar = {
                 SessionBottomBar(
                     sessionState.isStart,
+                    sessionState.isEnding,
                     serviceRepository,
-                    onStartSolution = { onSessionIntent(SessionIntent.StartProgress) }
+                    onStartSolution = { onSessionIntent(SessionIntent.StartProgress) },
+                    onEndingSolution = { onSessionIntent(SessionIntent.EndingProgress) },
+                    onTerminateSolution = { serviceRepository.sendEndCall() }
                 )
             }
         ) { innerPadding ->
@@ -214,7 +220,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                     Spacer(modifier = Modifier.weight(1f))
 
                     // 세션 진행 상징 카드 화면
-                    if(sessionState.isStart) {
+                    if(!isDisplayReady) {
                         ProgressLearningView(
                             selectedMode = progressState.selectedMode,
                             selectedSymbols = progressState.selectedSymbols,
@@ -228,11 +234,15 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                     }
 
                     // 교육자, 학습자 비디오 화면
-                    SessionVideoView(sessionState = sessionState, progressState = progressState)
+                    SessionVideoView(
+                        isDisplayReady = isDisplayReady,
+                        sessionState = sessionState,
+                        progressState = progressState
+                    )
                     Spacer(modifier = Modifier.weight(1f))
 
                     // 인사 버튼
-                    if(!sessionState.isStart) {
+                    if(isDisplayReady) {
                         ReadyHelloBtn(
                             greetState = sessionState.greetState,
                             onHelloClick = { onSessionIntent(SessionIntent.HelloClicked) }
@@ -242,7 +252,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                 }
 
                 // 세션 진행 시 바텀시트
-                if(sessionState.isStart) {
+                if(!isDisplayReady) {
                     BottomSheetScaffold(
                         scaffoldState = scaffoldState,
                         sheetContent = {
@@ -301,6 +311,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
 
 
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)
     @Preview(widthDp = 360, heightDp = 800)
     @Composable

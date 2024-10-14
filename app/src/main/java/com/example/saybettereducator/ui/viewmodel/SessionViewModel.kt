@@ -25,10 +25,9 @@ class SessionViewModel @Inject constructor(
             is SessionIntent.OnRemoteViewReady -> onRemoteViewReady()
             is SessionIntent.StartProgress -> startProgress()
             is SessionIntent.HelloClicked -> onHelloClicked()
+            is SessionIntent.EndingProgress -> endingProgress()
         }
     }
-
-
 
     init {
         mainRepository.connectionListener = this
@@ -59,6 +58,18 @@ class SessionViewModel @Inject constructor(
         //peer에게 Learning 모드로 전환 요청
         mainRepository.sendTextToDataChannel(SWITCH_TO_LEARNING.name)
     }
+
+    private fun terminateProgress() {
+
+    }
+
+    private fun endingProgress() {
+        updateState { it.copy(isEnding = true) }
+
+        //peer에게 Ending 모드로 전환 요청
+        mainRepository.sendTextToDataChannel(SWITCH_TO_ENDING.name)
+    }
+
 
     override fun onGreeting() {
         updateState { it.copy(remoteGreetState = true) }
