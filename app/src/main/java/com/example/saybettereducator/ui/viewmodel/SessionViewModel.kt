@@ -59,15 +59,16 @@ class SessionViewModel @Inject constructor(
         mainRepository.sendTextToDataChannel(SWITCH_TO_LEARNING.name)
     }
 
-    private fun terminateProgress() {
-
-    }
-
     private fun endingProgress() {
         updateState { it.copy(isEnding = true) }
 
         //peer에게 Ending 모드로 전환 요청
         mainRepository.sendTextToDataChannel(SWITCH_TO_ENDING.name)
+    }
+
+    override fun onReceiveChatting(msg: String) {
+        // text 레이블 상태 업데이트
+        updateState { it.copy(longChatText = it.longChatText + "\n" + msg) }
     }
 
 

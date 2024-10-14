@@ -7,5 +7,6 @@ data class SessionState(
     val isStart: Boolean = false,
     val isEnding: Boolean = false,
     val greetState: Boolean = false,
-    val remoteGreetState: Boolean = false
+    val remoteGreetState: Boolean = false,
+    val longChatText: String = "test"
 )
