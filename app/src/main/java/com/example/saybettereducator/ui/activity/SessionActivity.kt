@@ -269,7 +269,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                             
                             Column(
                                 modifier = Modifier
-                                    .height(48.dp)
+                                    .height(60.dp)
                                     .fillMaxWidth(0.7f)
                                     .verticalScroll(rememberScrollState())
                                     .border(
