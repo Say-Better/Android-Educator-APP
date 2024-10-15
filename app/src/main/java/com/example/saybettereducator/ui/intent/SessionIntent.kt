@@ -6,4 +6,7 @@ sealed class SessionIntent {
     data class ScreenShareClicked(val isScreenCasting: Boolean) : SessionIntent()
     data object EndingProgress : SessionIntent()
     data object HelloClicked : SessionIntent() // 추가된 Intent
+    data object SetScreenShare : SessionIntent()
+    data object StartScreenShare : SessionIntent()
+    data object StopScreenShare : SessionIntent()
 }

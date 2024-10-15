@@ -202,8 +202,32 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
 
         Scaffold(
             topBar = {
-                if (isDisplayReady) ReadyTopBar(serviceRepository)
-                else ProgressTopBar(isPlaying = progressState.isVoicePlaying)
+                if (isDisplayReady)
+                    ReadyTopBar(
+                        serviceRepository = serviceRepository,
+                        isScreenCasting = sessionState.isScreenCasting,
+                        onClickScreenCasting = {
+                            if(!sessionState.isScreenCasting) {
+                                onSessionIntent(SessionIntent.StartScreenShare)
+                            } else {
+                                onSessionIntent(SessionIntent.StopScreenShare)
+                            }
+                            onSessionIntent(SessionIntent.SetScreenShare)
+                        }
+                    )
+                else
+                    ProgressTopBar(
+                        isPlaying = progressState.isVoicePlaying,
+                        isScreenCasting = sessionState.isScreenCasting,
+                        onClickScreenCasting = {
+                            if(!sessionState.isScreenCasting) {
+                                onSessionIntent(SessionIntent.StartScreenShare)
+                            } else {
+                                onSessionIntent(SessionIntent.StopScreenShare)
+                            }
+                            onSessionIntent(SessionIntent.SetScreenShare)
+                        }
+                    )
             },
             bottomBar = {
                 SessionBottomBar(
@@ -350,8 +374,6 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
             )
         }
     }
-
-
 
     @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)

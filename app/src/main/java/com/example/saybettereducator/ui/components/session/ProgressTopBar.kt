@@ -1,11 +1,14 @@
 package com.example.saybettereducator.ui.components.session
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,7 +30,11 @@ import com.example.saybettereducator.ui.theme.montserratFont
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProgressTopBar(isPlaying: Boolean) {
+fun ProgressTopBar(
+    isPlaying: Boolean,
+    isScreenCasting: Boolean,
+    onClickScreenCasting: () -> Unit
+) {
     val iconTint = if (isPlaying) HighlightBorder else Gray5B
     Box(
         modifier = Modifier
@@ -62,13 +69,30 @@ fun ProgressTopBar(isPlaying: Boolean) {
             )
         )
 
-        Icon(
-            painter = painterResource(id = R.drawable.ic_progress_volume),
-            contentDescription = "솔루션 진행 음성 표시",
-            tint = iconTint,
+        Row(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 15.dp, end = 16.dp)
-        )
+        ) {
+            Icon(
+                painter =
+                if(!isScreenCasting)
+                    painterResource(id = R.drawable.ic_start_screen_share)
+                else
+                    painterResource(id = R.drawable.ic_stop_screen_share),
+                contentDescription = "screen share",
+                tint = Color.White,
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(width = 30.dp, height = 20.dp)
+                    .clickable { onClickScreenCasting() }
+            )
+
+            Icon(
+                painter = painterResource(id = R.drawable.ic_progress_volume),
+                contentDescription = "솔루션 진행 음성 표시",
+                tint = iconTint
+            )
+        }
     }
 }

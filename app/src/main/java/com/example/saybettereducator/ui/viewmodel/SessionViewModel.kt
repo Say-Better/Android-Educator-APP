@@ -26,7 +26,24 @@ class SessionViewModel @Inject constructor(
             is SessionIntent.HelloClicked -> onHelloClicked()
             is SessionIntent.ScreenShareClicked -> onScreenShareClicked(intent.isScreenCasting)
             is SessionIntent.EndingProgress -> endingProgress()
+            is SessionIntent.SetScreenShare -> onSetScreenShare()
+            is SessionIntent.StartScreenShare -> onStartScreenShare()
+            is SessionIntent.StopScreenShare -> onStopScreenShare()
         }
+    }
+
+    private fun onSetScreenShare() {
+        updateState { it.copy(isScreenCasting = !it.isScreenCasting) }
+    }
+
+    private fun onStartScreenShare() {
+        // 화면공유 시작
+
+    }
+
+    private fun onStopScreenShare() {
+        // 화면공유 종료
+
     }
 
     init {
