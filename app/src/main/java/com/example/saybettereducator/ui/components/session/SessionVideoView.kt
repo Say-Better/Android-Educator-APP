@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SessionVideoView(
+    isDisplayReady: Boolean,
     sessionState: SessionState,
     progressState: ProgressState
 ) {
@@ -54,8 +55,8 @@ fun SessionVideoView(
         modifier = Modifier
             .padding(horizontal = 12.dp)
             .size(
-                width = if (!sessionState.isStart) 328.dp else 263.dp,
-                height = if (!sessionState.isStart) 404.dp else 75.dp
+                width = if (isDisplayReady) 328.dp else 263.dp,
+                height = if (isDisplayReady) 404.dp else 75.dp
             )
     ) {
         // educator cam
@@ -63,22 +64,22 @@ fun SessionVideoView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(
-                    width = if (!sessionState.isStart) 328.dp else 128.dp,
-                    height = if (!sessionState.isStart) 196.dp else 75.dp
+                    width = if (isDisplayReady) 328.dp else 128.dp,
+                    height = if (isDisplayReady) 196.dp else 75.dp
                 )
                 .background(
                     color = Color.DarkGray,
-                    shape = RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp)
+                    shape = RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp)
                 )
                 .align(Alignment.TopStart)
         ) {
             LocalVideoRenderer(
                 modifier = Modifier
                     .size(
-                        width = if (!sessionState.isStart) 328.dp else 128.dp,
-                        height = if (!sessionState.isStart) 196.dp else 75.dp
+                        width = if (isDisplayReady) 328.dp else 128.dp,
+                        height = if (isDisplayReady) 196.dp else 75.dp
                     )
-                    .clip(RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp))
+                    .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
             )
             if (sessionState.greetState) {
                 var targetRotation by remember { mutableFloatStateOf(0f) }
@@ -102,10 +103,10 @@ fun SessionVideoView(
                 Box(
                     modifier = Modifier
                         .size(
-                            width = if (!sessionState.isStart) 328.dp else 128.dp,
-                            height = if (!sessionState.isStart) 196.dp else 75.dp
+                            width = if (isDisplayReady) 328.dp else 128.dp,
+                            height = if (isDisplayReady) 196.dp else 75.dp
                         )
-                        .clip(RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp))
+                        .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                         .background(Gray5B50)
                         .graphicsLayer(
                             rotationZ = rotationAnimation
@@ -126,23 +127,23 @@ fun SessionVideoView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(
-                    width = if (!sessionState.isStart) 328.dp else 128.dp,
-                    height = if (!sessionState.isStart) 196.dp else 75.dp
+                    width = if (isDisplayReady) 328.dp else 128.dp,
+                    height = if (isDisplayReady) 196.dp else 75.dp
                 )
                 .background(
                     color = Color.DarkGray,
-                    shape = RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp)
+                    shape = RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp)
                 )
-                .align(if (!sessionState.isStart) Alignment.BottomEnd else Alignment.TopEnd)
+                .align(if (isDisplayReady) Alignment.BottomEnd else Alignment.TopEnd)
         ) {
             if (sessionState.isPeerConnected){
                 RemoteVideoRenderer(
                     modifier = Modifier
                         .size(
-                            width = if (!sessionState.isStart) 328.dp else 128.dp,
-                            height = if (!sessionState.isStart) 196.dp else 75.dp
+                            width = if (isDisplayReady) 328.dp else 128.dp,
+                            height = if (isDisplayReady) 196.dp else 75.dp
                         )
-                        .clip(RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp))
+                        .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                 )
                 if (sessionState.remoteGreetState) {
                     var targetRotation by remember { mutableFloatStateOf(0f) }
@@ -166,10 +167,10 @@ fun SessionVideoView(
                     Box(
                         modifier = Modifier
                             .size(
-                                width = if (!sessionState.isStart) 328.dp else 128.dp,
-                                height = if (!sessionState.isStart) 196.dp else 75.dp
+                                width = if (isDisplayReady) 328.dp else 128.dp,
+                                height = if (isDisplayReady) 196.dp else 75.dp
                             )
-                            .clip(RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp))
+                            .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                             .background(Gray5B50)
                             .graphicsLayer(
                                 rotationZ = rotationAnimation
@@ -187,10 +188,10 @@ fun SessionVideoView(
                     Box(
                         modifier = Modifier
                             .size(
-                                width = if (!sessionState.isStart) 328.dp else 128.dp,
-                                height = if (!sessionState.isStart) 196.dp else 75.dp
+                                width = if (isDisplayReady) 328.dp else 128.dp,
+                                height = if (isDisplayReady) 196.dp else 75.dp
                             )
-                            .clip(RoundedCornerShape(if (!sessionState.isStart) 16.dp else 8.dp))
+                            .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                             .background(if(progressState.responseFilter == ResponseFilterType.YES) MainGreen_60 else Red_60)
                     ) {
                         Text(

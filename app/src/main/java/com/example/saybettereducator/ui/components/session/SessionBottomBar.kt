@@ -43,8 +43,11 @@ import com.example.saybettereducator.ui.theme.pretendardMediumFont
 @Composable
 fun SessionBottomBar(
     isStart: Boolean,
+    isEnding: Boolean,
     serviceRepository: MainServiceRepository,
-    onStartSolution: () -> Unit
+    onStartSolution: () -> Unit,
+    onEndingSolution: () -> Unit,
+    onTerminateSolution: () -> Unit,
 ) {
     var micClicked: Boolean by remember { mutableStateOf(false) }
     var cameraClicked: Boolean by remember { mutableStateOf(false) }
@@ -105,13 +108,16 @@ fun SessionBottomBar(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(28.dp))
-                    .background(if (!isStart) MainGreen else Red)
+                    .background(if (!isEnding) MainGreen else Red)
                     .size(width = 152.dp, height = 40.dp)
                     .clickable {
                         if (!isStart) {
                             onStartSolution()
-                            Log.d("SessionBottomBar", "솔루션 시작")
-                        } else serviceRepository.sendEndCall()
+                        } else if(!isEnding) {
+                            onEndingSolution()
+                        } else {
+                            onTerminateSolution()
+                        }
 
                     },
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween,
@@ -124,7 +130,7 @@ fun SessionBottomBar(
                     modifier = Modifier.padding(start = 21.5.dp)
                 )
                 Text(
-                    text = if(!isStart) "솔루션 시작" else "솔루션 종료",
+                    text = if(!isStart) "솔루션 시작" else if(!isEnding) "솔루션 종료" else "통화 종료",
                     fontSize = 16.sp,
                     color = White,
                     fontFamily = FontFamily(pretendardMediumFont),
