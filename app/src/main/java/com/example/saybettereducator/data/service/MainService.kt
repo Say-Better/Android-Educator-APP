@@ -180,7 +180,10 @@ class MainService : Service(), MainRepository.Listener {
 
                     }
 
-                    else -> {}
+
+                    else -> {
+                        sessionInteractionListener?.onReceiveChatting(it.second.toString())
+                    }
                 }
             } else {
                 Toast.makeText(this, "received data is wrong", Toast.LENGTH_SHORT).show()
@@ -210,6 +213,7 @@ class MainService : Service(), MainRepository.Listener {
     }
 
     interface SessionInteractionListener {
+        fun onReceiveChatting(msg: String)
         fun onGreeting()
         fun onSwitchToLearning()
     }

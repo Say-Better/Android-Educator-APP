@@ -7,22 +7,28 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -35,8 +41,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.saybettereducator.data.api.helper.WebRTCClient
 import com.example.saybettereducator.data.repository.MainServiceRepository
@@ -56,6 +65,7 @@ import com.example.saybettereducator.ui.sideeffect.ProgressSideEffect
 import com.example.saybettereducator.ui.sideeffect.SessionSideEffect
 import com.example.saybettereducator.ui.theme.BottomBar
 import com.example.saybettereducator.ui.theme.DarkGray
+import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.ui.viewmodel.ProgressViewModel
 import com.example.saybettereducator.ui.viewmodel.SessionViewModel
 import com.example.saybettereducator.utils.InstantInteractionType
@@ -187,16 +197,22 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
         onSessionIntent: (SessionIntent) -> Unit,
         onProgressIntent: (ProgressIntent) -> Unit,
     )  {
+        // 두 값이 동일한 시점에 Ready View 를 표시
+        val isDisplayReady: Boolean = !(sessionState.isStart xor sessionState.isEnding)
+
         Scaffold(
             topBar = {
-                if (!sessionState.isStart) ReadyTopBar(serviceRepository)
+                if (isDisplayReady) ReadyTopBar(serviceRepository)
                 else ProgressTopBar(isPlaying = progressState.isVoicePlaying)
             },
             bottomBar = {
                 SessionBottomBar(
                     sessionState.isStart,
+                    sessionState.isEnding,
                     serviceRepository,
-                    onStartSolution = { onSessionIntent(SessionIntent.StartProgress) }
+                    onStartSolution = { onSessionIntent(SessionIntent.StartProgress) },
+                    onEndingSolution = { onSessionIntent(SessionIntent.EndingProgress) },
+                    onTerminateSolution = { serviceRepository.sendEndCall() }
                 )
             }
         ) { innerPadding ->
@@ -213,8 +229,11 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
 
+                    // 이곳에 레이블 추가
+
+
                     // 세션 진행 상징 카드 화면
-                    if(sessionState.isStart) {
+                    if(!isDisplayReady) {
                         ProgressLearningView(
                             selectedMode = progressState.selectedMode,
                             selectedSymbols = progressState.selectedSymbols,
@@ -228,21 +247,54 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                     }
 
                     // 교육자, 학습자 비디오 화면
-                    SessionVideoView(sessionState = sessionState, progressState = progressState)
+                    SessionVideoView(
+                        isDisplayReady = isDisplayReady,
+                        sessionState = sessionState,
+                        progressState = progressState
+                    )
                     Spacer(modifier = Modifier.weight(1f))
 
                     // 인사 버튼
-                    if(!sessionState.isStart) {
-                        ReadyHelloBtn(
-                            greetState = sessionState.greetState,
-                            onHelloClick = { onSessionIntent(SessionIntent.HelloClicked) }
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
+                    if(isDisplayReady) {
+                        Row(
+                            modifier = Modifier.height(100.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            ReadyHelloBtn(
+                                greetState = sessionState.greetState,
+                                onHelloClick = { onSessionIntent(SessionIntent.HelloClicked) }
+                            )
+
+                            Spacer(modifier = Modifier.padding(start = 24.dp))
+                            
+                            Column(
+                                modifier = Modifier
+                                    .height(60.dp)
+                                    .fillMaxWidth(0.7f)
+                                    .verticalScroll(rememberScrollState())
+                                    .border(
+                                        width = 1.dp,
+                                        color = Color.White,
+                                        shape = RoundedCornerShape(size = 12.dp)
+                                    )
+                            ) {
+                                Text(
+                                    text = sessionState.longChatText,
+                                    color = Color.White,
+                                    fontFamily = FontFamily(pretendardMediumFont),
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(start = 12.dp)
+                                )
+
+                            }
+                        }
                     }
                 }
 
                 // 세션 진행 시 바텀시트
-                if(sessionState.isStart) {
+                if(!isDisplayReady) {
                     BottomSheetScaffold(
                         scaffoldState = scaffoldState,
                         sheetContent = {
@@ -301,6 +353,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
 
 
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)
     @Preview(widthDp = 360, heightDp = 800)
     @Composable
