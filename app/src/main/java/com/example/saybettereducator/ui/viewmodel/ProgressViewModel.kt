@@ -200,10 +200,12 @@ class ProgressViewModel @Inject constructor(
         val currentState = container.stateFlow.value
         when {
             symbol == null -> { toggleBottomSheet() }
-            currentState.playingSymbol == symbol -> { stopVoicePlayback() }
-            else -> {
+//            currentState.playingSymbol == symbol -> { stopVoicePlayback() }
+            else -> viewModelScope.launch {
                 mainRepository.sendTextToDataChannel("${SYMBOL_HIGHLIGHT.name} ${symbol.id}")
                 startVoicePlayback(symbol)
+                delay(2000)
+                stopVoicePlayback()
             }
         }
     }
@@ -215,7 +217,7 @@ class ProgressViewModel @Inject constructor(
             it.copy(isVoicePlaying = true, playingSymbol = symbol)
         }
 
-        textToSpeech.speak(symbol.name, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+        textToSpeech.speak(symbol.name, TextToSpeech.QUEUE_ADD, null, utteranceId)
         Log.d("ProgressViewModel", "Voice playback started for symbol: $symbol")
     }
 
@@ -254,7 +256,14 @@ class ProgressViewModel @Inject constructor(
         }
     }
 
-    override fun onSymbolHighlight() {
+    override fun onSymbolHighlight(symbolId: Int) {
+        val currentState = container.stateFlow.value
+        val symbol: Symbol = currentState.symbols[symbolId]
+        viewModelScope.launch {
+            startVoicePlayback(symbol)
+            delay(2000)
+            stopVoicePlayback()
+        }
 
     }
 }
