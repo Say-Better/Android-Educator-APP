@@ -111,8 +111,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                 val intent = result.data
                 // its time to give this intent to our service and service passes it to our webrtc client
                 MainService.screenPermissionIntent = intent
-                sessionViewModel.handleIntent(SessionIntent.SetScreenShare(true))
-                // ScreenCapture on 인 상태로 UI 세팅
+
                 serviceRepository.toggleScreenShare(true)
             }
         }
@@ -307,6 +306,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                     // 교육자, 학습자 비디오 화면
                     SessionVideoView(
                         isDisplayReady = isDisplayReady,
+                        isScreenCasting = sessionState.isScreenCasting,
                         sessionState = sessionState,
                         progressState = progressState
                     )

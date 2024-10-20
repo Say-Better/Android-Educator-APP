@@ -335,7 +335,7 @@ class WebRTCClient @Inject constructor(
         )
         Log.d("screen-share", "screen capturer 2")
 
-        screenCapturer!!.startCapture(screenWidthPixels, screenHeightPixels, 15)
+        screenCapturer!!.startCapture(969, 575, 20)
 
         Log.d("screen-share", "ScreenCapturer start capture")
 

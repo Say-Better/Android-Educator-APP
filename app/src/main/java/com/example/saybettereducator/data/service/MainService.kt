@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -61,7 +62,7 @@ class MainService : Service(), MainRepository.Listener {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let { incomingIntent ->
             when(incomingIntent.action) {
@@ -139,7 +140,7 @@ class MainService : Service(), MainRepository.Listener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun handleStartService(incomingIntent: Intent) {
         //Service 시작 시점에서 toggle on
         if(!isServiceRunning) {
@@ -155,7 +156,7 @@ class MainService : Service(), MainRepository.Listener {
     }
 
     //Notification Manager에게 정의한 notificationChannel 전달하여 생성하기
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun startServiceWithNotification() {
         val notificationChannel = NotificationChannel(
             "channel1", "foreground", NotificationManager.IMPORTANCE_HIGH

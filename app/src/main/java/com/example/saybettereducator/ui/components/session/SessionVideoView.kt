@@ -1,5 +1,6 @@
 package com.example.saybettereducator.ui.components.session
 
+import android.text.Layout
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -49,7 +51,8 @@ import kotlinx.coroutines.launch
 fun SessionVideoView(
     isDisplayReady: Boolean,
     sessionState: SessionState,
-    progressState: ProgressState
+    progressState: ProgressState,
+    isScreenCasting: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -73,54 +76,66 @@ fun SessionVideoView(
                 )
                 .align(Alignment.TopStart)
         ) {
-            LocalVideoRenderer(
-                modifier = Modifier
-                    .size(
-                        width = if (isDisplayReady) 328.dp else 128.dp,
-                        height = if (isDisplayReady) 196.dp else 75.dp
-                    )
-                    .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
-            )
-            if (sessionState.greetState) {
-                var targetRotation by remember { mutableFloatStateOf(0f) }
-
-                val rotationAnimation by animateFloatAsState(
-                    targetValue = targetRotation,
-                    animationSpec = tween(durationMillis = 200), label = ""
-                )
-
-                LaunchedEffect(Unit) {
-                    while (true) { // 상태가 true일 때 계속 반복
-                        targetRotation = 5f // 오른쪽으로 회전
-                        delay(200)
-                        targetRotation = -5f // 왼쪽으로 회전
-                        delay(200)
-                    }
-                    targetRotation = 0f // 원래 위치로 돌아옴
-                }
-
-
-                Box(
+            if(!isScreenCasting) {
+                LocalVideoRenderer(
                     modifier = Modifier
                         .size(
                             width = if (isDisplayReady) 328.dp else 128.dp,
                             height = if (isDisplayReady) 196.dp else 75.dp
                         )
                         .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
-                        .background(Gray5B50)
-                        .graphicsLayer(
-                            rotationZ = rotationAnimation
-                        )
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_hello),
-                        contentDescription = "Hello Image",
-                        modifier = Modifier.align(Alignment.Center).size(64.dp)
+                )
+                if (sessionState.greetState) {
+                    var targetRotation by remember { mutableFloatStateOf(0f) }
+
+                    val rotationAnimation by animateFloatAsState(
+                        targetValue = targetRotation,
+                        animationSpec = tween(durationMillis = 200), label = ""
                     )
+
+                    LaunchedEffect(Unit) {
+                        while (true) { // 상태가 true일 때 계속 반복
+                            targetRotation = 5f // 오른쪽으로 회전
+                            delay(200)
+                            targetRotation = -5f // 왼쪽으로 회전
+                            delay(200)
+                        }
+                        targetRotation = 0f // 원래 위치로 돌아옴
+                    }
+
+
+                    Box(
+                        modifier = Modifier
+                            .size(
+                                width = if (isDisplayReady) 328.dp else 128.dp,
+                                height = if (isDisplayReady) 196.dp else 75.dp
+                            )
+                            .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
+                            .background(Gray5B50)
+                            .graphicsLayer(
+                                rotationZ = rotationAnimation
+                            )
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_hello),
+                            contentDescription = "Hello Image",
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(64.dp)
+                        )
+                    }
                 }
+            } else {
+                Text(
+                    text = "화면 공유 중 입니다.",
+                    color = White,
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily(pretendardRegularFont),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
             }
         }
-
 
         // learner cam
         Box(
@@ -179,7 +194,9 @@ fun SessionVideoView(
                         Image(
                             painter = painterResource(id = R.drawable.ic_hello),
                             contentDescription = "Hello Image",
-                            modifier = Modifier.align(Alignment.Center).size(64.dp)
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(64.dp)
                         )
                     }
                 }
@@ -192,7 +209,7 @@ fun SessionVideoView(
                                 height = if (isDisplayReady) 196.dp else 75.dp
                             )
                             .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
-                            .background(if(progressState.responseFilter == ResponseFilterType.YES) MainGreen_60 else Red_60)
+                            .background(if (progressState.responseFilter == ResponseFilterType.YES) MainGreen_60 else Red_60)
                     ) {
                         Text(
                             text = if(progressState.responseFilter == ResponseFilterType.YES) "예" else "아니오",

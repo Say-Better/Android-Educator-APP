@@ -61,6 +61,12 @@ class SessionViewModel @Inject constructor(
 
     private fun onScreenShareClicked(screenCasting: Boolean) {
         updateState { it.copy(isScreenCasting = screenCasting) }
+
+        if (screenCasting) {
+            mainRepository.sendTextToDataChannel(SCREEN_SHARE_TOGGLE_TRUE.name)
+        } else {
+            mainRepository.sendTextToDataChannel(SCREEN_SHARE_TOGGLE_FALSE.name)
+        }
     }
 
     private fun onRemoteViewReady() {
