@@ -5,8 +5,10 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,7 +32,11 @@ import com.example.saybettereducator.utils.customClick.CustomClickEvent
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReadyTopBar(serviceRepository: MainServiceRepository) {
+fun ReadyTopBar(
+    serviceRepository: MainServiceRepository,
+    isScreenCasting: Boolean,
+    onClickScreenCasting: () -> Unit
+) {
     Box {
         TopAppBar(
             title = {
@@ -61,14 +67,32 @@ fun ReadyTopBar(serviceRepository: MainServiceRepository) {
                     serviceRepository.sendEndCall()
                 },
         )
-        Icon(
-            painter = painterResource(id = R.drawable.ic_dot_menu),
-            contentDescription = "혹시 있을지도 모르는 자잘한 설정 항목",
-            tint = Color.White,
+
+        Row(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 15.dp, end = 16.dp)
-                .clickable { /* Todo: 설정 항목 구현 */ }
-        )
+        ) {
+            Icon(
+                painter =
+                if(!isScreenCasting)
+                    painterResource(id = R.drawable.ic_start_screen_share)
+                else
+                    painterResource(id = R.drawable.ic_stop_screen_share),
+                contentDescription = "screen share",
+                tint = Color.White,
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(width = 30.dp, height = 20.dp)
+                    .clickable { onClickScreenCasting() }
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_dot_menu),
+                contentDescription = "혹시 있을지도 모르는 자잘한 설정 항목",
+                tint = Color.White,
+                modifier = Modifier
+                    .clickable { /* Todo: 설정 항목 구현 */ }
+            )
+        }
     }
 }

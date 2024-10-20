@@ -1,10 +1,17 @@
 package com.example.saybettereducator.ui.activity
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,6 +54,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.saybettereducator.data.api.helper.WebRTCClient
 import com.example.saybettereducator.data.repository.MainServiceRepository
 import com.example.saybettereducator.data.service.MainService
@@ -88,12 +96,36 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
     @Inject lateinit var webRTCClient: WebRTCClient
     @Inject lateinit var serviceRepository: MainServiceRepository
 
+    private lateinit var sessionViewModel: SessionViewModel
+    private lateinit var progressViewModel: ProgressViewModel
+
+    private lateinit var requestScreenCaptureLauncher: ActivityResultLauncher<Intent>
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onStart() {
+        super.onStart()
+        requestScreenCaptureLauncher = registerForActivityResult(ActivityResultContracts
+            .StartActivityForResult()) { result ->
+            if(result.resultCode == Activity.RESULT_OK) {
+                Log.d("screen-share", "Result-OK")
+                val intent = result.data
+                // its time to give this intent to our service and service passes it to our webrtc client
+                MainService.screenPermissionIntent = intent
+
+                serviceRepository.toggleScreenShare(true)
+            }
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()
         setContent {
-            SessionScreen()
+            SessionScreen(
+                sessionViewModel = sessionViewModel,
+                progressViewModel = progressViewModel
+            )
         }
     }
 
@@ -104,6 +136,9 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
         }?: kotlin.run {
             finish()
         }
+
+        sessionViewModel =  ViewModelProvider(this).get(SessionViewModel::class.java)
+        progressViewModel = ViewModelProvider(this).get(ProgressViewModel::class.java)
 
         // MainService에서 SurfaceView를 관리하도록 위임
         MainService.localSurfaceView = SurfaceViewRenderer(this)
@@ -121,8 +156,8 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun SessionScreen(
-        sessionViewModel: SessionViewModel = hiltViewModel(),
-        progressViewModel: ProgressViewModel = hiltViewModel()
+        sessionViewModel: SessionViewModel,
+        progressViewModel: ProgressViewModel
     ) {
         val scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = rememberStandardBottomSheetState(initialValue = SheetValue.PartiallyExpanded)
@@ -202,8 +237,32 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
 
         Scaffold(
             topBar = {
-                if (isDisplayReady) ReadyTopBar(serviceRepository)
-                else ProgressTopBar(isPlaying = progressState.isVoicePlaying)
+                if (isDisplayReady)
+                    ReadyTopBar(
+                        serviceRepository = serviceRepository,
+                        isScreenCasting = sessionState.isScreenCasting,
+                        onClickScreenCasting = {
+                            if(!sessionState.isScreenCasting) {
+                                startScreenShare()
+                            } else {
+                                stopScreenShare()
+                            }
+                            onSessionIntent(SessionIntent.SetScreenShare(!sessionState.isScreenCasting))
+                        }
+                    )
+                else
+                    ProgressTopBar(
+                        isPlaying = progressState.isVoicePlaying,
+                        isScreenCasting = sessionState.isScreenCasting,
+                        onClickScreenCasting = {
+                            if(!sessionState.isScreenCasting) {
+                                startScreenShare()
+                            } else {
+                                stopScreenShare()
+                            }
+                            onSessionIntent(SessionIntent.SetScreenShare(!sessionState.isScreenCasting))
+                        }
+                    )
             },
             bottomBar = {
                 SessionBottomBar(
@@ -229,8 +288,6 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
 
-                    // 이곳에 레이블 추가
-
 
                     // 세션 진행 상징 카드 화면
                     if(!isDisplayReady) {
@@ -249,6 +306,7 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                     // 교육자, 학습자 비디오 화면
                     SessionVideoView(
                         isDisplayReady = isDisplayReady,
+                        isScreenCasting = sessionState.isScreenCasting,
                         sessionState = sessionState,
                         progressState = progressState
                     )
@@ -351,14 +409,34 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
         }
     }
 
+//    @OptIn(ExperimentalMaterial3Api::class)
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    @Preview(widthDp = 360, heightDp = 800)
+//    @Composable
+//    fun VideoCallViewPreview() {
+//        SessionScreen()
+//    }
 
+    private fun startScreenShare() {
+        // 화면공유 시작
+        startScreenCapture()
+    }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    private fun startScreenCapture() {
+        val mediaProjectionManager = application.getSystemService(
+            Context.MEDIA_PROJECTION_SERVICE
+        ) as MediaProjectionManager
+
+        val captureIntent = mediaProjectionManager.createScreenCaptureIntent()
+
+        Log.d("screen-share", "requestScreenCaptureLauncher 직전")
+        requestScreenCaptureLauncher.launch(captureIntent)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    @Preview(widthDp = 360, heightDp = 800)
-    @Composable
-    fun VideoCallViewPreview() {
-        SessionScreen()
+    private fun stopScreenShare() {
+        // 화면공유 종료
+        serviceRepository.toggleScreenShare(false)
     }
 
     override fun onCallEnded() {

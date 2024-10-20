@@ -77,4 +77,12 @@ class MainServiceRepository @Inject constructor(
         startServiceIntent(intent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun toggleScreenShare(isStarting: Boolean) {
+        val intent = Intent(context, MainService::class.java)
+        intent.action = MainServiceActions.TOGGLE_SCREEN_SHARE.name
+        intent.putExtra("isStarting", isStarting)
+        startServiceIntent(intent)
+    }
+
 }

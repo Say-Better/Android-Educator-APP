@@ -1,8 +1,12 @@
 package com.example.saybettereducator.data.api.helper
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.PixelFormat
+import android.media.projection.MediaProjection
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.WindowManager
 import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.model.DataModelType
 import com.example.saybettereducator.utils.webrtcObserver.MyPeerObserver
@@ -20,9 +24,11 @@ import org.webrtc.MediaConstraints
 import org.webrtc.MediaStream
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory
+import org.webrtc.ScreenCapturerAndroid
 import org.webrtc.SessionDescription
 import org.webrtc.SurfaceTextureHelper
 import org.webrtc.SurfaceViewRenderer
+import org.webrtc.VideoCapturer
 import org.webrtc.VideoTrack
 import java.nio.ByteBuffer
 import javax.inject.Inject
@@ -96,6 +102,11 @@ class WebRTCClient @Inject constructor(
     private var localAudioTrack: AudioTrack? = null
     private var localVideoTrack: VideoTrack? = null
 
+    // screen casting
+    private var permissionIntent: Intent? = null
+    private var screenCapturer: VideoCapturer? = null
+    private val localScreenVideoSource by lazy { peerConnectionFactory.createVideoSource(false) }
+    private var localScreenShareVideoTrack: VideoTrack? = null
 
     // installing requirements section
     init {
@@ -205,6 +216,7 @@ class WebRTCClient @Inject constructor(
 
     fun closeConnection() {
         try {
+            screenCapturer?.dispose()
             videoCapturer.dispose()
             localStream?.dispose()
             peerConnection?.close()
@@ -294,6 +306,63 @@ class WebRTCClient @Inject constructor(
         localSurfaceView.clearImage()
         localStream?.removeTrack(localVideoTrack)
         localVideoTrack?.dispose()
+    }
+
+    // screen capture section
+    fun setPermissionIntent(screenPermissionIntent: Intent) {
+        this.permissionIntent = screenPermissionIntent
+    }
+
+    fun startScreenCapturing() {
+        Log.d("screen-share", "ScreenCapturing 진입")
+        val displayMetrics = DisplayMetrics()
+        val windowsManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowsManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val screenWidthPixels = displayMetrics.widthPixels
+        val screenHeightPixels = displayMetrics.heightPixels
+
+        surfaceTextureHelper = SurfaceTextureHelper.create(
+            Thread.currentThread().name, eglBaseContext
+        )
+        Log.d("screen-share", "ScreenCapturing 중간")
+
+        screenCapturer = createScreenCapturer()
+        Log.d("screen-share", "screen capturer 1")
+
+        screenCapturer!!.initialize(
+            surfaceTextureHelper, context, localScreenVideoSource.capturerObserver
+        )
+        Log.d("screen-share", "screen capturer 2")
+
+        screenCapturer!!.startCapture(969, 575, 20)
+
+        Log.d("screen-share", "ScreenCapturer start capture")
+
+        localScreenShareVideoTrack =
+            peerConnectionFactory.createVideoTrack(localTrackId + "_video", localScreenVideoSource)
+        localScreenShareVideoTrack?.addSink(localSurfaceView)
+        localStream?.addTrack(localScreenShareVideoTrack)
+        peerConnection?.addStream(localStream)
+        Log.d("screen-share", "ScreenCapturing 끝")
+    }
+
+    fun stopScreenCapturing() {
+        screenCapturer?.stopCapture()
+        screenCapturer?.dispose()
+        localScreenShareVideoTrack?.removeSink(localSurfaceView)
+        localSurfaceView.clearImage()
+        localStream?.removeTrack(localScreenShareVideoTrack)
+        localScreenShareVideoTrack?.dispose()
+    }
+
+    private fun createScreenCapturer(): VideoCapturer {
+        return ScreenCapturerAndroid(permissionIntent, object : MediaProjection.Callback() {
+            override fun onStop() {
+                super.onStop()
+                Log.d("permissions", "onStop: permission of screen casting is stopped")
+            }
+        })
     }
 
     interface Listener {

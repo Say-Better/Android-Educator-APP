@@ -1,11 +1,16 @@
 package com.example.saybettereducator.ui.activity
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +42,7 @@ import com.example.saybettereducator.R
 import com.example.saybettereducator.ui.theme.MainGreen
 import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.data.repository.MainRepository
+import com.example.saybettereducator.data.service.MainService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -47,6 +53,8 @@ class LoginActivity : ComponentActivity() {
 
     val testid: String = "testUser1"
 
+    private lateinit var requestScreenCaptureLauncher: ActivityResultLauncher<Intent>
+
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,19 +62,38 @@ class LoginActivity : ComponentActivity() {
         setContent {
             LoginScreen(
                 login = {
-                    mainRepository.login(testid) { isDone, reason ->
-                        if (!isDone) {
-                            Log.d("login", "로그인 실패, $reason")
-                        } else {
-                            Log.d("login", "로그인 성공")
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java)
-                                .putExtra("userid", testid)
-                            )
-                            finish()
-                        }
-                    }
+                    val mediaProjectionManager = application.getSystemService(
+                        Context.MEDIA_PROJECTION_SERVICE
+                    ) as MediaProjectionManager
+
+                    val captureIntent = mediaProjectionManager.createScreenCaptureIntent()
+
+                    requestScreenCaptureLauncher.launch(captureIntent)
+
                 }
             )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onStart() {
+        super.onStart()
+        requestScreenCaptureLauncher = registerForActivityResult(
+            ActivityResultContracts
+            .StartActivityForResult()) { result ->
+            if(result.resultCode == Activity.RESULT_OK) {
+                mainRepository.login(testid) { isDone, reason ->
+                    if (!isDone) {
+                        Log.d("login", "로그인 실패, $reason")
+                    } else {
+                        Log.d("login", "로그인 성공")
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java)
+                            .putExtra("userid", testid)
+                        )
+                        finish()
+                    }
+                }
+            }
         }
     }
 

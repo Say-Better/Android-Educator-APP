@@ -8,7 +8,6 @@ import com.example.saybettereducator.ui.common.MviViewModel
 import com.example.saybettereducator.ui.intent.SessionIntent
 import com.example.saybettereducator.ui.model.SessionState
 import com.example.saybettereducator.ui.sideeffect.SessionSideEffect
-import com.example.saybettereducator.utils.InstantInteractionType
 import com.example.saybettereducator.utils.InstantInteractionType.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -25,8 +24,25 @@ class SessionViewModel @Inject constructor(
             is SessionIntent.OnRemoteViewReady -> onRemoteViewReady()
             is SessionIntent.StartProgress -> startProgress()
             is SessionIntent.HelloClicked -> onHelloClicked()
+            is SessionIntent.SetScreenShare -> onScreenShareClicked(intent.isScreenCasting)
             is SessionIntent.EndingProgress -> endingProgress()
+            is SessionIntent.StartScreenShare -> onStartScreenShare()
+            is SessionIntent.StopScreenShare -> onStopScreenShare()
         }
+    }
+
+    private fun onStartScreenShare() {
+        // 화면공유 시작
+        startScreenCapture()
+    }
+
+    private fun startScreenCapture() {
+
+    }
+
+    private fun onStopScreenShare() {
+        // 화면공유 종료
+
     }
 
     init {
@@ -40,6 +56,16 @@ class SessionViewModel @Inject constructor(
         viewModelScope.launch {
             delay(1000) // 3초 동안 표시
             updateState { it.copy(greetState = false) }
+        }
+    }
+
+    private fun onScreenShareClicked(screenCasting: Boolean) {
+        updateState { it.copy(isScreenCasting = screenCasting) }
+
+        if (screenCasting) {
+            mainRepository.sendTextToDataChannel(SCREEN_SHARE_TOGGLE_TRUE.name)
+        } else {
+            mainRepository.sendTextToDataChannel(SCREEN_SHARE_TOGGLE_FALSE.name)
         }
     }
 

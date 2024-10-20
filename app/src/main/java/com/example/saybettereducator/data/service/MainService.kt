@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -30,6 +31,7 @@ class MainService : Service(), MainRepository.Listener {
 
     private lateinit var notificationManager : NotificationManager
     private lateinit var rtcAudioManager : RTCAudioManager
+    private var isPreviousCallStateVideo = true
 
     @Inject
     lateinit var mainRepository : MainRepository
@@ -41,6 +43,7 @@ class MainService : Service(), MainRepository.Listener {
         var endCallListener : EndCallListener? = null
         var localSurfaceView : SurfaceViewRenderer? = null
         var remoteSurfaceView : SurfaceViewRenderer? = null
+        var screenPermissionIntent : Intent? = null
     }
 
     private fun handleSwitchCamera() {
@@ -59,7 +62,7 @@ class MainService : Service(), MainRepository.Listener {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let { incomingIntent ->
             when(incomingIntent.action) {
@@ -70,10 +73,32 @@ class MainService : Service(), MainRepository.Listener {
                 TOGGLE_AUDIO.name -> handleToggleAudio(incomingIntent)
                 TOGGLE_VIDEO.name -> handleToggleVideo(incomingIntent)
                 STOP_SERVICE.name -> handleStopService()
+                TOGGLE_SCREEN_SHARE.name -> handleToggleScreenShare(incomingIntent)
                 else -> Unit
             }
         }
         return START_STICKY
+    }
+
+    private fun handleToggleScreenShare(incomingIntent: Intent) {
+        val isStarting = incomingIntent.getBooleanExtra("isStarting", true)
+        Log.d("screen-share", "[MainService] handleToggleScreenShare 진입, isStarting $isStarting")
+        if(isStarting){
+            // we should start screen share
+            // but we have to keep it in mind that we first should remove the camera streaming first
+            if (isPreviousCallStateVideo) {
+                mainRepository.toggleVideo(true)
+            }
+            Log.d("screen-share", "Local View Off")
+            mainRepository.setScreenCaptureIntent(screenPermissionIntent!!)
+            mainRepository.toggleScreenShare(true)
+        } else {
+            // we should stop screen share and check if camera streaming was on so we should make it on back again
+            mainRepository.toggleScreenShare(false)
+            if (isPreviousCallStateVideo) {
+                mainRepository.toggleVideo(false)
+            }
+        }
     }
 
     private fun handleStopService() {
@@ -86,6 +111,7 @@ class MainService : Service(), MainRepository.Listener {
 
     private fun handleToggleVideo(incomingIntent: Intent) {
         val shouldBeMuted = incomingIntent.getBooleanExtra("shouldBeMuted", true)
+        this.isPreviousCallStateVideo = !shouldBeMuted
         mainRepository.toggleVideo(shouldBeMuted)
     }
 
@@ -97,6 +123,9 @@ class MainService : Service(), MainRepository.Listener {
     private fun handleSetupViews(incomingIntent: Intent) {
         val isCaller = incomingIntent.getBooleanExtra("isCaller", false)
         val target = incomingIntent.getStringExtra("target")
+        val isVideoCall = true
+
+        this.isPreviousCallStateVideo = isVideoCall
 
         mainRepository.setTarget(target!!)
 
@@ -111,7 +140,7 @@ class MainService : Service(), MainRepository.Listener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun handleStartService(incomingIntent: Intent) {
         //Service 시작 시점에서 toggle on
         if(!isServiceRunning) {
@@ -127,7 +156,7 @@ class MainService : Service(), MainRepository.Listener {
     }
 
     //Notification Manager에게 정의한 notificationChannel 전달하여 생성하기
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun startServiceWithNotification() {
         val notificationChannel = NotificationChannel(
             "channel1", "foreground", NotificationManager.IMPORTANCE_HIGH
