@@ -205,13 +205,18 @@ class MainService : Service(), MainRepository.Listener {
                     GREETING.name -> {
                         sessionInteractionListener?.onGreeting()
                     }
-                    SYMBOL_HIGHLIGHT.name -> {
-
-                    }
-
-
                     else -> {
-                        sessionInteractionListener?.onReceiveChatting(it.second.toString())
+                        Log.d("DataChannel", it.second.toString())
+                        if(it.second.toString().contains(SYMBOL_HIGHLIGHT.name)) {
+                            val chunkedMessage: List<String> = it.second.toString().split(' ')
+                            val action: String = chunkedMessage[0]
+                            val symbolId: Int = chunkedMessage[1].toInt()
+
+                            progressInteractionListener?.onSymbolHighlight(symbolId)
+                        } else {
+                            sessionInteractionListener?.onReceiveChatting(it.second.toString())
+                        }
+
                     }
                 }
             } else {
@@ -248,7 +253,7 @@ class MainService : Service(), MainRepository.Listener {
     }
 
     interface ProgressInteractionListener {
-        fun onSymbolHighlight(/* symbol id send */)
+        fun onSymbolHighlight(symbolId: Int)
     }
 
 }
