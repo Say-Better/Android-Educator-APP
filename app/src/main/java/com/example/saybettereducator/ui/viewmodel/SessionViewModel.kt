@@ -24,20 +24,19 @@ class SessionViewModel @Inject constructor(
             is SessionIntent.OnRemoteViewReady -> onRemoteViewReady()
             is SessionIntent.StartProgress -> startProgress()
             is SessionIntent.HelloClicked -> onHelloClicked()
-            is SessionIntent.ScreenShareClicked -> onScreenShareClicked(intent.isScreenCasting)
+            is SessionIntent.SetScreenShare -> onScreenShareClicked(intent.isScreenCasting)
             is SessionIntent.EndingProgress -> endingProgress()
-            is SessionIntent.SetScreenShare -> onSetScreenShare()
             is SessionIntent.StartScreenShare -> onStartScreenShare()
             is SessionIntent.StopScreenShare -> onStopScreenShare()
         }
     }
 
-    private fun onSetScreenShare() {
-        updateState { it.copy(isScreenCasting = !it.isScreenCasting) }
-    }
-
     private fun onStartScreenShare() {
         // 화면공유 시작
+        startScreenCapture()
+    }
+
+    private fun startScreenCapture() {
 
     }
 
@@ -61,7 +60,7 @@ class SessionViewModel @Inject constructor(
     }
 
     private fun onScreenShareClicked(screenCasting: Boolean) {
-        updateState { it.copy(isScreenCasting = !screenCasting) }
+        updateState { it.copy(isScreenCasting = screenCasting) }
     }
 
     private fun onRemoteViewReady() {

@@ -1,5 +1,6 @@
 package com.example.saybettereducator.data.repository
 
+import android.content.Intent
 import android.util.Log
 import com.example.saybettereducator.data.model.DataModel
 import com.example.saybettereducator.data.model.DataModelType.*
@@ -214,4 +215,16 @@ class MainRepository @Inject constructor(
     }
 
     fun logOff(function: () -> Unit) = firebaseClient.logOff(function)
+
+    fun setScreenCaptureIntent(screenPermissionIntent: Intent) {
+        webRTCClient.setPermissionIntent(screenPermissionIntent)
+    }
+
+    fun toggleScreenShare(isStarting: Boolean) {
+        if(isStarting) {
+            webRTCClient.startScreenCapturing()
+        } else {
+            webRTCClient.stopScreenCapturing()
+        }
+    }
 }
