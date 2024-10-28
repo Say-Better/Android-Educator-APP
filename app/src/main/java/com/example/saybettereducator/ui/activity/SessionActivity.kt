@@ -374,7 +374,15 @@ class SessionActivity: ComponentActivity(), MainService.EndCallListener {
                                         onProgressIntent(ProgressIntent.SelectSymbol(symbol))
                                     }
                                 },
-                                onAddClick = {}
+                                onAddClick = {
+                                    onProgressIntent(ProgressIntent.TextSymbolAddMode(true))
+                                },
+                                onTextChange = {
+                                    onProgressIntent(ProgressIntent.TextFieldTyping(it))
+                                },
+                                onAddTextSymbol = { textSymbolName ->
+                                    onProgressIntent(ProgressIntent.AddSymbolClicked(textSymbolName))
+                                }
                             )
                         },
                         sheetDragHandle = {

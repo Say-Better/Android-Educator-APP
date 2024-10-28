@@ -25,6 +25,7 @@ import com.example.saybettereducator.data.model.Symbol
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.Gray5B50
 import com.example.saybettereducator.ui.theme.Transparent
+import com.example.saybettereducator.ui.viewmodel.TEXT_SYMBOL
 
 @Composable
 fun ProgressBottomSheetSymbol(
@@ -37,7 +38,12 @@ fun ProgressBottomSheetSymbol(
 
     ProgressBottomSheetTitle(R.string.progress_symbol_title)
 
-    BottomSheetSymbolCard(symbols, selectedSymbols, onItemClick, onAddClick)
+    BottomSheetSymbolCard(
+        symbols = symbols,
+        selectedSymbols = selectedSymbols,
+        onItemClick = onItemClick,
+        onAddClick = onAddClick
+    )
 }
 
 
@@ -106,14 +112,16 @@ fun BottomSheetSymbolCard(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = item.imageRes),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp))
-                )
+                if (item.imageRes != TEXT_SYMBOL) {
+                    Image(
+                        painter = painterResource(id = item.imageRes),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -124,7 +132,7 @@ fun BottomSheetSymbolCard(
                 )
                 Text(
                     text = item.name,
-                    color = Color.White,
+                    color = if(isSelected) Color.Black else Color.White,
                     fontSize = 12.sp,
                     modifier = Modifier
                         .align(Alignment.Center)

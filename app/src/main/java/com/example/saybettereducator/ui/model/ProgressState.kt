@@ -13,7 +13,9 @@ data class ProgressState(
     val communicationCount: Int = 0, // 소통 횟수
     val timerTime: Long = 0, // 타이머 남은 시간 (밀리초)
     val timerMaxTime: Long = 0, // 타이머 최대 시간 (밀리초)
-    val communicationState: CommunicationType = CommunicationType.NotCommunicating // 소통 상태
+    val communicationState: CommunicationType = CommunicationType.NotCommunicating, // 소통 상태
+    val isTextSymbolModeActivating: Boolean = false, // 바텀 시트에서 text symbol 추가 버튼 상태
+    val inputState: String = ""
 )
 
 

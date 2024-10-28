@@ -35,8 +35,11 @@ import com.example.saybettereducator.ui.theme.DarkGray
 import com.example.saybettereducator.ui.theme.Gray5B
 import com.example.saybettereducator.ui.theme.HighlightBorder
 import com.example.saybettereducator.ui.theme.LightGray
+import com.example.saybettereducator.ui.theme.White
 import com.example.saybettereducator.ui.theme.pretendardBoldFont
+import com.example.saybettereducator.ui.theme.pretendardMediumFont
 import com.example.saybettereducator.ui.theme.pretendardRegularFont
+import com.example.saybettereducator.ui.viewmodel.TEXT_SYMBOL
 
 @Composable
 fun SymbolCard(
@@ -66,7 +69,8 @@ fun SymbolCard(
             .background(
                 color = DarkGray,
                 shape = RoundedCornerShape(size = outRound)
-            ).clickable { onSymbolClick(symbol) },
+            )
+            .clickable { onSymbolClick(symbol) },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -75,18 +79,36 @@ fun SymbolCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (symbol != null) {
-                Image(
-                    painter = painterResource(id = symbol.imageRes),
-                    contentDescription = "symbol",
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .background(
-                            color = LightGray,
-                            shape = RoundedCornerShape(size = inRound)
-                        ),
+                // 해당 symbol이 text symbol이 아닌 경우에만 이미지를 표시
+                if (symbol.imageRes != TEXT_SYMBOL) {
+                    Image(
+                        painter = painterResource(id = symbol.imageRes),
+                        contentDescription = "symbol",
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .background(
+                                color = LightGray,
+                                shape = RoundedCornerShape(size = inRound)
+                            ),
                     )
+                } else {
+                    Text(
+                        text = symbol.name,
+                        fontSize = 36.sp,
+                        fontFamily = FontFamily(pretendardMediumFont),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .background(
+                                color = White,
+                                shape = RoundedCornerShape(size = inRound)
+                            )
+                    )
+                }
             } else {
                 Column(
                     modifier = Modifier
