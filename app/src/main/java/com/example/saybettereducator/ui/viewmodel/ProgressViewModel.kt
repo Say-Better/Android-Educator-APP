@@ -22,6 +22,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val TEXT_SYMBOL = -1
+
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
     private val textToSpeech: TextToSpeech
@@ -34,7 +36,8 @@ class ProgressViewModel @Inject constructor(
         when (intent) {
             is ProgressIntent.LoadSymbols -> loadSymbols()
             is ProgressIntent.SelectMode -> selectMode(intent.mode)
-            is ProgressIntent.AddSymbolClicked -> {}
+            is ProgressIntent.AddSymbolClicked -> onAddTextSymbol(intent.text)
+            is ProgressIntent.TextSymbolAddMode -> onTextSymbolAddMode(intent.isActivating)
             is ProgressIntent.SelectSymbol -> selectSymbol(intent.symbol)
             is ProgressIntent.DeselectSymbol -> deselectSymbol(intent.symbol)
             is ProgressIntent.SymbolClicked -> handleSymbolClicked(intent.symbol)
@@ -44,7 +47,16 @@ class ProgressViewModel @Inject constructor(
             is ProgressIntent.ApplyResponseFilter -> applyResponseFilter(intent.filterType)
             is ProgressIntent.CommunicationClicked -> handleCommunicationClicked()
             is ProgressIntent.TimerClicked -> handleTimerClicked()
+            is ProgressIntent.TextFieldTyping -> onTextTyping(intent.text)
         }
+    }
+
+    private fun onTextTyping(text: String) {
+        updateState { it.copy(inputState = text) }
+    }
+
+    private fun onTextSymbolAddMode(isActivating: Boolean) {
+        updateState { it.copy(isTextSymbolModeActivating = isActivating) }
     }
 
     init {
@@ -93,6 +105,22 @@ class ProgressViewModel @Inject constructor(
             Symbol(23, "흥미롭다", R.drawable.ic_symbol_interested),
         )
         updateState { it.copy(symbols = symbols) }
+    }
+
+    // text를 받아서 symbol로 만들어 symbol list에 추가
+    private fun onAddTextSymbol(text: String) {
+        val currentState = container.stateFlow.value
+        val newSymbolId: Int = currentState.symbols.lastIndex + 1
+        val textSymbolTmp = Symbol(newSymbolId, text, TEXT_SYMBOL)
+        updateState {
+            it.copy(
+                symbols = listOf(textSymbolTmp) + it.symbols,
+                isTextSymbolModeActivating = false
+            )
+        }
+
+        // 상대방 peer에도 텍스트 심볼 추가
+        mainRepository.sendTextToDataChannel("${ADD_TEXT_SYMBOL.name} $text")
     }
 
     private fun selectMode(mode: Int) {
