@@ -54,12 +54,14 @@ fun SessionVideoView(
     progressState: ProgressState,
     isScreenCasting: Boolean
 ) {
+    val readyVideoWidth = 328.dp
+    val readyVideoHeight = 196.dp
     Box(
         modifier = Modifier
             .padding(horizontal = 12.dp)
             .size(
-                width = if (isDisplayReady) 328.dp else 263.dp,
-                height = if (isDisplayReady) 404.dp else 75.dp
+                width = if (isDisplayReady) readyVideoWidth else 263.dp,
+                height = if (isDisplayReady) readyVideoHeight*2 + 12.dp else 75.dp
             )
     ) {
         // educator cam
@@ -67,8 +69,8 @@ fun SessionVideoView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(
-                    width = if (isDisplayReady) 328.dp else 128.dp,
-                    height = if (isDisplayReady) 196.dp else 75.dp
+                    width = if (isDisplayReady) readyVideoWidth else 128.dp,
+                    height = if (isDisplayReady) readyVideoHeight else 75.dp
                 )
                 .background(
                     color = Color.DarkGray,
@@ -80,8 +82,8 @@ fun SessionVideoView(
                 LocalVideoRenderer(
                     modifier = Modifier
                         .size(
-                            width = if (isDisplayReady) 328.dp else 128.dp,
-                            height = if (isDisplayReady) 196.dp else 75.dp
+                            width = if (isDisplayReady) readyVideoWidth else 128.dp,
+                            height = if (isDisplayReady) readyVideoHeight else 75.dp
                         )
                         .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                 )
@@ -107,8 +109,8 @@ fun SessionVideoView(
                     Box(
                         modifier = Modifier
                             .size(
-                                width = if (isDisplayReady) 328.dp else 128.dp,
-                                height = if (isDisplayReady) 196.dp else 75.dp
+                                width = if (isDisplayReady) readyVideoWidth else 128.dp,
+                                height = if (isDisplayReady) readyVideoHeight else 75.dp
                             )
                             .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                             .background(Gray5B50)
@@ -142,8 +144,8 @@ fun SessionVideoView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(
-                    width = if (isDisplayReady) 328.dp else 128.dp,
-                    height = if (isDisplayReady) 196.dp else 75.dp
+                    width = if (isDisplayReady) readyVideoWidth else 128.dp,
+                    height = if (isDisplayReady) readyVideoHeight else 75.dp
                 )
                 .background(
                     color = Color.DarkGray,
@@ -155,8 +157,8 @@ fun SessionVideoView(
                 RemoteVideoRenderer(
                     modifier = Modifier
                         .size(
-                            width = if (isDisplayReady) 328.dp else 128.dp,
-                            height = if (isDisplayReady) 196.dp else 75.dp
+                            width = if (isDisplayReady) readyVideoWidth else 128.dp,
+                            height = if (isDisplayReady) readyVideoHeight else 75.dp
                         )
                         .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                 )
@@ -182,8 +184,8 @@ fun SessionVideoView(
                     Box(
                         modifier = Modifier
                             .size(
-                                width = if (isDisplayReady) 328.dp else 128.dp,
-                                height = if (isDisplayReady) 196.dp else 75.dp
+                                width = if (isDisplayReady) readyVideoWidth else 128.dp,
+                                height = if (isDisplayReady) readyVideoHeight else 75.dp
                             )
                             .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                             .background(Gray5B50)
@@ -205,8 +207,8 @@ fun SessionVideoView(
                     Box(
                         modifier = Modifier
                             .size(
-                                width = if (isDisplayReady) 328.dp else 128.dp,
-                                height = if (isDisplayReady) 196.dp else 75.dp
+                                width = if (isDisplayReady) readyVideoWidth else 128.dp,
+                                height = if (isDisplayReady) readyVideoHeight else 75.dp
                             )
                             .clip(RoundedCornerShape(if (isDisplayReady) 16.dp else 8.dp))
                             .background(if (progressState.responseFilter == ResponseFilterType.YES) MainGreen_60 else Red_60)

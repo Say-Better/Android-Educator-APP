@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation.width
@@ -43,6 +45,8 @@ fun ProgressBottomSheet(
     onTextChange: (String) -> Unit,
     onAddTextSymbol: (String) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     if (!state.isTextSymbolModeActivating) {
         Column(
             modifier = Modifier
@@ -90,6 +94,11 @@ fun ProgressBottomSheet(
                 value = state.inputState,
                 onValueChange = { onTextChange(it) },
                 textStyle = PretendardTypography.bodyMedium.copy(Color.Black),
+                keyboardActions = KeyboardActions(onDone = {
+                    onAddTextSymbol(state.inputState)
+                    onTextChange("")
+                    keyboardController?.hide()
+                }),
                 singleLine = true,
                 maxLines = 1,
                 modifier = Modifier
